@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${@siteSettings.title}">List-S2</title>
+    <object th:include="fragments/head :: head" th:remove="tag" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}"/>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script th:src="@{/js/queue.js}"></script>
+    <script th:inline="javascript">
+
+        $(document).ready(function () {
+            $("#fastaExampleBtn").click(function(e) {
+                $("#fasta").val(
+                    ">P07766 OX=9606\r\n" +
+                    "MQSGTHWRVLGLCLLSVGVWGQDGNEEMGGITQTPYKVSISGTTVILTCPQYPGSEILWQHNDKNIGGDEDDKNIGSDEDHLSLKEFSELEQSGYYVCYPRGSKPEDANFYLYLRARVCENCMEMDVMSVATIVIVDICITGGLLLLVYYWSKNRKAKAKPVTRGAGAGGRQRGQNKERPPPVPNPDYEPIRKGQRDLYSGLNQRRI\r\n" +
+                    ">Q764N2|CD3D_PIG\r\n" +
+                    "MEHSRFLSGLILAAFLSRVSPYEVEMEELEDKVFVSCNTSIIWLQGTEGELLSDKKIDLGKRILDPRGLYKCNAPKEQDSNSKIFLQVYYRMCQNCVELDSATLAGIIVTDIIATLLLALGVYCFAGHEMGRFSRAADTQDLLRNDQLYQPLRDRNDGQYSRLGENWARNK"
+                )
+            });
+            $('.toast').toast('show');
+            $(function () {
+                $('[data-toggle="popover"]').popover({trigger: 'focus'})
+            })
+        });
+
+    </script>
+
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar(home)">...</div>
+<div class="container-fluid p-4">
+
+    <div style="position: absolute; top: 100px; right: 25px;min-width: 200px;z-index: 1;opacity: 0.8;">
+
+        <div th:each="message: ${messages}" class="toast fade hide"
+             th:classappend="${message.level.name() == 'INFO' ? 'bg-success' :
+             (message.level.name() == 'WARNING' ? 'bg-warning' : 'bg-danger')}" data-autohide="true" data-delay="5000">
+            <div class="toast-header" style="border-bottom: none; justify-content: space-between;">
+                <div class="toast-body mr-3" style="overflow-x: auto; overflow-y: hidden;" th:text="${message.message}"></div>
+                <button type="button" class="close" style="align-self: flex-start;" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content p-4" >
+
+        <h5 class="mb-3"><b th:text="${@siteSettings.title}">LIST-S2</b> predicts the deleteriousness of amino acid mutations in protein sequences based on Taxonomy distances.</h5>
+
+        <div class="p-2">
+            <form method="POST" enctype="multipart/form-data" action="/">
+                <!--<div class="form-group">-->
+                    <!--<label for="fastaFile">FASTA file</label>-->
+                    <!--<input type="file" class="form-control-file" id="fastaFile" name="fastaFile" aria-describedby="fastaFileHelp" required>-->
+                    <!--<small id="fastaFileHelp" class="form-text text-muted">Sequence file in the FASTA format labeled with matching chain ID.</small>-->
+                <!--</div>-->
+                <div class="form-row">
+                    <div class="form-group col-lg-8 col-12">
+                        <label for="fasta" class="mb-0">Enter protein sequences with identifier headers in FASTA format. <a id="fastaExampleBtn" href="#">Try example</a>.</label>
+                        <small id="emailHelp" class="form-text text-muted mt-0 font-italic">
+                            Optional 'OX=&lt;n&gt;' can be included in the FASTA header to explicitly identify the sequence Taxa ID.
+                            <a tabindex="0" type="button" class="icon-only fas fa-question-circle text-primary" data-html="true"
+                                    data-container="body" data-toggle="popover" data-placement="right"
+                                    data-content="<p>To explicitly set the sequence Taxa ID include 'OX=n' in the header, <b>ex: >P07766 OX=9606</b>.
+                                    Otherwise, the Taxa ID of the sequence with the highest alignment (Bits) score will
+                                    be used as the query Taxa ID.</p>
+                                    <p class=&quot;mb-0&quot;>Taxa IDs can be obtained from <a href=&quot;https://www.ncbi.nlm.nih.gov/Taxonomy/TaxIdentifier/tax_identifier.cgi&quot; target=&quot;_blank&quot;
+                            rel=&quot;noopener noreferrer&quot;>NCBI Taxonomy name/id</a>.</p>"></a></small>
+                        <div class="search-wrapper">
+                            <textarea rows="6" class="form-control search-box" style="resize:vertical;" id="fasta" name="fasta" aria-describedby="fastaHelp" required=""></textarea>
+                            <button class="close-icon fas fa-times-circle text-danger" type="reset"></button>
+                        </div>
+                    </div>
+                    <div class="form-group align-self-start col-lg-4 col-12" th:if="${!@applicationSettings.isDisableEmails()}">
+                        <label for="email" class="mb-0">Notification Email - Optional</label>
+                        <small id="emailHelp" class="form-text text-muted font-italic mt-0">Used to notify on job finish. Will not be saved.</small>
+                        <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Enter email">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group form-submit-wrapper align-self-end" style="text-align: center;">
+                        <button type="submit" class="btn btn-lg btn-primary mr-3">Submit</button>
+<!--                        <button type="reset" class="btn btn-lg btn-danger">-->
+<!--                            <i class="fas fa-trash mr-1"></i>Clear-->
+<!--                        </button>-->
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
+
+        <hr/>
+
+        <div id="job-table">
+            <div th:replace="fragments/job-table :: job-table(joblist=${jobs})"
+                 th:remove="tag">...
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+</div>
+<div th:replace="fragments/footer" th:remove="tag">...</div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${@siteSettings.title + ' - Job Queue'}">Job Queue</title>
+    <object th:include="fragments/head :: head" th:remove="tag" />
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script th:src="@{/js/queue.js}"></script>
+
+</head>
+<body>
+<div th:replace="fragments/navbar">...</div>
+<div class="container-fluid p-4">
+
+
+    <div th:replace="fragments/title :: title(title='Jobs Queue')" th:remove="tag">...</div>
+
+    <div class="main-content p-4" >
+
+        <div th:replace="fragments/job-table :: job-table(joblist=${jobs})"
+             th:remove="tag">...
+        </div>
+
+    </div>
+
+
+
+
+</div>
+<div th:replace="fragments/footer" th:remove="tag">...</div>
+</body>
+</html>

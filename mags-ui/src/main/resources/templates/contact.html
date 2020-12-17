@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${@siteSettings.title + ' - Contact'}">Contact</title>
+    <object th:include="fragments/head :: head" th:remove="tag" />
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar(contact)">...</div>
+<div class="container-fluid p-4">
+
+
+    <div th:replace="fragments/title :: title(title='Contact')" th:remove="tag">...</div>
+
+    <div class="main-content p-4">
+        <p>Have questions? Want more information?</p>
+        <p>Contact us at the following:</p>
+        <ul>
+            <li><b>Nawar Malhis:</b> <a href="mailto:nmalhis@msl.ubc.ca">nmalhis@msl.ubc.ca</a></li>
+            <li><b>Joerg Gsponer:</b> <a href="mailto:gsponer@msl.ubc.ca">gsponer@msl.ubc.ca</a></li>
+        </ul>
+        Web Application and Visualizations:
+        <ul>
+            <li><b>Matthew Jacobson:</b> <a href="https://jacobsonmt.com" target="_blank">jacobsonmt.com</a></li>
+        </ul>
+
+    </div>
+
+
+</div>
+<div th:replace="fragments/footer" th:remove="tag">...</div>
+</body>
+</html>

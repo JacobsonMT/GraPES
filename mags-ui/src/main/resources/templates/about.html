@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${@siteSettings.title + ' - About'}">About</title>
+    <object th:include="fragments/head :: head" th:remove="tag"/>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar(about)">...</div>
+<div class="container-fluid p-4">
+
+    <div th:replace="fragments/title :: title(title='About')" th:remove="tag">...</div>
+
+    <div class="main-content p-4">
+        <p><b th:text="${@siteSettings.title}">LIST-S2</b> (species specific) predicts the deleteriousness of amino acid mutations in protein sequences. First, it
+            aligns (high Local identity Pair-wise Sequence Alignment, LPSA) the query sequence to all protein sequences in the UniProt Swiss-Prot/TrEMBL
+            database and then it identifies the most relevant homologies based on their local identity to the query
+            sequence around that position. And finally, it estimates the potential deleteriousness
+            of mutations based on Taxonomy distance of species with variations to the query.</p>
+
+        <p> Prediction scores are in the range [0 .. 1], where lower scores indicate more benign and higher indicate
+            deleteriousness effect.</p>
+
+    </div>
+
+    <div th:replace="fragments/title :: title(title='Citation')" th:remove="tag">...</div>
+
+    <div class="main-content p-4">
+        <p>Citation pending.</p>
+    </div>
+
+    <div th:replace="fragments/title :: title(title='Terms & Conditions')" th:remove="tag">...</div>
+
+    <div class="main-content p-4" >
+        <p>This software is distributed on an as is basis, without any kind of warranties. This software is free for
+            all. Appropriate citation when using <span th:text="${@siteSettings.title}" th:remove="tag">LIST-S2</span>
+            in publication of scientific results. </p>
+    </div>
+
+    <div th:replace="fragments/title :: title(title='Browser Compatibility')" th:remove="tag">...</div>
+
+    <div class="main-content p-4">
+        <p>The latest versions of most browsers are supported.</p>
+        <table class="table table-sm table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>OS</th>
+                    <th>Chrome</th>
+                    <th>Firefox</th>
+                    <th>Microsoft Edge</th>
+                    <th>Safari</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Windows</th>
+                    <td class="text-success">Supported</td>
+                    <td class="text-success">Supported</td>
+                    <td class="text-success">Supported</td>
+                    <td class="text-danger">Unsupported</td>
+                </tr>
+                <tr>
+                    <th scope="row">Linux</th>
+                    <td class="text-success">Supported</td>
+                    <td class="text-success">Supported</td>
+                    <td class="text-muted">N/A</td>
+                    <td class="text-danger">Unsupported</td>
+                </tr>
+                <tr>
+                    <th scope="row">Mac</th>
+                    <td class="text-success">Supported</td>
+                    <td class="text-warning">Untested</td>
+                    <td class="text-muted">N/A</td>
+                    <td class="text-success">Supported</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+    <div th:replace="fragments/footer" th:remove="tag">...</div>
+</body>
+</html>

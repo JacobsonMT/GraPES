@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+<table class="job-table table table-sm mb-0" th:fragment="job-table (joblist)">
+    <thead class="thead-light">
+    <tr>
+        <th scope="col"></th>
+        <th scope="col">Header</th>
+        <th scope="col">OX (Taxa ID)</th>
+        <th scope="col">Status</th>
+        <th scope="col">Submitted</th>
+        <th scope="col">Results</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="job : ${joblist}">
+        <tr>
+            <td class="text-center">
+                <span class="align-middle">
+                    <a th:jobId="${job.jobId}" onclick="deleteJob(event, this.getAttribute('jobId'))" title="delete" class="align-middle mr-2" style="cursor: pointer;"><i class="fas fa-trash"></i></a>
+                </span>
+            </td>
+            <td><span class="align-middle" th:text="${job.label}" th:classappend="${(job.failed or (job.result != null && job.result.taxa.key != 'OX')) ? 'text-danger' : ''}"></span></td>
+            <td><span class="align-middle" th:text="${job.result != null ? job.result.taxa.id : ''}" th:classappend="${(job.failed or (job.result != null && job.result.taxa.key != 'OX')) ? 'text-danger' : ''}"></span></td>
+            <td><span class="align-middle" th:text="${job.status}" th:classappend="${(job.failed or (job.result != null && job.result.taxa.key != 'OX')) ? 'text-danger' : ''}"></span></td>
+            <td><span class="align-middle" th:text="${job.submittedDate}" th:classappend="${(job.failed or (job.result != null && job.result.taxa.key != 'OX')) ? 'text-danger' : ''}"></span></td>
+            <td>
+                <span class="align-middle">
+
+                    <a th:href="'job/' + ${job.jobId}" target="_blank" class="align-middle mr-2" style="white-space: nowrap;"><i class="fas fa-chart-area mr-1"></i>View</a>
+
+                    <a th:if="${job.complete && !job.failed}" th:href="'job/' + ${job.jobId} +'/resultCSV'" class="align-middle" style="white-space: nowrap;"><i class="fas fa-file-download mr-1"></i>Download</a>
+                </span>
+            </td>
+        </tr>
+    </th:block>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="4">
+
+        </td>
+    </tr>
+    </tfoot>
+</table>
+</body>
+</html>

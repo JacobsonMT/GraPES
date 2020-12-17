@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${@siteSettings.title + ' - Job Description'}">Job Description</title>
+    <object th:include="fragments/head :: head" th:remove="tag" />
+    <script src="https://code.highcharts.com/6.0.3/highcharts.js"></script>
+    <script src="https://code.highcharts.com/6.0.3/modules/heatmap.js"></script>
+    <script src="https://code.highcharts.com/6.0.3/modules/boost.js"></script>
+    <script src="https://code.highcharts.com/6.0.3/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/6.0.3/modules/offline-exporting.js"></script>
+    <script th:inline="javascript">
+
+        /*<![CDATA[*/
+
+        const job = /*[[${job}]]*/ 'job';
+
+        /*]]>*/
+    </script>
+    <script th:src="@{/js/job.js}"></script>
+    <style>
+        #heatmap-axis-toggle {
+            position: absolute;
+            top: 55px;
+            left: 420px;
+            z-index: 99;
+        }
+
+        #heatmap-axis-toggle i.fas.fa-undo {
+            color: rgba(0,0,0,.5);
+        }
+
+        #heatmap-axis-toggle i.fas.fa-undo:hover {
+            color: rgba(0,0,0,.7);
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navbar">...</div>
+<div class="container-fluid p-4">
+
+    <div id="job-view-content" class="main-content p-4" >
+
+        <h1 class="mb-0 text-center" th:text="${job.label}">...</h1>
+        <span class="d-block text-center mb-4 text-muted" th:text="${job.jobId}">...</span>
+        <!--<small class="d-block text-center mb-4 text-muted" th:if="${job.hidden}" th:text="Private">...</small>-->
+
+        <div class="card mx-auto text-center mb-4 result-card" th:if="${job.complete}" style="min-width:750px;">
+            <div class="card-header">
+                Results
+            </div>
+            <div class="card-body" th:if="${job.complete && !job.failed}">
+               <div id="job-graphs">
+                   <div id="heatmap-axis-toggle" style="width:300px;display: none;">
+                        <div class="form-group row">
+                            <div class="col-sm-4 text-left">
+                                <div class="form-check">
+                                    <input class="form-check-input" name="heatmap-axis-toggle" type="radio"
+                                           id="grad-radio" value="grad" checked>
+                                    <label class="form-check-label" for="grad-radio">Gradient</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" name="heatmap-axis-toggle" type="radio"
+                                           id="binary-radio" value="binary">
+                                    <label class="form-check-label" for="binary-radio">Binary</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <div id="cutoff-container" class="form-group" style="display: none;">
+                                    <label for="cutoff" style="margin-bottom: 0;"><a onclick="resetCutoff();" title="reset" class="align-middle mr-2" style="cursor: pointer;"><i class="fas fa-undo"></i></a>Binary Cutoff: <span id="cutoff-value">0.88</span></label>
+                                    <input type="range" min="0.01" max="0.99" value="0.88" step="0.01" class="custom-range" id="cutoff">
+                                </div>
+                            </div>
+                        </div>
+                   </div>
+                    <div id="heatmap-container">
+
+                    </div>
+
+                    <div id="conservation-container">
+
+                    </div>
+
+                    <div id="depth-container">
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="card-body" th:if="${!job.complete}">
+                <p class="card-text">Not Finished</p>
+            </div>
+
+            <div class="card-body text-danger" th:if="${job.failed}">
+                <p class="card-text">Job Failed</p>
+            </div>
+        </div>
+
+        <div class="card mx-auto text-center mb-4 result-card">
+            <div class="card-header">
+                Status
+            </div>
+            <div class="card-body">
+                <span th:text="${job.status}" th:remove="tag"></span>
+            </div>
+        </div>
+
+        <div class="card mx-auto text-center mb-4 result-card">
+            <div class="card-header">
+                Details
+            </div>
+                <table class="job-table table table-sm mb-0">
+                    <tbody>
+                    <tr th:if="${job.complete && !job.failed}">
+                        <td class="text-right" style="width: 33%">OX Taxa id:</td>
+                        <td>
+                            <span class="align-middle p-4" th:text="${job.result != null ? job.result.taxa.id : ''}"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 33%">Submitted:</td>
+                        <td>
+                            <span class="align-middle p-4" th:if="${!job.failed}" th:text="${job.submittedDate != null} ? ${job.submittedDate} : 'Submission Pending'"></span>
+                            <span class="align-middle p-4" th:if="${job.failed}">Failed</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 33%">Started:</td>
+                        <td><span class="align-middle p-4" th:text="${job.startedDate != null} ? ${job.startedDate} : 'Not Started'"></span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 33%">Finished:</td>
+                        <td><span class="align-middle p-4" th:text="${job.finishedDate != null} ? ${job.finishedDate} : 'Not Finished'"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+        </div>
+
+        <div class="card mx-auto text-center mb-4 result-card">
+            <div class="card-header">
+                Downloads
+            </div>
+            <div class="card-body">
+                <a th:href="${job.jobId} +'/inputFASTA'" class="align-middle mr-2"><i class="fas fa-file-download mr-1"></i>Input FASTA</a>
+                <a th:href="${job.jobId} +'/resultCSV'" th:if="${job.complete && !job.failed}" class="align-middle"><i class="fas fa-file-download mr-1"></i>Results</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<div th:replace="fragments/footer" th:remove="tag">...</div>
+</body>
+</html>
