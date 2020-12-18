@@ -37,7 +37,17 @@
                     </li>
                 </ol>
         </ol>
+    </div>
 
+    <div th:replace="fragments/title :: title(title='Job Deletion Policy')" th:remove="tag">...</div>
+    <div class="main-content p-4">
+        <p>Jobs will be stored for at least 14 days, afterwards they may be deleted without notice. </p>
+    </div>
+
+    <div th:replace="fragments/title :: title(title='Versions')" th:remove="tag">...</div>
+    <div class="main-content p-4">
+        <p class="card-text">LIST-S2: <b>v1.10 (2020)</b></p>
+        <footer class="blockquote-footer">Based on <cite title="UniProt release 2019_02">UniProt release 2019_02</cite></footer>
     </div>
 
 </div>

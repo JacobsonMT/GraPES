@@ -12,4 +12,5 @@ import lombok.Setter;
 public class Taxa {
     private String key;
     private int id;
+    private String name;
 }

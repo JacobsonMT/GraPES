@@ -7,6 +7,11 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}"/>
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const sessionId = /*[[${sessionId}]]*/ '';
+        /*]]>*/
+    </script>
     <script th:src="@{/js/queue.js}"></script>
     <script th:inline="javascript">
 
@@ -31,7 +36,6 @@
 <body>
 <div th:replace="fragments/navbar :: navbar(home)">...</div>
 <div class="container-fluid p-4">
-
     <div style="position: absolute; top: 100px; right: 25px;min-width: 200px;z-index: 1;opacity: 0.8;">
 
         <div th:each="message: ${messages}" class="toast fade hide"
@@ -52,6 +56,7 @@
 
         <div class="p-2">
             <form method="POST" enctype="multipart/form-data" action="/">
+                <input type="hidden" id="session" name="session" th:value="${sessionId}">
                 <!--<div class="form-group">-->
                     <!--<label for="fastaFile">FASTA file</label>-->
                     <!--<input type="file" class="form-control-file" id="fastaFile" name="fastaFile" aria-describedby="fastaFileHelp" required>-->

@@ -23,4 +23,6 @@ public class ApplicationSettings {
     private boolean emailOnJobStart = true;
     private boolean emailOnJobComplete = true;
 
+    private double defaultHeatmapCutoff = 0.85;
+
 }

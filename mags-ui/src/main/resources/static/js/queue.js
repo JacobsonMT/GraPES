@@ -16,7 +16,7 @@ function pollUntilDone(interval, timeout) {
     let start = Date.now();
     let previousPending = -1;
     function run() {
-        return $.get("/pending").then(function(pending) {
+        return $.get("/pending", { session: sessionId }).then(function(pending) {
             if (pending < previousPending) {
                 updateJobTable();
                 previousPending = pending;
@@ -46,7 +46,7 @@ function deleteJob(e, jobId) {
 }
 
 function updateJobTable() {
-    $.get("job-table", function(fragment) { // get from controller
+    $.get("job-table", { session: sessionId }, function(fragment) { // get from controller
         $("#job-table").replaceWith(fragment); // update snippet of page
         queueTable = initJobTable();
     });

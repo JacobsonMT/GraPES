@@ -14,14 +14,19 @@
         /*<![CDATA[*/
 
         const job = /*[[${job}]]*/ 'job';
+        const defaultHeatmapCutoff = /*[[${@applicationSettings.defaultHeatmapCutoff}]]*/ 0.85;
 
         /*]]>*/
     </script>
     <script th:src="@{/js/job.js}"></script>
     <style>
+        #job-graphs {
+            position: relative;
+        }
+
         #heatmap-axis-toggle {
             position: absolute;
-            top: 55px;
+            top: -10px;
             left: 420px;
             z-index: 99;
         }
@@ -47,7 +52,8 @@
 
         <div class="card mx-auto text-center mb-4 result-card" th:if="${job.complete}" style="min-width:750px;">
             <div class="card-header">
-                Results
+                <h5 class="mb-0 text-center">Results</h5>
+                <span class="d-block text-center text-muted">To zoom in, use the mouse to select a region of interest</span>
             </div>
             <div class="card-body" th:if="${job.complete && !job.failed}">
                <div id="job-graphs">
@@ -67,8 +73,8 @@
                             </div>
                             <div class="col-sm-8">
                                 <div id="cutoff-container" class="form-group" style="display: none;">
-                                    <label for="cutoff" style="margin-bottom: 0;"><a onclick="resetCutoff();" title="reset" class="align-middle mr-2" style="cursor: pointer;"><i class="fas fa-undo"></i></a>Binary Cutoff: <span id="cutoff-value">0.88</span></label>
-                                    <input type="range" min="0.01" max="0.99" value="0.88" step="0.01" class="custom-range" id="cutoff">
+                                    <label for="cutoff" style="margin-bottom: 0;"><a onclick="resetCutoff();" title="reset" class="align-middle mr-2" style="cursor: pointer;"><i class="fas fa-undo"></i></a>Binary Cutoff: <span id="cutoff-value" th:text="${@applicationSettings.defaultHeatmapCutoff}">0.85</span></label>
+                                    <input type="range" min="0.01" max="0.99" th:value="${@applicationSettings.defaultHeatmapCutoff}" value="0.85" step="0.01" class="custom-range" id="cutoff">
                                 </div>
                             </div>
                         </div>
@@ -99,7 +105,7 @@
 
         <div class="card mx-auto text-center mb-4 result-card">
             <div class="card-header">
-                Status
+                <h5 class="mb-0 text-center">Status</h5>
             </div>
             <div class="card-body">
                 <span th:text="${job.status}" th:remove="tag"></span>
@@ -108,7 +114,7 @@
 
         <div class="card mx-auto text-center mb-4 result-card">
             <div class="card-header">
-                Details
+                <h5 class="mb-0 text-center">Details</h5>
             </div>
                 <table class="job-table table table-sm mb-0">
                     <tbody>
@@ -116,6 +122,13 @@
                         <td class="text-right" style="width: 33%">OX Taxa id:</td>
                         <td>
                             <span class="align-middle p-4" th:text="${job.result != null ? job.result.taxa.id : ''}"></span>
+                        </td>
+                    </tr>
+                    <tr th:if="${job.complete && !job.failed}">
+                        <td class="text-right" style="width: 33%">Species:</td>
+                        <td>
+                            <span class="align-middle p-4" th:text="${job.result != null ? job.result.taxa.name : ''}"></span>
+
                         </td>
                     </tr>
                     <tr>
@@ -139,7 +152,7 @@
 
         <div class="card mx-auto text-center mb-4 result-card">
             <div class="card-header">
-                Downloads
+                <h5 class="mb-0 text-center">Downloads</h5>
             </div>
             <div class="card-body">
                 <a th:href="${job.jobId} +'/inputFASTA'" class="align-middle mr-2"><i class="fas fa-file-download mr-1"></i>Input FASTA</a>

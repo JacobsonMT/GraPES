@@ -103,7 +103,7 @@ function updateBinaryCutoff() {
 }
 
 function resetCutoff() {
-    window.heatmapChart.heatmapCutoff = 0.88;
+    window.heatmapChart.heatmapCutoff = defaultHeatmapCutoff;
     $('#cutoff').val(window.heatmapChart.heatmapCutoff);
     $('#cutoff-value').html(parseFloat(window.heatmapChart.heatmapCutoff).toFixed(2));
     if ($('#binary-radio').prop("checked", true)) {
@@ -184,7 +184,7 @@ function initializeGraphs() {
             document.getElementById('heatmap-container'),
             createHeatMap( "Position Conservation Matrix", data, categories)
         );
-        window.heatmapChart.heatmapCutoff = 0.88;
+        window.heatmapChart.heatmapCutoff = defaultHeatmapCutoff;
         window.heatmapChart.gradientColorAxis = {
             stops: window.heatmapChart.colorAxis[0].stops,
             tickPositions: window.heatmapChart.colorAxis[0].tickPositions
@@ -196,7 +196,8 @@ function initializeGraphs() {
     if (conservationData.every(function(v) {return v.data.length !== 0})) {
         window.conservationChart = new Highcharts.Chart(
             document.getElementById('conservation-container'),
-            createChart( "Conservation", conservationData, true, false, "linear")
+            createChart( "Conservation (Average LIST-S2 Scores)", conservationData, true,
+                false, "linear", 0, 1)
         );
         charts.push( window.conservationChart );
     }
@@ -204,7 +205,8 @@ function initializeGraphs() {
     if (depthData.every(function(v) {return v.data.length !== 0})) {
         window.depthChart = new Highcharts.Chart(
             document.getElementById('depth-container'),
-            createChart( "Alignment Depth", depthData, true, true, "linear")
+            createChart( "Alignment Depth", depthData, true, true,
+                "linear", null, null)
         );
         charts.push( window.depthChart );
     }
@@ -513,7 +515,9 @@ function createChart(title,
                      data,
                      xAxisVisible,
                      enableCredit,
-                     yAxisType) {
+                     yAxisType,
+                     yAxisMin,
+                     yAxisMax) {
 
     const options = {
 
@@ -652,6 +656,8 @@ function createChart(title,
 
         yAxis: {
             title: null,
+            min: yAxisMin,
+            max: yAxisMax,
             type: yAxisType,
             maxPadding: 0,
             minPadding:0,
