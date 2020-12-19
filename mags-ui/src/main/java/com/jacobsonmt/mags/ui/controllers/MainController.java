@@ -77,6 +77,11 @@ public class MainController {
         return ResponseEntity.ok().body(jobs.stream().filter( j -> j.getResult() == null ).count());
     }
 
+    @GetMapping("/precomputed")
+    public String search( Model model) {
+        return "precomputed";
+    }
+
     @GetMapping("/documentation")
     public String documentation( Model model) {
         return "documentation";

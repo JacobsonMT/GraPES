@@ -1,16 +1,15 @@
-version: "3"
+version: "2"
 
 services:
   mags-server:
     image: mags-server
     container_name: mags-server
-    networks:
-      - mags-network
     depends_on:
-      - db
+      - mags-postgresql
     environment:
+        - _JAVA_OPTIONS=-Xmx512m -Xms256m
         - SPRING_PROFILES_ACTIVE=local, docker
-        - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://mags-postgresql:5432/compose-postgres
         - SPRING_DATASOURCE_USERNAME=compose-postgres
         - SPRING_DATASOURCE_PASSWORD=compose-postgres
         - SPRING_JPA_HIBERNATE_DDL_AUTO=update
@@ -22,25 +21,16 @@ services:
   mags-ui:
     image: mags-ui
     container_name: mags-ui
-    networks:
-      - mags-network
     ports:
       - 8090:8090
     environment:
-      SPRING_PROFILES_ACTIVE: local, docker
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=local, docker
 
-  db:
-    image: 'postgres:13.1-alpine'
-    container_name: db
-    networks:
-      - mags-network
-    environment:
-      - POSTGRES_USER=compose-postgres
-      - POSTGRES_PASSWORD=compose-postgres
-    expose:
-      - "5432"
-    ports:
-      - 5433:5432
+  mags-postgresql:
+    extends:
+      file: postgresql.yml
+      service: mags-postgresql
 
-networks:
-  mags-network:
+volumes:
+  pgdata:

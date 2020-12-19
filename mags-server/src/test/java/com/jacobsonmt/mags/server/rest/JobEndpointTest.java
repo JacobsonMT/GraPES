@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jacobsonmt.mags.server.dao.JobDao;
+import com.jacobsonmt.mags.server.dao.PrecomputedResultDao;
 import com.jacobsonmt.mags.server.model.FASTASequence;
 import com.jacobsonmt.mags.server.model.JobDO;
 import com.jacobsonmt.mags.server.model.JobResult;
@@ -71,6 +72,9 @@ public class JobEndpointTest {
 
     @MockBean
     private JobDao jobDao;
+
+    @MockBean
+    private PrecomputedResultDao precomputedResultDao;
 
     @Autowired private ApplicationContext ctx;
 

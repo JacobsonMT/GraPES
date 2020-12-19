@@ -65,15 +65,6 @@
                 <div class="form-row">
                     <div class="form-group col-lg-8 col-12">
                         <label for="fasta" class="mb-0">Enter protein sequences with identifier headers in FASTA format. <a id="fastaExampleBtn" href="#">Try example</a>.</label>
-                        <small id="emailHelp" class="form-text text-muted mt-0 font-italic">
-                            Optional 'OX=&lt;n&gt;' can be included in the FASTA header to explicitly identify the sequence Taxa ID.
-                            <a tabindex="0" type="button" class="icon-only fas fa-question-circle text-primary" data-html="true"
-                                    data-container="body" data-toggle="popover" data-placement="right"
-                                    data-content="<p>To explicitly set the sequence Taxa ID include 'OX=n' in the header, <b>ex: >P07766 OX=9606</b>.
-                                    Otherwise, the Taxa ID of the sequence with the highest alignment (Bits) score will
-                                    be used as the query Taxa ID.</p>
-                                    <p class=&quot;mb-0&quot;>Taxa IDs can be obtained from <a href=&quot;https://www.ncbi.nlm.nih.gov/Taxonomy/TaxIdentifier/tax_identifier.cgi&quot; target=&quot;_blank&quot;
-                            rel=&quot;noopener noreferrer&quot;>NCBI Taxonomy name/id</a>.</p>"></a></small>
                         <div class="search-wrapper">
                             <textarea rows="6" class="form-control search-box" style="resize:vertical;" id="fasta" name="fasta" aria-describedby="fastaHelp" required=""></textarea>
                             <button class="close-icon fas fa-times-circle text-danger" type="reset"></button>

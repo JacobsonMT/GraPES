@@ -7,8 +7,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}"/>
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
-    <script th:src="@{/js/queue.js}"></script>
+    <script th:src="@{/js/precomputed-table.js}"></script>
     <script th:inline="javascript">
 
         $(document).ready(function () {
@@ -16,15 +15,15 @@
             $(function () {
                 $('[data-toggle="popover"]').popover({trigger: 'focus'})
             })
-
-            $('.search-input').autoComplete();
         });
 
     </script>
 
+    <link rel="stylesheet" type="text/css" th:href="@{/css/precomputed-table.css}"/>
+
 </head>
 <body>
-<div th:replace="fragments/navbar :: navbar(search)">...</div>
+<div th:replace="fragments/navbar :: navbar(precomputed)">...</div>
 <div class="container-fluid p-4">
     <div style="position: absolute; top: 100px; right: 25px;min-width: 200px;z-index: 1;opacity: 0.8;">
 
@@ -43,22 +42,11 @@
     <div class="main-content p-4" >
 
         <h5 class="mb-3"><b th:text="${@siteSettings.title}">LIST-S2</b> predicts the deleteriousness of amino acid mutations in protein sequences based on Taxonomy distances.</h5>
-
-        <div class="p-2">
-            <form method="POST" enctype="multipart/form-data" action="/">
-                <div class="form-row">
-                    <div class="form-group align-self-start col-lg-12 col-12">
-                        <label for="search" class="mb-0">Search Uniprot IDs</label>
-                        <small id="searchHelp" class="form-text text-muted font-italic mt-0">Search for precomputed results for Uniprot IDs in Human and Yeast.</small>
-                        <input autocomplete="off" data-url="results/search" type="text" class="form-control search-input" id="search" name="search" aria-describedby="searchHelp" placeholder="Search by Uniprot ID">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group form-submit-wrapper align-self-end" style="text-align: center;">
-                        <button type="submit" class="btn btn-lg btn-primary mr-3">Submit</button>
-                    </div>
-                </div>
-            </form>
+        <div>
+            <div th:replace="fragments/precomputed-table :: precomputed-table"
+                 th:remove="tag">...
+            </div>
+        </div>
 
 
         </div>

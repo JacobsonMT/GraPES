@@ -1,0 +1,13 @@
+table.dataTable tbody td.mono-font-body {
+  font-family: 'Source Code Pro' , monospace;
+}
+
+.uniprot-url:before {
+  content: "";
+  background-image: url(/img/uniprot_rgb_320x146.png);
+  background-size: 100% 100%;
+  width: 40px;
+  height: 18px;
+  vertical-align: middle;
+  display: inline-block;
+}
