@@ -4,19 +4,8 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-primary justify-content-between" style="font-size:90%;" th:fragment="navbar(activeTab)">
     <div class="navbar-brand m-0 pt-2 abs" style="vertical-align: middle;display:inline-block;text-align:center;">
-        <h1 class="font-weight-bold m-0" style="font-size:200%" th:text="${@siteSettings.title}">LIST-S2</h1>
+        <h1 class="font-weight-bold m-0" style="font-size:175%" th:text="${@siteSettings.title}">LIST-S2</h1>
         <h5 class="mb-0 font-italic" th:text="${@siteSettings.subtitle}">Species Specific</h5>
-        <ul class="navbar-nav collapse-right align-items-center divided" style="font-weight: bold;">
-            <li class="nav-item">
-                <a class="nav-link active" th:href="@{/}" href="/">HTML Interface</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="${@siteSettings.apiSite}" href="https://list-s2-api.msl.ubc.ca">REST API</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="${@siteSettings.precomputedSite}" href="https://precomputed.list-s2.msl.ubc.ca">Precomputed</a>
-            </li>
-        </ul>
     </div>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
         <span class="navbar-toggler-icon"></span>
@@ -26,6 +15,10 @@
             <li class="nav-item">
                 <a class="nav-link" th:classappend="${activeTab == 'home'} ? 'active' : null"
                    th:href="@{/}" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${activeTab == 'search'} ? 'active' : null"
+                   th:href="@{/search}" href="/search">Search</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" th:classappend="${activeTab == 'documentation'} ? 'active' : null"
@@ -43,7 +36,7 @@
                     <p class="text-uppercase text-center"><b>University of British Columbia</b></p>
                 </div>
                 <a class="navbar-brand mr-0" href="https://www.ubc.ca/">
-                    <img th:src="@{/img/UBC-logo.png}" style="height: 90px;" class="pr-2">
+                    <img th:src="@{/img/UBC-logo.png}" style="height: 50px;" class="pr-2">
                 </a>
             </li>
         </ul>
