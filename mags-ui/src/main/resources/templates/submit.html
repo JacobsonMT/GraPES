@@ -34,7 +34,7 @@
 
 </head>
 <body>
-<div th:replace="fragments/navbar :: navbar(home)">...</div>
+<div th:replace="fragments/navbar :: navbar(submit)">...</div>
 <div class="container-fluid p-4">
     <div style="position: absolute; top: 100px; right: 25px;min-width: 200px;z-index: 1;opacity: 0.8;">
 
@@ -52,10 +52,14 @@
 
     <div class="main-content p-4" >
 
-        <h5 class="mb-3">On this website, <b th:text="${@siteSettings.title}">GraPES</b>, we provide two refined tools to predict the likelihood of proteins to be contained within liquid-liquid phase separated (LLPS) protein condensates within a cellular environment.  The first, MaGS, exploits a priori knowledge present in the public domain, while the second, MaGSeq, makes predictions purely based on the input protein sequence.</h5>
+        <h5 class="mb-3">Here we provide MaGSeq, the second tool to predict the likelihood of proteins to be contained within
+            liquid-liquid phase separated (LLPS) protein condensates within a cellular environment.</h5>
+
+        <h5> Submitted sequences are processed using MaGSeq, given limited computing resources please expect delays of ~30min
+            per job ahead of you in the queue. If an email is provided, we will contact you when the job has finished.</h5>
 
         <div class="p-2">
-            <form method="POST" enctype="multipart/form-data" action="/">
+            <form method="POST" enctype="multipart/form-data" action="/submit">
                 <input type="hidden" id="session" name="session" th:value="${sessionId}">
                 <!--<div class="form-group">-->
                     <!--<label for="fastaFile">FASTA file</label>-->

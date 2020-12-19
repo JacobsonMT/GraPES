@@ -13,12 +13,12 @@
     <div class="navbar-collapse collapse" id="collapsingNavbar">
         <ul class="navbar-nav collapse-right align-items-center" style="font-size:150%;font-weight: bold;">
             <li class="nav-item">
-                <a class="nav-link" th:classappend="${activeTab == 'home'} ? 'active' : null"
+                <a class="nav-link" th:classappend="${activeTab == 'precomputed'} ? 'active' : null"
                    th:href="@{/}" href="/">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:classappend="${activeTab == 'search'} ? 'active' : null"
-                   th:href="@{/precomputed}" href="/precomputed">Precomputed</a>
+                <a class="nav-link" th:classappend="${activeTab == 'submit'} ? 'active' : null"
+                   th:href="@{/submit}" href="/submit">MaGSeq</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" th:classappend="${activeTab == 'documentation'} ? 'active' : null"

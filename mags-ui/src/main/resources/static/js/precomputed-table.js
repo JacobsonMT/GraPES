@@ -18,6 +18,10 @@ $(document).ready(function () {
     searchDelay: 400,
     "processing": true,
     "serverSide": true,
+    // Move the search bar
+    dom: "<'row'<'col-lg-10 col-md-10 col-xs-12'f><'col-lg-2 col-md-2 col-xs-12'l>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
     columnDefs: [
       {
         targets: 0,

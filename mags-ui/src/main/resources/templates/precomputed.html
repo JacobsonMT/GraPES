@@ -40,7 +40,11 @@
     </div>
 
     <div class="main-content p-4" >
-
+        <h5 class="mb-3">On this website, <b th:text="${@siteSettings.title}">GraPES</b>, we provide two refined tools to predict
+            the likelihood of proteins to be contained within liquid-liquid phase separated (LLPS) protein condensates within a
+            cellular environment.  The first, MaGS, exploits a priori knowledge present in the public domain, while the second,
+            MaGSeq, makes predictions purely based on the input protein sequence.</h5>
+        <h5 class="mb-5">The below table shows a collection of precomputed MaGS results based on Human and Yeast Uniprot sequences.</h5>
         <div>
             <div th:replace="fragments/precomputed-table :: precomputed-table"
                  th:remove="tag">...

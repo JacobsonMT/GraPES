@@ -27,19 +27,12 @@ public class JobController {
     @Autowired
     private JobService jobService;
 
-    @PostMapping("/")
-    public String submitJob(       @RequestParam(value = "fasta", required = false, defaultValue = "") String fasta,
-                                   @RequestParam(value = "fastaFile", required = false) MultipartFile fastaFile,
-//                                   @RequestParam(value = "label", required = false, defaultValue = "") String label,
-                                   @RequestParam(value = "email", required = false, defaultValue = "") String email,
-                                   @RequestParam(value = "session", required = false) String session,
-//                                   HttpServletRequest request,
-                                   RedirectAttributes redirectAttributes) throws IOException {
-
-//        String ipAddress = request.getHeader( "X-FORWARDED-FOR" );
-//        if ( ipAddress == null ) {
-//            ipAddress = request.getRemoteAddr();
-//        }
+    @PostMapping("/submit")
+    public String submitJob(@RequestParam(value = "fasta", required = false, defaultValue = "") String fasta,
+                           @RequestParam(value = "fastaFile", required = false) MultipartFile fastaFile,
+                           @RequestParam(value = "email", required = false, defaultValue = "") String email,
+                           @RequestParam(value = "session", required = false) String session,
+                           RedirectAttributes redirectAttributes) throws IOException {
 
         if (session == null || session.isEmpty()) {
             session = RequestContextHolder.currentRequestAttributes().getSessionId();
@@ -50,7 +43,7 @@ public class JobController {
                 fasta = InputStreamUtils.inputStreamToString( fastaFile.getInputStream() );
             } else {
                 redirectAttributes.addFlashAttribute( "errorMessage", "FASTA Not Found" );
-                return "redirect:/?session="+session;
+                return "redirect:/submit?session="+session;
             }
         }
 
@@ -66,7 +59,7 @@ public class JobController {
             redirectAttributes.addFlashAttribute( "errorMessage", "Server Error" );
         }
 
-        return "redirect:/?session="+session;
+        return "redirect:/submit?session="+session;
     }
 
     @GetMapping("/job/{jobId}")

@@ -2,6 +2,23 @@ table.dataTable tbody td.mono-font-body {
   font-family: 'Source Code Pro' , monospace;
 }
 
+/* Move search to left and filter to right */
+.dataTables_wrapper .dataTables_filter{
+  float: left;
+}
+.dataTables_wrapper .dataTables_length{
+  float: right;
+}
+
+/* Increase size of search */
+div.dataTables_wrapper div.dataTables_filter {
+  width: 30%;
+}
+div.dataTables_wrapper div.dataTables_filter input,
+div.dataTables_wrapper div.dataTables_filter label {
+  width: 100%;
+}
+
 .uniprot-url:before {
   content: "";
   background-image: url(/img/uniprot_rgb_320x146.png);

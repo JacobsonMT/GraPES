@@ -30,18 +30,22 @@ public class MainController {
     @Autowired
     private EmailService emailService;
 
-
     @GetMapping("/")
     public String index() {
-        String session = RequestContextHolder.currentRequestAttributes().getSessionId();
-        return "redirect:/?session="+session;
+        return "precomputed";
     }
 
-    @GetMapping(value = "/", params = "session")
-    public String indexWithSession( Model model, @RequestParam(value = "session") String session ) {
+    @GetMapping("/submit")
+    public String submit() {
+        String session = RequestContextHolder.currentRequestAttributes().getSessionId();
+        return "redirect:/submit?session="+session;
+    }
+
+    @GetMapping(value = "/submit", params = "session")
+    public String submitWithSession( Model model, @RequestParam(value = "session") String session ) {
         model.addAttribute("jobs", jobService.getJobsForUser( session ).getBody());
         model.addAttribute("sessionId", session);
-        return "index";
+        return "submit";
     }
 
     @GetMapping("/job-table")
@@ -52,7 +56,7 @@ public class MainController {
 
         model.addAttribute("jobs", jobService.getJobsForUser( session ).getBody());
 
-        return "index :: #job-table";
+        return "submit :: #job-table";
     }
 
     @GetMapping("/queue")
