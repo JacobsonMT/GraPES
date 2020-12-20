@@ -24,6 +24,7 @@ import com.jacobsonmt.mags.server.model.JobDO;
 import com.jacobsonmt.mags.server.model.JobResult;
 import com.jacobsonmt.mags.server.rest.JobEndpoint.JobSubmissionContent;
 import com.jacobsonmt.mags.server.services.JobManager;
+import com.jacobsonmt.mags.server.services.ResultService;
 import com.jacobsonmt.mags.server.settings.ClientSettings;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
@@ -69,6 +70,9 @@ public class JobEndpointTest {
 
     @MockBean
     private JobManager jobManager;
+
+    @MockBean
+    private ResultService resultService;
 
     @MockBean
     private JobDao jobDao;

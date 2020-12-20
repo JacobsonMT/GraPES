@@ -2,6 +2,8 @@ package com.jacobsonmt.mags.server.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Data;
@@ -13,166 +15,102 @@ import lombok.NoArgsConstructor;
 @Table(name = "precomputed")
 public class PrecomputedResult {
 
+    public enum Species {
+        HUMAN("Human"),
+        YEAST("Yeast");
+
+        private String label;
+
+        Species(String label) {
+            this.label = label;
+        }
+    }
+
     @Id
-    @Column(name = "nam")
+    @Column(name = "accession")
     private String accession;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "species")
-    private String species;
+    private Species species;
 
-    /**
-     * Model score
-     */
-    @Column(name = "v1")
-    private Double v1;
+    @Column(name = "marker")
+    private boolean marker;
 
-    /**
-     * Model score average
-     */
-    @Column(name = "avg")
-    private Double avg;
+    @Column(name = "mags_score")
+    private Double magsScore;
 
-    @Column(name = "dis")
-    private Double disorder;
+    @Column(name = "mags_z_score")
+    private Double magsZScore;
+
+    @Column(name = "diso")
+    private Double diso;
+
+    @Column(name = "abd")
+    private Double abd;
+
+    @Column(name = "csl")
+    private Double csl;
+
+//    @Column(name = "int")
+//    private Integer int;
 
     @Column(name = "len")
     private Integer len;
 
-    /**
-     * has 30 consecutive disorder AA
-     */
-    @Column(name = "run")
-    private Integer run;
-
     @Column(name = "max")
     private Integer max;
 
-    /**
-     * % charged AA
-     */
-    @Column(name = "chg")
-    private Double chargedAAPercentage;
+    @Column(name = "phs")
+    private Integer phs;
 
-    /**
-     * net charge
-     */
-    @Column(name = "net")
-    private Double netCharged;
-
-    /**
-     * GRAVY score
-     */
-    @Column(name = "gvy")
-    private Double gravyScore;
-
-    /**
-     * Pi-Pi Pscore
-     */
     @Column(name = "pip")
-    private Double piPiScore;
+    private Double pip;
 
-    /**
-     * TANGO Score
-     */
-    @Column(name = "tgo")
-    private Double tangoScore;
+    @Column(name = "rna")
+    private Integer rna;
 
-    /**
-     * number of MoRFs
-     */
-    @Column(name = "mfc")
-    private Integer morfCount;
+    @Column(name = "mrf")
+    private Integer mrf;
 
-    /**
-     * number of tango sections
-     */
-    @Column(name = "sto")
-    private Integer tangoSectionCount;
+    @Column(name = "lps")
+    private Double lps;
 
-    /**
-     * number AA in TANGO sections
-     */
-    @Column(name = "stc")
-    private Integer aaInTangoSection;
-
-    /**
-     * RBPPred score
-     */
-    @Column(name = "rbp")
-    private String rbp;
-
-    /**
-     * soluprot score
-     */
-    @Column(name = "sol")
-    private Double sol;
-
-    /**
-     * catgrangule score
-     */
     @Column(name = "cat")
     private Double cat;
 
-    /* Columns that showed up in yeast only */
+    @Column(name = "tgo")
+    private Double tgo;
 
-    @Column(name = "sft")
-    private String sft;
+    @Column(name = "gvy")
+    private Double gvy;
 
-    @Column(name = "scn")
-    private Double scn;
+    @Column(name = "a")
+    private Double a;
 
-    @Column(name = "sbb")
-    private Double sbb;
-
-    @Column(name = "pol")
-    private Double pol;
-
-    /* %composition of given AAs Below*/
-
-    @Column(name = "r")
-    private Double r;
-
-    @Column(name = "h")
-    private Double h;
-
-    @Column(name = "k")
-    private Double k;
+    @Column(name = "c")
+    private Double c;
 
     @Column(name = "d")
     private Double d;
 
     @Column(name = "e")
-    private Double e;
+    private Integer e;
 
-    @Column(name = "s")
-    private Double s;
-
-    @Column(name = "t")
-    private Double t;
-
-    @Column(name = "n")
-    private Double n;
-
-    @Column(name = "q")
-    private Double q;
-
-    @Column(name = "c")
-    private Double c;
+    @Column(name = "f")
+    private Double f;
 
     @Column(name = "g")
     private Double g;
 
-    @Column(name = "p")
-    private Double p;
-
-    @Column(name = "a")
-    private Double a;
-
-    @Column(name = "v")
-    private Double v;
+    @Column(name = "h")
+    private Integer h;
 
     @Column(name = "i")
     private Double i;
+
+    @Column(name = "k")
+    private Double k;
 
     @Column(name = "l")
     private Double l;
@@ -180,13 +118,31 @@ public class PrecomputedResult {
     @Column(name = "m")
     private Double m;
 
-    @Column(name = "f")
-    private Double f;
+    @Column(name = "n")
+    private Double n;
 
-    @Column(name = "y")
-    private Double y;
+    @Column(name = "p")
+    private Double p;
+
+    @Column(name = "q")
+    private Double q;
+
+    @Column(name = "r")
+    private Double r;
+
+    @Column(name = "s")
+    private Double s;
+
+    @Column(name = "t")
+    private Double t;
+
+    @Column(name = "v")
+    private Double v;
 
     @Column(name = "w")
     private Double w;
+
+    @Column(name = "y")
+    private Integer y;
 
 }

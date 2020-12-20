@@ -4,11 +4,13 @@ import com.google.common.collect.Lists;
 import com.jacobsonmt.mags.ui.exceptions.ResultNotFoundException;
 import com.jacobsonmt.mags.ui.model.datatable.DataTableRequest;
 import com.jacobsonmt.mags.ui.model.datatable.DataTableResponse;
+import com.jacobsonmt.mags.ui.model.result.Distribution;
+import com.jacobsonmt.mags.ui.model.result.Result;
 import com.jacobsonmt.mags.ui.model.search.FieldSearch;
 import com.jacobsonmt.mags.ui.model.search.FieldSort;
 import com.jacobsonmt.mags.ui.model.search.SearchCriteria;
 import com.jacobsonmt.mags.ui.model.search.SearchResponse;
-import com.jacobsonmt.mags.ui.services.ResultSearchService;
+import com.jacobsonmt.mags.ui.services.ResultService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,32 +30,46 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class ResultController {
 
-    private final ResultSearchService resultSearchService;
+    private final ResultService resultService;
 
-    public ResultController(ResultSearchService resultSearchService) {this.resultSearchService = resultSearchService;}
+    public ResultController(ResultService resultService) {this.resultService = resultService;}
 
     @RequestMapping(value = "/results/precomputed/{accession}", method = RequestMethod.GET)
-    public String protein( @PathVariable("accession") String accession, Model model) {
+    public String precomputed( @PathVariable("accession") String accession, Model model) {
         if (accession == null) {
             throw new ResultNotFoundException();
         }
 
-        ResponseEntity<?> result = resultSearchService.getPrecomputedResult(accession);
+        ResponseEntity<Result> result = resultService.getPrecomputedResult(accession);
+        ResponseEntity<List<Distribution>> distributions = resultService.getResultDistributions(accession);
 
-        model.addAttribute("result", result );
+        model.addAttribute("result", result.getBody() );
+        model.addAttribute("distributions", distributions.getBody() );
 
-        return "precomputed";
+        return "result";
     }
 
-    @GetMapping("/api/results/precomputed/{accession}")
+    @GetMapping("/api/results/precomputed/{accession}/distributions")
     @ResponseBody
-    public ResponseEntity<?> getPrecomputedResult( @PathVariable("accession") String accession, Model model) {
+    public ResponseEntity<List<Distribution>> getResultDistributions( @PathVariable("accession") String accession, Model model) {
 
         if (accession == null) {
             return ResponseEntity.notFound().build();
         }
 
-        return resultSearchService.getPrecomputedResult(accession);
+        return resultService.getResultDistributions(accession);
+
+    }
+
+    @GetMapping("/api/results/precomputed/{accession}")
+    @ResponseBody
+    public ResponseEntity<Result> getPrecomputedResult( @PathVariable("accession") String accession, Model model) {
+
+        if (accession == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return resultService.getPrecomputedResult(accession);
 
     }
 
@@ -67,7 +83,7 @@ public class ResultController {
             return ResponseEntity.notFound().build();
         }
 
-        return resultSearchService.getPrecomputedResult(accession);
+        return resultService.getPrecomputedResult(accession);
 
     }
 
@@ -99,8 +115,10 @@ public class ResultController {
                 switch ( col.getData() ) {
                     case "accession":
                     case "species":
-                    case "v1":
                         sorts.add(new FieldSort(col.getData(), order.getDir().equals("asc")));
+                        break;
+                    case "score":
+                        sorts.add(new FieldSort("magsZScore", order.getDir().equals("asc")));
                         break;
                     default:
                         // Do Nothing
@@ -119,7 +137,7 @@ public class ResultController {
             dataTablesRequest.getLength()
         );
 
-        ResponseEntity<SearchResponse> results = resultSearchService.search(searchCriteria);
+        ResponseEntity<SearchResponse> results = resultService.search(searchCriteria);
 
         if (results.getBody() != null) {
 

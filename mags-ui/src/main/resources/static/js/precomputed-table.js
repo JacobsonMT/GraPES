@@ -43,7 +43,7 @@ $(document).ready(function () {
       },
       {
         targets: 2,
-        data: "v1",
+        data: "score",
         className: 'text-right mono-font-body',
         render: function (data, type, row, meta) {
           return parseFloat(data).toFixed(2)
@@ -58,7 +58,7 @@ $(document).ready(function () {
         render: function ( data, type, row, meta ) {
           return '<span class="align-middle">' +
               '<a href="/results/precomputed/' + data + '" target="_blank" class="align-middle mr-2"><i class="fas fa-chart-area mr-1"></i>View</a>' +
-              '<a href="/api/results/precomputed/' + data + '/download" target="_blank" class="align-middle"><i class="fas fa-file-download mr-1"></i>Download</a>' +
+              '<a href="/api/results/precomputed/' + data + '" target="_blank" class="align-middle"><i class="fas fa-file-download mr-1"></i>Download</a>' +
               '</span>';
         }
       }

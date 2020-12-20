@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${@siteSettings.title + ' - Result'}">Result</title>
+    <object th:include="fragments/head :: head" th:remove="tag" />
+    <script src="https://code.highcharts.com/8.2.2/highcharts.js"></script>
+    <script src="https://code.highcharts.com/8.2.2/modules/histogram-bellcurve.js"></script>
+    <script src="https://code.highcharts.com/8.2.2/modules/boost.js"></script>
+    <script src="https://code.highcharts.com/8.2.2/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/8.2.2/modules/offline-exporting.js"></script>
+    <script th:inline="javascript">
+
+        /*<![CDATA[*/
+
+        const result = /*[[${result}]]*/ 'result';
+        const distributions = /*[[${distributions}]]*/ 'distributions';
+
+        /*]]>*/
+    </script>
+    <script th:src="@{/js/result.js}"></script>
+    <style>
+        #graphs {
+            position: relative;
+        }
+
+        .graph {
+            width:400px;
+            display:inline-block;
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navbar">...</div>
+<div class="container-fluid p-4">
+
+    <div id="job-view-content" class="main-content p-4" >
+
+        <h1 class="mb-0 text-center" th:text="${result.accession}">...</h1>
+        <span class="d-block text-center mb-4 text-muted" th:text="${result.species}">...</span>
+        <!--<small class="d-block text-center mb-4 text-muted" th:if="${job.hidden}" th:text="Private">...</small>-->
+
+        <div class="card mx-auto text-center mb-4 result-card" th:if="${result}" style="min-width:750px;">
+            <div class="card-header">
+                <h5 class="mb-0 text-center">Feature Distributions</h5>
+                <span class="d-block text-center text-muted">To zoom in, use the mouse to select a region of interest. Current accession is
+                    annotated with a green vertical bar, marker accessions are annotated with red vertical bars.</span>
+            </div>
+            <div class="card-body" th:if="${result}">
+               <div id="graphs">
+                   <div th:each="distribution : ${distributions}" th:id="${distribution.label + '-graph'}" class="graph">
+
+                   </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="card mx-auto text-center mb-4 result-card">
+            <div class="card-header">
+                <h5 class="mb-0 text-center">Details</h5>
+            </div>
+                <table class="job-table table table-sm mb-0">
+                    <tbody>
+                    <tr>
+                        <td class="text-right" style="width: 33%">Accession:</td>
+                        <td><span class="align-middle p-4" th:text="${result.accession}"></span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 33%">Species:</td>
+                        <td><span class="align-middle p-4" th:text="${result.species}"></span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 33%">MaGS Z-Score:</td>
+                        <td><span class="align-middle p-4" th:text="${result.score}"></span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 33%">RNA:</td>
+                        <td><span class="align-middle p-4" th:text="${result.rna}"></span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 33%">Abundance:</td>
+                        <td><span class="align-middle p-4" th:text="${result.abundance}"></span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 33%">Camsol:</td>
+                        <td><span class="align-middle p-4" th:text="${result.camsol}"></span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 33%">Annotated Phosphorylation Sites:</td>
+                        <td><span class="align-middle p-4" th:text="${result.annotatedPhosphorylationSites}"></span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 33%">PScore:</td>
+                        <td><span class="align-middle p-4" th:text="${result.pScore}"></span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 33%">Disorder:</td>
+                        <td><span class="align-middle p-4" th:text="${result.disorder}"></span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 33%">% Composition D:</td>
+                        <td><span class="align-middle p-4" th:text="${result.compositionD}"></span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 33%">% Composition E:</td>
+                        <td><span class="align-middle p-4" th:text="${result.compositionE}"></span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 33%">Composition L:</td>
+                        <td><span class="align-middle p-4" th:text="${result.compositionL}"></span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 33%">% Composition G:</td>
+                        <td><span class="align-middle p-4" th:text="${result.compositionG}"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+        </div>
+
+        <div class="card mx-auto text-center mb-4 result-card">
+            <div class="card-header">
+                <h5 class="mb-0 text-center">Downloads</h5>
+            </div>
+            <div class="card-body">
+<!--                <a th:href="${job.jobId} +'/inputFASTA'" class="align-middle mr-2"><i class="fas fa-file-download mr-1"></i>Input FASTA</a>-->
+<!--                <a th:href="${job.jobId} +'/resultCSV'" th:if="${job.complete && !job.failed}" class="align-middle"><i class="fas fa-file-download mr-1"></i>Results</a>-->
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<div th:replace="fragments/footer" th:remove="tag">...</div>
+</body>
+</html>

@@ -13,36 +13,32 @@
 
     <div class="main-content p-4">
         <p><b>Input:</b></p>
-        <p>One or more protein sequences in fasta format. Optional OX=n can be included in the FASTA header to
-            explicitly identify the sequence Taxa ID as n, otherwise, the Taxa ID of the sequence with the highest
-            alignment (Bits score) will be used as the query Taxa ID. Taxa IDs can be obtained from
-            <a href="https://www.ncbi.nlm.nih.gov/Taxonomy/TaxIdentifier/tax_identifier.cgi" target="_blank"
-               rel="noopener noreferrer">NCBI Taxonomy name/id</a></p>
+        <p>One or more protein sequences in fasta format.
         <p><b>Output:</b></p>
-        <p><a th:href="@{/job/example}" href="../job/example">Live Example</a></p>
-        <ol type="I">
-            <li> The potential deleteriousness effect of every possible amino acid mutation in the form of a heat-map
-                matrix.
-            </li>
-            <li> A downloadable text file with the following columns:
-                <ol type="1">
-                    <li>AC: Sequence id from the fasta header.</li>
-                    <li>Pos: Amino acid position.</li>
-                    <li>Ref: The reference amino acid.</li>
-                    <li>Conservation: The average <span th:text="${@siteSettings.title}" th:remove="tag">LIST-S2</span> deleteriousness score of all possible mutations at that
-                        position.
-                    </li>
-                    <li>20 columns one for each amino acid: The potential deleteriousness <span th:text="${@siteSettings.title}" th:remove="tag">LIST-S2</span> score for mutating the
-                        reference amino acid to “this” amino acid. Scores are in the range [0 .. 1], where lower scores indicate more benign and higher indicate deleteriousness effect.
-                    </li>
-                </ol>
-        </ol>
+        <p><a th:href="@{/results/precomputed/A0AV96}" href="../results/precomputed/A0AV96">Live Example</a></p>
+        <pre>
+{
+    "accession": Unitprot Accession,
+    "species": Species,
+    "score": MaGS Z-Score,
+    "abundance": Abundance,
+    "camsol": Camsol,
+    "annotatedPhosphorylationSites": Annotated Phosphorylation Sites,
+    "disorder": % Disorder,
+    "compositionD": Percent Composition of D,
+    "compositionE": Percent Composition of E,
+    "compositionL": Percent Composition of L,
+    "compositionG": Percent Composition of G,
+    "rna": true/false,
+    "pscore": PScore
+}
+        </pre>
     </div>
 
-    <div th:replace="fragments/title :: title(title='Job Deletion Policy')" th:remove="tag">...</div>
-    <div class="main-content p-4">
-        <p>Jobs will be stored for at least 14 days, afterwards they may be deleted without notice. </p>
-    </div>
+<!--    <div th:replace="fragments/title :: title(title='Job Deletion Policy')" th:remove="tag">...</div>-->
+<!--    <div class="main-content p-4">-->
+<!--        <p>Jobs will be stored for at least 14 days, afterwards they may be deleted without notice. </p>-->
+<!--    </div>-->
 
     <div th:replace="fragments/title :: title(title='Versions')" th:remove="tag">...</div>
     <div class="main-content p-4">

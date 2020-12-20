@@ -1,18 +1,13 @@
 package com.jacobsonmt.mags.server.rest;
 
 import com.jacobsonmt.mags.server.dao.PrecomputedResultDao;
-import com.jacobsonmt.mags.server.entities.PrecomputedResult;
-import com.jacobsonmt.mags.server.model.search.FieldSearch;
+import com.jacobsonmt.mags.server.model.result.Distribution;
+import com.jacobsonmt.mags.server.model.result.Result;
 import com.jacobsonmt.mags.server.model.search.SearchCriteria;
 import com.jacobsonmt.mags.server.model.search.SearchResponse;
-import java.util.stream.Collectors;
+import com.jacobsonmt.mags.server.services.ResultService;
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.domain.Sort.Order;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,16 +23,32 @@ import org.springframework.web.bind.annotation.RestController;
 public class ResultEndpoint {
 
     private final PrecomputedResultDao precomputedResultDao;
+    private final ResultService resultService;
 
-    public ResultEndpoint(PrecomputedResultDao precomputedResultDao) {this.precomputedResultDao = precomputedResultDao;}
+    public ResultEndpoint(PrecomputedResultDao precomputedResultDao,
+        ResultService resultService) {this.precomputedResultDao = precomputedResultDao;
+        this.resultService = resultService;
+    }
 
     /**
      * @return Precomputed result for given accession.
      */
     @RequestMapping(value = "/{accession}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<PrecomputedResult> getPrecomputedResultForAccession( @PathVariable String accession ) {
+    public ResponseEntity<Result> getPrecomputedResultForAccession( @PathVariable String accession ) {
 
-        return precomputedResultDao.findById(accession)
+        return resultService.getResultByAccession(accession)
+            .map(ResponseEntity::ok).orElse(
+                ResponseEntity.status( HttpStatus.NOT_FOUND ).body( null )
+            );
+    }
+
+    /**
+     * @return Precomputed feature distributions for given accession.
+     */
+    @RequestMapping(value = "/{accession}/distributions", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<Distribution>> getDistributionForAccession( @PathVariable String accession ) {
+
+        return resultService.calculateDistributions(accession)
             .map(ResponseEntity::ok).orElse(
                 ResponseEntity.status( HttpStatus.NOT_FOUND ).body( null )
             );
@@ -48,31 +59,9 @@ public class ResultEndpoint {
      */
     @RequestMapping(value = "/precomputed/search", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<SearchResponse> search( @RequestBody SearchCriteria searchCriteria ) {
-        Specification<PrecomputedResult> spec = Specification.where(null);
-        for (FieldSearch fieldSearch : searchCriteria.getFieldSearches()) {
-            spec = spec.or((result, cq, cb) -> cb.like(
-                cb.lower(result.get(fieldSearch.getField())), "%" + fieldSearch.getQuery().toLowerCase() + "%")
-            );
-        }
-
-        Sort sort = Sort.by(
-            searchCriteria.getFieldSorts().stream().map(
-                fs -> new Order(fs.isAsc() ? Direction.ASC : Direction.DESC, fs.getField())).collect(Collectors.toList()
-            )
+        return resultService.search(searchCriteria).map(ResponseEntity::ok).orElse(
+            ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( null )
         );
-        PageRequest pageRequest = PageRequest.of(searchCriteria.getPage(), searchCriteria.getSize(), sort);
-
-        Page<PrecomputedResult> res = precomputedResultDao.findAll(
-            spec, pageRequest
-        );
-
-        SearchResponse searchResponse = new SearchResponse(
-            res.getContent(),
-            1000000,
-            res.getTotalElements()
-        );
-
-        return ResponseEntity.ok(searchResponse);
     }
 
 }
