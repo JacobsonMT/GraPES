@@ -48,6 +48,7 @@ public class ResultService {
     private Map<Species, Map<MaGSSeqFeature, Distribution>> backgroundMaGSSeqDistributions = new ConcurrentHashMap<>();
 
     public enum MaGSFeature {
+        score("MaGS Z-Score", PrecomputedMaGSResult::getZScore),
         abundance("Abundance", PrecomputedMaGSResult::getAbd),
         camsol("Camsol", PrecomputedMaGSResult::getCsl),
         annotatedPhosphorylationSites("Annotated Phosphorylation Sites", PrecomputedMaGSResult::getPhs),
@@ -68,6 +69,7 @@ public class ResultService {
     }
 
     public enum MaGSSeqFeature {
+        score("MaGSeq Z-Score", MaGSSeqResult::getZScore),
         disorder("Disorder", MaGSSeqResult::getDiso),
         pScore("P Score", MaGSSeqResult::getPip),
         rbpPred("RBP Pred", MaGSSeqResult::getRbp),
@@ -112,6 +114,7 @@ public class ResultService {
     public void prepopulateBackgroundDistributions() {
         Map<Species, List<MaGSFeature>> speciesFeatureSet = new HashMap<>();
         speciesFeatureSet.put(Species.HUMAN, Lists.newArrayList(
+            MaGSFeature.score,
             MaGSFeature.abundance,
             MaGSFeature.camsol,
             MaGSFeature.annotatedPhosphorylationSites,
@@ -122,6 +125,7 @@ public class ResultService {
         ));
 
         speciesFeatureSet.put(Species.YEAST, Lists.newArrayList(
+            MaGSFeature.score,
             MaGSFeature.abundance,
             MaGSFeature.camsol,
             MaGSFeature.annotatedPhosphorylationSites,
@@ -159,6 +163,7 @@ public class ResultService {
         /* Jobs background */
         Map<Species, List<MaGSSeqFeature>> speciesMaGSSeqFeatureSet = new HashMap<>();
         speciesMaGSSeqFeatureSet.put(Species.HUMAN, Lists.newArrayList(
+            MaGSSeqFeature.score,
             MaGSSeqFeature.disorder,
             MaGSSeqFeature.pScore,
             MaGSSeqFeature.soluprot,
@@ -173,6 +178,7 @@ public class ResultService {
         ));
 
         speciesMaGSSeqFeatureSet.put(Species.YEAST, Lists.newArrayList(
+            MaGSSeqFeature.score,
             MaGSSeqFeature.disorder,
             MaGSSeqFeature.pScore,
             MaGSSeqFeature.rbpPred,
