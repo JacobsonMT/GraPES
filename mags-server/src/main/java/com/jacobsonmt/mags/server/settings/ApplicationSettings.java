@@ -13,5 +13,6 @@ public class ApplicationSettings {
 
     private int concurrentJobs = 1;
     private boolean disableEmails = false;
+    private int jobPollSeconds = 5;
 
 }

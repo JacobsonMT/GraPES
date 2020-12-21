@@ -102,7 +102,7 @@ public class JobService {
     }
 
     public Job submit( String user, String email, FASTASequence sequence, String emailExternalLink ) {
-        log.info("Job sumitted for user: {}, legth: {}", user, sequence.getSequence().length());
+        log.info("Job sumitted for user: {}, length: {}", user, sequence.getSequence().length());
         return jobDao.save(createJob(user, email, sequence, emailExternalLink));
     }
 
@@ -125,7 +125,7 @@ public class JobService {
     }
 
     public List<Job> getJobs(String session) {
-        return jobDao.findBySession(session);
+        return jobDao.findBySessionOrderByCreatedDateDesc(session);
     }
 
     private Job createJob(String user, String email, FASTASequence sequence, String emailExternalLink) {

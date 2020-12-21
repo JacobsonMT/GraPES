@@ -53,7 +53,6 @@ public class JobRunner {
         Path inputDirectory = jobsDirectory.resolve(jobSettings.getInputPath());
         Path outputDirectory = jobsDirectory.resolve(jobSettings.getOutputPath()).resolve(String.valueOf(job.getId()));
         Files.createDirectories( inputDirectory );
-        Files.createDirectories( outputDirectory );
 
         // Write content to input
         Path fastaFile = inputDirectory.resolve(getInputFileNameFromJob(job));

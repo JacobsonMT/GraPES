@@ -32,7 +32,7 @@ public class JobScheduler {
         log.info( "Job JobScheduler Initialize" );
         scheduler = Executors.newScheduledThreadPool( applicationSettings.getConcurrentJobs() );
         for (int i = 0; i < applicationSettings.getConcurrentJobs(); i++) {
-            scheduler.scheduleAtFixedRate(jobService::startJob, 0, 1, TimeUnit.SECONDS );
+            scheduler.scheduleAtFixedRate(jobService::startJob, 0, applicationSettings.getJobPollSeconds(), TimeUnit.SECONDS );
         }
     }
 

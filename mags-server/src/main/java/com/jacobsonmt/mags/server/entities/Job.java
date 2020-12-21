@@ -89,7 +89,7 @@ public class Job extends Auditable {
 
     @JsonIgnore
     public String recreateFASTA() {
-        return label + System.lineSeparator() + input;
+        return ">" + label + System.lineSeparator() + input + System.lineSeparator();
     }
 
 }

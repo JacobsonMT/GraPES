@@ -27,7 +27,7 @@ public interface JobDao extends JpaRepository<Job, Long> {
     @Query("update Job j set j.deleted=true where j.id = ?1")
     void delete(long id);
 
-    List<Job> findBySession(String session);
+    List<Job> findBySessionOrderByCreatedDateDesc(String session);
 
     Optional<Job> findFirstBySessionNotInAndStatusIsOrderByCreatedDateAsc(Set<String> sessions, Status status);
 
