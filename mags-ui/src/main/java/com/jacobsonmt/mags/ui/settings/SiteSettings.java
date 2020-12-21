@@ -20,7 +20,5 @@ public class SiteSettings {
 
     @Email
     private String contactEmail;
-    @Email
-    private String fromEmail;
 
 }
