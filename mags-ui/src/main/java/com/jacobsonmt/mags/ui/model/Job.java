@@ -1,5 +1,6 @@
 package com.jacobsonmt.mags.ui.model;
 
+import com.jacobsonmt.mags.ui.model.result.MaGSSeqResult;
 import java.time.Instant;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,19 +16,15 @@ public class Job {
     private String session;
     private String label;
     private String input;
-    private String species;
+    private Species species;
     private Status status;
     private String message;
     private Instant started;
     private Instant finished;
 //    private String email;
-    private String externalLink;
+//    private String externalLink;
     private Instant createdDate;;
-//    private JobResult result;
-
-    public static String obfuscateEmail( String email ) {
-        return email.replaceAll( "(\\w{0,3})(\\w+.*)(@.*)", "$1****$3" );
-    }
+    private MaGSSeqResult result;
 
     public enum Status {
         SUBMITTED,

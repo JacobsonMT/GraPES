@@ -17,7 +17,7 @@ public class MaGSResult {
         result.setAbundance(precomputedResult.getAbd());
         result.setCamsol(precomputedResult.getCsl());
         result.setAnnotatedPhosphorylationSites(precomputedResult.getPhs());
-        result.setPScore(precomputedResult.getPip());
+        result.setPropensityScore(precomputedResult.getPip());
         result.setDisorder(precomputedResult.getDiso());
         result.setCompositionD(precomputedResult.getD());
         result.setCompositionE(precomputedResult.getE());
@@ -41,7 +41,7 @@ public class MaGSResult {
     private Double abundance;
     private Double camsol;
     private Integer annotatedPhosphorylationSites;
-    private Double pScore;
+    private Double propensityScore;
 
     private Double disorder;
 

@@ -2,7 +2,6 @@ package com.jacobsonmt.mags.ui.services;
 
 import com.jacobsonmt.mags.ui.model.result.Graph;
 import com.jacobsonmt.mags.ui.model.result.MaGSResult;
-import com.jacobsonmt.mags.ui.model.result.MaGSSeqResult;
 import com.jacobsonmt.mags.ui.model.search.SearchCriteria;
 import com.jacobsonmt.mags.ui.model.search.SearchResponse;
 import com.jacobsonmt.mags.ui.settings.ApplicationSettings;
@@ -59,40 +58,6 @@ public class ResultService {
             entity,
             new ParameterizedTypeReference<List<Graph>>(){},
             accession
-        );
-    }
-
-    /* Jobs Results */
-
-    public ResponseEntity<MaGSSeqResult> getJobsResult(long id) {
-        RestTemplate restTemplate = new RestTemplateBuilder()
-            .errorHandler( new NoOpResponseErrorHandler() ).build();
-        HttpEntity entity = new HttpEntity(createHeaders());
-        // getForObject cannot specify headers so we use exchange
-
-        log.info( "Get Result: {}", id );
-        return restTemplate.exchange(
-            applicationSettings.getProcessServerURI() + "/results/jobs/{accession}",
-            HttpMethod.GET,
-            entity,
-            MaGSSeqResult.class,
-            id
-        );
-    }
-
-    public ResponseEntity<List<Graph>> getJobsResultGraphs(long id) {
-        RestTemplate restTemplate = new RestTemplateBuilder()
-            .errorHandler( new NoOpResponseErrorHandler() ).build();
-        HttpEntity entity = new HttpEntity(createHeaders());
-        // getForObject cannot specify headers so we use exchange
-
-        log.info( "Get Result: {}", id );
-        return restTemplate.exchange(
-            applicationSettings.getProcessServerURI() + "/results/jobs/{accession}/graphs",
-            HttpMethod.GET,
-            entity,
-            new ParameterizedTypeReference<List<Graph>>(){},
-            id
         );
     }
 

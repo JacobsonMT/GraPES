@@ -75,7 +75,7 @@ function createHistogram(title, xAxis, data, score, markers) {
                 dashStyle: 'solid',
                 zIndex: 99,
                 label: {
-                    text: result.accession ? result.accession : 'Current',
+                    text: label,
                     // verticalAlign: 'top',
                     // textAlign: 'left',
                     align: score > mid ? 'right' : 'left',

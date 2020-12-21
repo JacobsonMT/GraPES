@@ -33,7 +33,7 @@ public class PrecomputedResultController {
 
     public PrecomputedResultController(ResultService resultService) {this.resultService = resultService;}
 
-    @RequestMapping(value = "/results/precomputed/{accession}", method = RequestMethod.GET)
+    @RequestMapping(value = "/precomputed/{accession}", method = RequestMethod.GET)
     public String precomputed( @PathVariable("accession") String accession, Model model) {
         if (accession == null) {
             throw new ResultNotFoundException();
@@ -48,7 +48,7 @@ public class PrecomputedResultController {
         return "result";
     }
 
-    @GetMapping("/api/results/precomputed/{accession}/graphs")
+    @GetMapping("/api/precomputed/{accession}/graphs")
     @ResponseBody
     public ResponseEntity<List<Graph>> getResultDistributions( @PathVariable("accession") String accession, Model model) {
 
@@ -60,7 +60,7 @@ public class PrecomputedResultController {
 
     }
 
-    @GetMapping("/api/results/precomputed/{accession}")
+    @GetMapping("/api/precomputed/{accession}")
     @ResponseBody
     public ResponseEntity<MaGSResult> getPrecomputedResult( @PathVariable("accession") String accession, Model model) {
 
@@ -72,7 +72,7 @@ public class PrecomputedResultController {
 
     }
 
-    @RequestMapping( value = "/api/results/precomputed/datatable", method = RequestMethod.POST )
+    @RequestMapping( value = "/api/precomputed/datatable", method = RequestMethod.POST )
     public ResponseEntity<?> precomputedDataTable( @RequestBody final DataTableRequest dataTablesRequest ) {
         String query = dataTablesRequest.getSearch().getValue().toLowerCase();
         List<FieldSearch> searches = new ArrayList<>();

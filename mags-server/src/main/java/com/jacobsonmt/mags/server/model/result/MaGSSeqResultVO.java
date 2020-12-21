@@ -15,7 +15,7 @@ public class MaGSSeqResultVO {
         result.setScore(jobResult.getZScore());
 
         result.setDisorder(jobResult.getDiso());
-        result.setPScore(jobResult.getPip());
+        result.setPropensityScore(jobResult.getPip());
         result.setRbpPred(jobResult.getRbp());
         result.setSoluprot(jobResult.getSol());
         result.setLength(jobResult.getLen());
@@ -40,7 +40,7 @@ public class MaGSSeqResultVO {
     private Double score;
 
     private Double disorder;
-    private Double pScore;
+    private Double propensityScore;
     private Double rbpPred;
     private Double soluprot;
     private Integer length;

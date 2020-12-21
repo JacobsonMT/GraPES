@@ -33,7 +33,6 @@ public class Job extends Auditable {
     @Column(name = "deleted", nullable = false)
     private boolean deleted;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "session", nullable = false)
     private String session;
 

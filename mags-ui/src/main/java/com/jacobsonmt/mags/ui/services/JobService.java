@@ -6,6 +6,7 @@ import static org.springframework.http.HttpStatus.Series.SERVER_ERROR;
 import com.jacobsonmt.mags.ui.model.Job;
 import com.jacobsonmt.mags.ui.model.Message;
 import com.jacobsonmt.mags.ui.model.Species;
+import com.jacobsonmt.mags.ui.model.result.Graph;
 import com.jacobsonmt.mags.ui.settings.ApplicationSettings;
 import com.jacobsonmt.mags.ui.settings.SiteSettings;
 import java.io.IOException;
@@ -48,13 +49,13 @@ public class JobService {
         return restTemplate.postForEntity( applicationSettings.getProcessServerURI() + "/job/submit", request, JobSubmissionResponse.class );
     }
 
-    public ResponseEntity<Job> getJob(String jobId) {
+    public ResponseEntity<Job> getJob(long jobId) {
         RestTemplate restTemplate = new RestTemplateBuilder()
                 .errorHandler( new NoOpResponseErrorHandler() ).build();
         HttpEntity entity = new HttpEntity(createHeaders());
         // getForObject cannot specify headers so we use exchange
 
-        log.info( "Client: (" + applicationSettings.getClientId() + "), Job: (" + jobId + ")" );
+        log.info( "Client: ({}), Job: ({})", applicationSettings.getClientId(), jobId );
         ResponseEntity<Job> response
                 = restTemplate.exchange(
                         applicationSettings.getProcessServerURI() + "/job/{jobId}",
@@ -68,6 +69,22 @@ public class JobService {
 
     }
 
+    public ResponseEntity<List<Graph>> getJobsResultGraphs(long id) {
+        RestTemplate restTemplate = new RestTemplateBuilder()
+            .errorHandler( new NoOpResponseErrorHandler() ).build();
+        HttpEntity entity = new HttpEntity(createHeaders());
+        // getForObject cannot specify headers so we use exchange
+
+        log.info( "Get Result: {}", id );
+        return restTemplate.exchange(
+            applicationSettings.getProcessServerURI() + "/results/jobs/{id}/graphs",
+            HttpMethod.GET,
+            entity,
+            new ParameterizedTypeReference<List<Graph>>(){},
+            id
+        );
+    }
+
     public ResponseEntity<String> deleteJob( String jobId) {
         RestTemplate restTemplate = new RestTemplateBuilder()
                 .errorHandler( new RestTemplateResponseErrorHandler() )
@@ -75,7 +92,7 @@ public class JobService {
         HttpEntity entity = new HttpEntity(createHeaders());
         // getForObject cannot specify headers so we use exchange
 
-        log.info( "Client: (" + applicationSettings.getClientId() + "), Job: (" + jobId + ")" );
+        log.info( "Client: ({}), Job: ({})", applicationSettings.getClientId(), jobId );
         return restTemplate.exchange( applicationSettings.getProcessServerURI() + "/job/{jobId}/delete",
                 HttpMethod.DELETE,
                 entity,
@@ -94,7 +111,7 @@ public class JobService {
         HttpEntity entity = new HttpEntity(createHeaders());
         // getForObject cannot specify headers so we use exchange
 
-        log.info( "Get Jobs for Client: (" + applicationSettings.getClientId() + "), User: (" + userId + ")" );
+        log.info( "Client: ({}), User: ({})", applicationSettings.getClientId(), userId );
         ResponseEntity<List<Job>> response = restTemplate.exchange(
                 applicationSettings.getProcessServerURI() + "/queue/client/{clientId}/user/{userId}?withResults={withResults}",
                 HttpMethod.GET,

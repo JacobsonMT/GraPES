@@ -29,8 +29,8 @@
             <td><span class="align-middle" th:text="${job.createdDate}" th:classappend="${#strings.contains(job.status, 'ERROR') ? 'text-danger' : ''}"></span></td>
             <td>
                 <span class="align-middle">
-
-                    <a th:href="'results/jobs/' + ${job.id}" target="_blank" class="align-middle mr-2" style="white-space: nowrap;"><i class="fas fa-chart-area mr-1"></i>View</a>
+                    <a th:href="'job/' + ${job.id}" target="_blank" class="align-middle mr-2" style="white-space: nowrap;"><i class="fas fa-chart-area mr-1"></i>View</a>
+                    <a th:href="'api/job/' + ${job.id}" class="align-middle" target="_blank" style="white-space: nowrap;"><i class="fas fa-file-download mr-1"></i>Results</a>
                 </span>
             </td>
         </tr>

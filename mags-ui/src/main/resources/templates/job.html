@@ -13,8 +13,8 @@
 
         /*<![CDATA[*/
 
-        const result = /*[[${result}]]*/ 'result';
         const graphs = /*[[${graphs}]]*/ 'graphs';
+        const label = 'Content';
 
         /*]]>*/
     </script>
@@ -37,17 +37,17 @@
 
     <div id="job-view-content" class="main-content p-4" >
 
-        <h1 class="mb-0 text-center" th:text="${result.label}">...</h1>
-        <span class="d-block text-center mb-4 text-muted" th:text="${result.species}">...</span>
+        <h1 class="mb-0 text-center" th:text="${job.label}">...</h1>
+        <span class="d-block text-center mb-4 text-muted" th:text="${job.species}">...</span>
         <!--<small class="d-block text-center mb-4 text-muted" th:if="${job.hidden}" th:text="Private">...</small>-->
 
-        <div class="card mx-auto text-center mb-4 result-card" th:if="${result}" style="min-width:750px;">
+        <div class="card mx-auto text-center mb-4 result-card" th:if="${job}" style="min-width:750px;">
             <div class="card-header">
                 <h5 class="mb-0 text-center">Feature Distributions</h5>
                 <span class="d-block text-center text-muted">To zoom in, use the mouse to select a region of interest. Current accession is
                     annotated with a green vertical bar, marker accessions are annotated with red vertical bars.</span>
             </div>
-            <div class="card-body" th:if="${result}">
+            <div class="card-body" th:if="${graphs}">
                 <div id="graphs">
                     <div th:each="graph : ${graphs}" th:id="${graph.label + '-graph'}" th:if="${graph.score != null}" class="graph">
 
@@ -65,29 +65,30 @@
                 <tbody>
                 <tr>
                     <td class="text-right" style="width: 33%">Label:</td>
-                    <td><span class="align-middle p-4" th:text="${result.label}"></span></td>
+                    <td><span class="align-middle p-4" th:text="${job.label}"></span></td>
                 </tr>
                 <tr>
                     <td class="text-right" style="width: 33%">Species:</td>
-                    <td><span class="align-middle p-4" th:text="${result.species}"></span></td>
+                    <td><span class="align-middle p-4" th:text="${job.species}"></span></td>
                 </tr>
-                <tr th:each="graph : ${graphs}" th:if="${graph.score != null}">
-                    <td class="text-right" style="width: 33%" th:text="${graph.title}"></td>
-                    <td><span class="align-middle p-4" th:text="${graph.score} % 1 == 0? ${graph.score} :${#numbers.formatDecimal(graph.score, 0, 2)}"></span></td>
-                </tr>
+                <div th:if="${graphs}" th:remove="tag">
+                    <tr th:each="graph : ${graphs}" th:if="${graph.score != null}">
+                        <td class="text-right" style="width: 33%" th:text="${graph.title}"></td>
+                        <td><span class="align-middle p-4" th:text="${graph.score} % 1 == 0? ${graph.score} :${#numbers.formatDecimal(graph.score, 0, 2)}"></span></td>
+                    </tr>
+                </div>
                 </tbody>
             </table>
         </div>
 
-<!--        <div class="card mx-auto text-center mb-4 result-card">-->
-<!--            <div class="card-header">-->
-<!--                <h5 class="mb-0 text-center">Downloads</h5>-->
-<!--            </div>-->
-<!--            <div class="card-body">-->
-<!--                &lt;!&ndash;                <a th:href="${job.jobId} +'/inputFASTA'" class="align-middle mr-2"><i class="fas fa-file-download mr-1"></i>Input FASTA</a>&ndash;&gt;-->
-<!--                &lt;!&ndash;                <a th:href="${job.jobId} +'/resultCSV'" th:if="${job.complete && !job.failed}" class="align-middle"><i class="fas fa-file-download mr-1"></i>Results</a>&ndash;&gt;-->
-<!--            </div>-->
-<!--        </div>-->
+        <div class="card mx-auto text-center mb-4 result-card">
+            <div class="card-header">
+                <h5 class="mb-0 text-center">Downloads</h5>
+            </div>
+            <div class="card-body">
+                <a th:href="'/api/job/' + ${job.id}" class="align-middle" target="_blank"><i class="fas fa-file-download mr-1"></i>Results</a>
+            </div>
+        </div>
 
     </div>
 

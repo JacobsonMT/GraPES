@@ -17,7 +17,7 @@ public class MaGSResult {
     private Double abundance;
     private Double camsol;
     private Integer annotatedPhosphorylationSites;
-    private Double pScore;
+    private Double propensityScore;
 
     private Double disorder;
 

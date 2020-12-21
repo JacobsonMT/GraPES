@@ -52,7 +52,7 @@ public class ResultService {
         abundance("Abundance", PrecomputedMaGSResult::getAbd),
         camsol("Camsol", PrecomputedMaGSResult::getCsl),
         annotatedPhosphorylationSites("Annotated Phosphorylation Sites", PrecomputedMaGSResult::getPhs),
-        pScore("P Score", PrecomputedMaGSResult::getPip),
+        propensityScore("Propensity Score", PrecomputedMaGSResult::getPip),
         disorder("Disorder", PrecomputedMaGSResult::getDiso),
         compositionD("% Composition D", PrecomputedMaGSResult::getD),
         compositionE("% Composition E", PrecomputedMaGSResult::getE),
@@ -71,7 +71,7 @@ public class ResultService {
     public enum MaGSSeqFeature {
         score("MaGSeq Z-Score", MaGSSeqResult::getZScore),
         disorder("Disorder", MaGSSeqResult::getDiso),
-        pScore("P Score", MaGSSeqResult::getPip),
+        propensityScore("Propensity Score", MaGSSeqResult::getPip),
         rbpPred("RBP Pred", MaGSSeqResult::getRbp),
         soluprot("Soluprot", MaGSSeqResult::getSol),
         length("Length", MaGSSeqResult::getLen),
@@ -118,7 +118,7 @@ public class ResultService {
             MaGSFeature.abundance,
             MaGSFeature.camsol,
             MaGSFeature.annotatedPhosphorylationSites,
-            MaGSFeature.pScore,
+            MaGSFeature.propensityScore,
             MaGSFeature.disorder,
             MaGSFeature.compositionL,
             MaGSFeature.compositionG
@@ -129,7 +129,7 @@ public class ResultService {
             MaGSFeature.abundance,
             MaGSFeature.camsol,
             MaGSFeature.annotatedPhosphorylationSites,
-            MaGSFeature.pScore,
+            MaGSFeature.propensityScore,
             MaGSFeature.compositionD,
             MaGSFeature.compositionE
         ));
@@ -165,7 +165,7 @@ public class ResultService {
         speciesMaGSSeqFeatureSet.put(Species.HUMAN, Lists.newArrayList(
             MaGSSeqFeature.score,
             MaGSSeqFeature.disorder,
-            MaGSSeqFeature.pScore,
+            MaGSSeqFeature.propensityScore,
             MaGSSeqFeature.soluprot,
             MaGSSeqFeature.length,
             MaGSSeqFeature.tango,
@@ -180,7 +180,7 @@ public class ResultService {
         speciesMaGSSeqFeatureSet.put(Species.YEAST, Lists.newArrayList(
             MaGSSeqFeature.score,
             MaGSSeqFeature.disorder,
-            MaGSSeqFeature.pScore,
+            MaGSSeqFeature.propensityScore,
             MaGSSeqFeature.rbpPred,
             MaGSSeqFeature.soluprot,
             MaGSSeqFeature.length,

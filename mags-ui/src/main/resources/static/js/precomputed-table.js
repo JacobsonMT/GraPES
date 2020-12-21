@@ -3,7 +3,7 @@ $(document).ready(function () {
   $('#precomputed-table').DataTable({
     deferRender:    true,
     ajax: {
-      url: '/api/results/precomputed/datatable',
+      url: '/api/precomputed/datatable',
       // dataSrc: '',
       data: function (data) {
         return JSON.stringify(data);
@@ -57,8 +57,8 @@ $(document).ready(function () {
         className: 'text-center',
         render: function ( data, type, row, meta ) {
           return '<span class="align-middle">' +
-              '<a href="/results/precomputed/' + data + '" target="_blank" class="align-middle mr-2"><i class="fas fa-chart-area mr-1"></i>View</a>' +
-              '<a href="/api/results/precomputed/' + data + '" target="_blank" class="align-middle"><i class="fas fa-file-download mr-1"></i>Download</a>' +
+              '<a href="/precomputed/' + data + '" target="_blank" class="align-middle mr-2"><i class="fas fa-chart-area mr-1"></i>View</a>' +
+              '<a href="/api/precomputed/' + data + '" target="_blank" class="align-middle"><i class="fas fa-file-download mr-1"></i>Download</a>' +
               '</span>';
         }
       }
