@@ -3,9 +3,12 @@
       xmlns:th="http://www.thymeleaf.org">
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-primary justify-content-between" style="font-size:90%;" th:fragment="navbar(activeTab)">
+    <a class="navbar-brand m-0 pt-2" th:href="@{/}" href="/" style="vertical-align: middle;display:inline-block;text-align:left;">
+        <img th:src="@{/img/logo.png}" style="height: 62px;" class="pr-2">
+    </a>
     <div class="navbar-brand m-0 pt-2 abs" style="vertical-align: middle;display:inline-block;text-align:center;">
-        <h1 class="font-weight-bold m-0" style="font-size:175%" th:text="${@siteSettings.title}">LIST-S2</h1>
-        <h5 class="mb-0 font-italic" th:text="${@siteSettings.subtitle}">Species Specific</h5>
+        <h1 class="font-weight-bold m-0" style="font-size:175%" th:text="${@siteSettings.title}">GraPES</h1>
+        <h5 class="mb-0 font-italic" th:text="${@siteSettings.subtitle}">Granule Protein Enrichment Score</h5>
     </div>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
         <span class="navbar-toggler-icon"></span>
