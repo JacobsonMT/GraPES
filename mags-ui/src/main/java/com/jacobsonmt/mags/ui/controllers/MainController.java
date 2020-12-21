@@ -2,6 +2,7 @@ package com.jacobsonmt.mags.ui.controllers;
 
 import com.jacobsonmt.mags.ui.model.ContactForm;
 import com.jacobsonmt.mags.ui.model.Job;
+import com.jacobsonmt.mags.ui.model.Job.Status;
 import com.jacobsonmt.mags.ui.services.JobService;
 import com.jacobsonmt.mags.ui.services.mail.EmailService;
 import java.util.List;
@@ -78,7 +79,9 @@ public class MainController {
         if (jobs == null) {
             return ResponseEntity.status( 500 ).body( 0L );
         }
-        return ResponseEntity.ok().body(jobs.stream().filter( j -> j.getResult() == null ).count());
+
+        return ResponseEntity.ok().body(jobs.stream()
+            .filter( j -> j.getStatus() == Status.SUBMITTED || j.getStatus() == Status.PROCESSING ).count());
     }
 
     @GetMapping("/precomputed")

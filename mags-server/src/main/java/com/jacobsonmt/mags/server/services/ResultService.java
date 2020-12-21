@@ -1,18 +1,23 @@
 package com.jacobsonmt.mags.server.services;
 
-import static java.util.stream.Collectors.groupingBy;
-
 import com.google.common.collect.Lists;
-import com.jacobsonmt.mags.server.dao.PrecomputedResultDao;
-import com.jacobsonmt.mags.server.entities.PrecomputedResult;
-import com.jacobsonmt.mags.server.entities.PrecomputedResult.Species;
+import com.jacobsonmt.mags.server.dao.JobResultDao;
+import com.jacobsonmt.mags.server.dao.PrecomputedMaGSResultDao;
+import com.jacobsonmt.mags.server.dao.PrecomputedMaGSSeqResultDao;
+import com.jacobsonmt.mags.server.entities.JobResult;
+import com.jacobsonmt.mags.server.entities.MaGSSeqResult;
+import com.jacobsonmt.mags.server.entities.PrecomputedMaGSResult;
+import com.jacobsonmt.mags.server.entities.Species;
 import com.jacobsonmt.mags.server.model.result.Distribution;
-import com.jacobsonmt.mags.server.model.result.Result;
+import com.jacobsonmt.mags.server.model.result.Graph;
+import com.jacobsonmt.mags.server.model.result.MaGSResult;
+import com.jacobsonmt.mags.server.model.result.MaGSSeqResultVO;
 import com.jacobsonmt.mags.server.model.search.FieldSearch;
 import com.jacobsonmt.mags.server.model.search.SearchCriteria;
 import com.jacobsonmt.mags.server.model.search.SearchResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,27 +40,51 @@ import org.springframework.stereotype.Service;
 @Service
 public class ResultService {
 
-    private final PrecomputedResultDao precomputedResultDao;
+    private final PrecomputedMaGSResultDao precomputedMaGSResultDao;
+    private final PrecomputedMaGSSeqResultDao precomputedMaGSSeqResultDao;
+    private final JobResultDao jobResultDao;
 
-    private Map<Species, Map<Feature, List<Number>>> speciesBackgroundDistributions = new ConcurrentHashMap<>();
-    private Map<Species, List<Marker>> markers = new ConcurrentHashMap<>();
-    private Map<Species, List<Feature>> speciesFeatureSet = new ConcurrentHashMap<>();
+    private Map<Species, Map<MaGSFeature, Distribution>> backgroundMaGSDistributions = new ConcurrentHashMap<>();
+    private Map<Species, Map<MaGSSeqFeature, Distribution>> backgroundMaGSSeqDistributions = new ConcurrentHashMap<>();
 
-    public enum Feature {
-        abundance("Abundance", PrecomputedResult::getAbd),
-        camsol("Camsol", PrecomputedResult::getCsl),
-        annotatedPhosphorylationSites("Annotated Phosphorylation Sites", PrecomputedResult::getPhs),
-        pScore("P Score", PrecomputedResult::getPip),
-        disorder("Disorder", PrecomputedResult::getDiso),
-        compositionD("% Composition D", PrecomputedResult::getD),
-        compositionE("% Composition E", PrecomputedResult::getE),
-        compositionL("% Composition L", PrecomputedResult::getL),
-        compositionG("% Composition G", PrecomputedResult::getG);
+    public enum MaGSFeature {
+        abundance("Abundance", PrecomputedMaGSResult::getAbd),
+        camsol("Camsol", PrecomputedMaGSResult::getCsl),
+        annotatedPhosphorylationSites("Annotated Phosphorylation Sites", PrecomputedMaGSResult::getPhs),
+        pScore("P Score", PrecomputedMaGSResult::getPip),
+        disorder("Disorder", PrecomputedMaGSResult::getDiso),
+        compositionD("% Composition D", PrecomputedMaGSResult::getD),
+        compositionE("% Composition E", PrecomputedMaGSResult::getE),
+        compositionL("% Composition L", PrecomputedMaGSResult::getL),
+        compositionG("% Composition G", PrecomputedMaGSResult::getG);
 
-        private final Function<PrecomputedResult, Number> extract;
+        private final Function<PrecomputedMaGSResult, Number> extract;
         private final String title;
 
-        Feature(String title, Function<PrecomputedResult, Number> extract) {
+        MaGSFeature(String title, Function<PrecomputedMaGSResult, Number> extract) {
+            this.extract = extract;
+            this.title = title;
+        }
+    }
+
+    public enum MaGSSeqFeature {
+        disorder("Disorder", MaGSSeqResult::getDiso),
+        pScore("P Score", MaGSSeqResult::getPip),
+        rbpPred("RBP Pred", MaGSSeqResult::getRbp),
+        soluprot("Soluprot", MaGSSeqResult::getSol),
+        length("Length", MaGSSeqResult::getLen),
+        tango("Tango", MaGSSeqResult::getTgo),
+        compositionG("% Composition G", MaGSSeqResult::getG),
+        compositionR("% Composition R", MaGSSeqResult::getR),
+        compositionL("% Composition L", MaGSSeqResult::getL),
+        compositionD("% Composition D", MaGSSeqResult::getD),
+        compositionP("% Composition P", MaGSSeqResult::getP),
+        compositionS("% Composition S", MaGSSeqResult::getS);
+
+        private final Function<MaGSSeqResult, Number> extract;
+        private final String title;
+
+        MaGSSeqFeature(String title, Function<MaGSSeqResult, Number> extract) {
             this.extract = extract;
             this.title = title;
         }
@@ -66,90 +95,149 @@ public class ResultService {
 //        String name; // TODO
         String accession;
         Species species;
-        Map<Feature, Number> features;
+        Map<MaGSFeature, Number> features;
     }
 
 
-    public ResultService(PrecomputedResultDao precomputedResultDao) {this.precomputedResultDao = precomputedResultDao;}
+    public ResultService(
+        PrecomputedMaGSResultDao precomputedMaGSResultDao,
+        PrecomputedMaGSSeqResultDao precomputedMaGSSeqResultDao,
+        JobResultDao jobResultDao) {
+        this.precomputedMaGSResultDao = precomputedMaGSResultDao;
+        this.precomputedMaGSSeqResultDao = precomputedMaGSSeqResultDao;
+        this.jobResultDao = jobResultDao;
+    }
 
     @PostConstruct
     public void prepopulateBackgroundDistributions() {
+        Map<Species, List<MaGSFeature>> speciesFeatureSet = new HashMap<>();
         speciesFeatureSet.put(Species.HUMAN, Lists.newArrayList(
-            Feature.abundance,
-            Feature.camsol,
-            Feature.annotatedPhosphorylationSites,
-            Feature.pScore,
-            Feature.disorder,
-            Feature.compositionL,
-            Feature.compositionG
+            MaGSFeature.abundance,
+            MaGSFeature.camsol,
+            MaGSFeature.annotatedPhosphorylationSites,
+            MaGSFeature.pScore,
+            MaGSFeature.disorder,
+            MaGSFeature.compositionL,
+            MaGSFeature.compositionG
         ));
 
         speciesFeatureSet.put(Species.YEAST, Lists.newArrayList(
-            Feature.abundance,
-            Feature.camsol,
-            Feature.annotatedPhosphorylationSites,
-            Feature.pScore,
-            Feature.compositionD,
-            Feature.compositionE
+            MaGSFeature.abundance,
+            MaGSFeature.camsol,
+            MaGSFeature.annotatedPhosphorylationSites,
+            MaGSFeature.pScore,
+            MaGSFeature.compositionD,
+            MaGSFeature.compositionE
         ));
 
-        Feature[] features = Feature.values();
-        precomputedResultDao.findAll().forEach( result -> {
-            Map<Feature, List<Number>> featureMap = speciesBackgroundDistributions.computeIfAbsent(
+        precomputedMaGSResultDao.findAll().forEach( result -> {
+            Map<MaGSFeature, Distribution> featureMap = backgroundMaGSDistributions.computeIfAbsent(
                 result.getSpecies(),
-                k -> new ConcurrentHashMap<>());
+                k -> new LinkedHashMap<>());
 
-            for (Feature feature : speciesFeatureSet.get(result.getSpecies())) {
+            for (MaGSFeature feature : speciesFeatureSet.getOrDefault(result.getSpecies(), new ArrayList<>())) {
                 Number val = feature.extract.apply(result);
                 if (val != null) {
-                    featureMap.computeIfAbsent(feature, k -> new ArrayList<>()).add(val);
+                    featureMap.computeIfAbsent(feature, k -> new Distribution()).add(val);
                 }
             }
         });
 
-        markers = precomputedResultDao.findByMarkerTrue().stream().map( result -> {
-            Map<Feature, Number> markerFeatures = new HashMap<>();
+        precomputedMaGSResultDao.findByMarkerTrue().forEach( result -> {
+            Map<MaGSFeature, Distribution> featureMap = backgroundMaGSDistributions.computeIfAbsent(
+                result.getSpecies(),
+                k -> new LinkedHashMap<>());
 
-            for (Feature feature : speciesFeatureSet.get(result.getSpecies())) {
+            for (MaGSFeature feature : speciesFeatureSet.getOrDefault(result.getSpecies(), new ArrayList<>())) {
                 Number val = feature.extract.apply(result);
                 if (val != null) {
-                    markerFeatures.put(feature, val);
+                    featureMap.computeIfAbsent(feature, k -> new Distribution()).getMarkers().put(result.getAccession(), val);
                 }
             }
-            return new Marker(result.getAccession(), result.getSpecies(), markerFeatures);
-        }).collect(groupingBy(Marker::getSpecies));
-    }
+        });
 
-    public Optional<List<Distribution>> calculateDistributions(String accession) {
-        return precomputedResultDao.findById(accession).map(this::calculateDistributions);
-    }
+        /* Jobs background */
+        Map<Species, List<MaGSSeqFeature>> speciesMaGSSeqFeatureSet = new HashMap<>();
+        speciesMaGSSeqFeatureSet.put(Species.HUMAN, Lists.newArrayList(
+            MaGSSeqFeature.disorder,
+            MaGSSeqFeature.pScore,
+            MaGSSeqFeature.soluprot,
+            MaGSSeqFeature.length,
+            MaGSSeqFeature.tango,
+            MaGSSeqFeature.compositionG,
+            MaGSSeqFeature.compositionR,
+            MaGSSeqFeature.compositionL,
+            MaGSSeqFeature.compositionD,
+            MaGSSeqFeature.compositionP,
+            MaGSSeqFeature.compositionS
+        ));
 
-    private List<Distribution> calculateDistributions(PrecomputedResult result) {
-        List<Distribution> distributions = new ArrayList<>();
+        speciesMaGSSeqFeatureSet.put(Species.YEAST, Lists.newArrayList(
+            MaGSSeqFeature.disorder,
+            MaGSSeqFeature.pScore,
+            MaGSSeqFeature.rbpPred,
+            MaGSSeqFeature.soluprot,
+            MaGSSeqFeature.length,
+            MaGSSeqFeature.tango,
+            MaGSSeqFeature.compositionG,
+            MaGSSeqFeature.compositionR,
+            MaGSSeqFeature.compositionL,
+            MaGSSeqFeature.compositionD,
+            MaGSSeqFeature.compositionP,
+            MaGSSeqFeature.compositionS
+        ));
+        precomputedMaGSSeqResultDao.findAll().forEach( result -> {
+            Map<MaGSSeqFeature, Distribution> featureMap = backgroundMaGSSeqDistributions.computeIfAbsent(
+                result.getSpecies(),
+                k -> new LinkedHashMap<>());
 
-        for (Feature feature : speciesFeatureSet.get(result.getSpecies())) {
-            try {
-                Distribution dist = new Distribution(feature.name(), feature.title, feature.extract.apply(result));
-                dist.setBackground(speciesBackgroundDistributions.get(result.getSpecies()).get(feature));
-                dist.setMarkers(markers.get(result.getSpecies()).stream()
-                    .collect(Collectors.toMap(Marker::getAccession, m-> m.getFeatures().get(feature)))
-                );
-                distributions.add(dist);
-            } catch (Exception e) {
-                log.error("Problem creating distribution data for feature: {} in species: {}", feature, result.getSpecies());
+            for (MaGSSeqFeature feature : speciesMaGSSeqFeatureSet.getOrDefault(result.getSpecies(), new ArrayList<>())) {
+                Number val = feature.extract.apply(result);
+                if (val != null) {
+                    featureMap.computeIfAbsent(feature, k -> new Distribution()).add(val);
+                }
             }
-        }
+        });
 
-        return distributions;
+        precomputedMaGSSeqResultDao.findByMarkerTrue().forEach( result -> {
+            Map<MaGSSeqFeature, Distribution> featureMap = backgroundMaGSSeqDistributions.computeIfAbsent(
+                result.getSpecies(),
+                k -> new LinkedHashMap<>());
+
+            for (MaGSSeqFeature feature : speciesMaGSSeqFeatureSet.getOrDefault(result.getSpecies(), new ArrayList<>())) {
+                Number val = feature.extract.apply(result);
+                if (val != null) {
+                    featureMap.computeIfAbsent(feature, k -> new Distribution()).getMarkers().put(result.getAccession(), val);
+                }
+            }
+        });
     }
 
-    public Optional<Result> getResultByAccession(String accession) {
-        return precomputedResultDao.findById(accession).map(Result::fromPrecomputedResult);
+    public Optional<List<Graph>> calculateDistributions(String accession) {
+        return precomputedMaGSResultDao.findById(accession).map(this::calculateDistributions);
+    }
+
+    private List<Graph> calculateDistributions(PrecomputedMaGSResult result) {
+        List<Graph> graphs = new ArrayList<>();
+
+        backgroundMaGSDistributions.getOrDefault(result.getSpecies(), new HashMap<>()).forEach( (feature, distribution) -> {
+            try {
+                graphs.add( new Graph(feature.name(), feature.title, feature.extract.apply(result), distribution) );
+            } catch (Exception e) {
+                log.error("Problem creating graph data for feature: {} in species: {}", feature, result.getSpecies(), e);
+            }
+        });
+
+        return graphs;
+    }
+
+    public Optional<MaGSResult> getResultByAccession(String accession) {
+        return precomputedMaGSResultDao.findById(accession).map(MaGSResult::fromPrecomputedResult);
     }
 
     public Optional<SearchResponse> search(SearchCriteria searchCriteria) {
         try {
-            Specification<PrecomputedResult> spec = Specification.where(null);
+            Specification<PrecomputedMaGSResult> spec = Specification.where(null);
             for (FieldSearch fieldSearch : searchCriteria.getFieldSearches()) {
                 spec = spec.or((result, cq, cb) -> cb.like(
                     cb.lower(result.get(fieldSearch.getField())), "%" + fieldSearch.getQuery().toLowerCase() + "%")
@@ -164,12 +252,12 @@ public class ResultService {
             );
             PageRequest pageRequest = PageRequest.of(searchCriteria.getPage(), searchCriteria.getSize(), sort);
 
-            Page<PrecomputedResult> res = precomputedResultDao.findAll(
+            Page<PrecomputedMaGSResult> res = precomputedMaGSResultDao.findAll(
                 spec, pageRequest
             );
 
             return Optional.of(new SearchResponse(
-                res.getContent().stream().map(Result::fromPrecomputedResult).collect(Collectors.toList()),
+                res.getContent().stream().map(MaGSResult::fromPrecomputedResult).collect(Collectors.toList()),
                 1000000,
                 res.getTotalElements()
             ));
@@ -177,5 +265,29 @@ public class ResultService {
             log.error("Issue searching for precomputed result using search criteria: {}", searchCriteria);
             return Optional.empty();
         }
+    }
+
+    /* Jobs */
+
+    public Optional<List<Graph>> calculateDistributionsForJobId(long id) {
+        return jobResultDao.findById(id).map(this::calculateGraphs);
+    }
+
+    private List<Graph> calculateGraphs(JobResult result) {
+        List<Graph> graphs = new ArrayList<>();
+
+        backgroundMaGSSeqDistributions.getOrDefault(result.getSpecies(), new HashMap<>()).forEach( (feature, distribution) -> {
+            try {
+                graphs.add( new Graph(feature.name(), feature.title, feature.extract.apply(result), distribution) );
+            } catch (Exception e) {
+                log.error("Problem creating graph data for feature: {} in species: {}", feature, result.getSpecies(), e);
+            }
+        });
+
+        return graphs;
+    }
+
+    public Optional<MaGSSeqResultVO> getResultByJobId(long id) {
+        return jobResultDao.findById(id).map(MaGSSeqResultVO::fromPrecomputedResult);
     }
 }

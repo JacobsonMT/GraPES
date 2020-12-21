@@ -1,18 +1,18 @@
 package com.jacobsonmt.mags.server.model.result;
 
-import com.jacobsonmt.mags.server.entities.PrecomputedResult;
-import com.jacobsonmt.mags.server.entities.PrecomputedResult.Species;
+import com.jacobsonmt.mags.server.entities.PrecomputedMaGSResult;
+import com.jacobsonmt.mags.server.entities.Species;
 import lombok.Data;
 
 @Data
-public class Result {
+public class MaGSResult {
 
-    public static Result fromPrecomputedResult(PrecomputedResult precomputedResult) {
-        Result result = new Result();
+    public static MaGSResult fromPrecomputedResult(PrecomputedMaGSResult precomputedResult) {
+        MaGSResult result = new MaGSResult();
         result.setAccession(precomputedResult.getAccession());
         result.setSpecies(precomputedResult.getSpecies());
 
-        result.setScore(precomputedResult.getMagsZScore());
+        result.setScore(precomputedResult.getZScore());
 
         result.setAbundance(precomputedResult.getAbd());
         result.setCamsol(precomputedResult.getCsl());

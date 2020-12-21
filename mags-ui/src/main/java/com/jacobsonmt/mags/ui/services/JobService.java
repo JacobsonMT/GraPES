@@ -1,10 +1,19 @@
 package com.jacobsonmt.mags.ui.services;
 
-import com.jacobsonmt.mags.ui.model.Message;
+import static org.springframework.http.HttpStatus.Series.CLIENT_ERROR;
+import static org.springframework.http.HttpStatus.Series.SERVER_ERROR;
+
 import com.jacobsonmt.mags.ui.model.Job;
+import com.jacobsonmt.mags.ui.model.Message;
 import com.jacobsonmt.mags.ui.settings.ApplicationSettings;
 import com.jacobsonmt.mags.ui.settings.SiteSettings;
-import lombok.*;
+import java.io.IOException;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -20,12 +29,6 @@ import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
-import java.util.List;
-
-import static org.springframework.http.HttpStatus.Series.CLIENT_ERROR;
-import static org.springframework.http.HttpStatus.Series.SERVER_ERROR;
-
 @Log4j2
 @Service
 public class JobService {
@@ -38,13 +41,9 @@ public class JobService {
 
     private Integer completionCount = 0;
 
-    public ResponseEntity<JobSubmissionResponse> submitJob( String userId, String label, String fasta, String email, boolean hidden) {
+    public ResponseEntity<JobSubmissionResponse> submitJob( String userId, String fasta, String email) {
         RestTemplate restTemplate = new RestTemplateBuilder().errorHandler(new NoOpResponseErrorHandler()).build();
-        JobSubmission jobSubmission = new JobSubmission( userId, label, fasta, email, hidden,
-                siteSettings.getFullUrl() + "job/",
-                applicationSettings.isEmailOnJobSubmitted(),
-                applicationSettings.isEmailOnJobStart(),
-                applicationSettings.isEmailOnJobComplete());
+        JobSubmission jobSubmission = new JobSubmission( userId,  fasta, email, siteSettings.getFullUrl() + "job/");
         HttpEntity<JobSubmission> request =
                 new HttpEntity<>( jobSubmission, createHeaders() );
         return restTemplate.postForEntity( applicationSettings.getProcessServerURI() + "/job/submit", request, JobSubmissionResponse.class );
@@ -66,49 +65,7 @@ public class JobService {
                 jobId
         );
 
-        Job job = response.getBody();
-
-        if ( job != null ) {
-            // Obfuscate email
-            job.setEmail( Job.obfuscateEmail( job.getEmail() ) );
-
-        }
-
         return response;
-
-    }
-
-    public ResponseEntity<String> downloadJobResultContent(String jobId) {
-        RestTemplate restTemplate = new RestTemplateBuilder()
-                .errorHandler( new RestTemplateResponseErrorHandler() ).build();
-        HttpEntity entity = new HttpEntity(createHeaders());
-        // getForObject cannot specify headers so we use exchange
-
-        log.info( "Download Result Content for Client: (" + applicationSettings.getClientId() + "), Job: (" + jobId + ")" );
-
-        return restTemplate.exchange( applicationSettings.getProcessServerURI() + "/job/{jobId}/resultCSV",
-                HttpMethod.GET,
-                entity,
-                String.class,
-                jobId
-        );
-
-    }
-
-    public ResponseEntity<String> downloadJobInputFASTA(String jobId) {
-        RestTemplate restTemplate = new RestTemplateBuilder()
-                .errorHandler( new RestTemplateResponseErrorHandler() ).build();
-        HttpEntity entity = new HttpEntity(createHeaders());
-        // getForObject cannot specify headers so we use exchange
-
-        log.info( "Download Input FASTA for Client: (" + applicationSettings.getClientId() + "), Job: (" + jobId + ")" );
-
-        return restTemplate.exchange( applicationSettings.getProcessServerURI() + "/job/{jobId}/inputFASTA",
-                HttpMethod.GET,
-                entity,
-                String.class,
-                jobId
-        );
 
     }
 
@@ -126,33 +83,6 @@ public class JobService {
                 String.class,
                 jobId
         );
-    }
-
-    public synchronized boolean hasChanged() {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity entity = new HttpEntity( createHeaders() );
-        // getForObject cannot specify headers so we use exchange
-
-        try {
-            ResponseEntity<Integer> response
-                    = restTemplate.exchange( applicationSettings.getProcessServerURI() + "/queue/client/{clientId}/complete",
-                    HttpMethod.GET,
-                    entity,
-                    Integer.class,
-                    applicationSettings.getClientId()
-            );
-
-            Integer newCompletionCount = response.getBody();
-
-            if ( newCompletionCount != null && newCompletionCount > completionCount ) {
-                completionCount = newCompletionCount;
-                return true;
-            }
-        } catch ( Exception e ){
-            log.warn( "Issue polling CCRS" );
-        }
-
-        return false;
     }
 
     public ResponseEntity<List<Job>> getJobsForUser( String userId ) {
@@ -194,14 +124,9 @@ public class JobService {
     @NoArgsConstructor
     static class JobSubmission {
         private String userId;
-        private String label;
         private String fastaContent;
         private String email;
-        private boolean hidden;
         private String emailJobLinkPrefix;
-        private Boolean emailOnJobSubmitted;
-        private Boolean emailOnJobStart;
-        private Boolean emailOnJobComplete;
     }
 
     @ToString

@@ -1,7 +1,8 @@
 package com.jacobsonmt.mags.ui.services;
 
-import com.jacobsonmt.mags.ui.model.result.Distribution;
-import com.jacobsonmt.mags.ui.model.result.Result;
+import com.jacobsonmt.mags.ui.model.result.Graph;
+import com.jacobsonmt.mags.ui.model.result.MaGSResult;
+import com.jacobsonmt.mags.ui.model.result.MaGSSeqResult;
 import com.jacobsonmt.mags.ui.model.search.SearchCriteria;
 import com.jacobsonmt.mags.ui.model.search.SearchResponse;
 import com.jacobsonmt.mags.ui.settings.ApplicationSettings;
@@ -29,7 +30,7 @@ public class ResultService {
         ApplicationSettings applicationSettings) {this.applicationSettings = applicationSettings;}
 
 
-    public ResponseEntity<Result> getPrecomputedResult(String accession) {
+    public ResponseEntity<MaGSResult> getPrecomputedResult(String accession) {
         RestTemplate restTemplate = new RestTemplateBuilder()
                 .errorHandler( new NoOpResponseErrorHandler() ).build();
         HttpEntity entity = new HttpEntity(createHeaders());
@@ -37,15 +38,15 @@ public class ResultService {
 
         log.info( "Get Result: {}", accession );
         return restTemplate.exchange(
-                        applicationSettings.getProcessServerURI() + "/results/{accession}",
+                        applicationSettings.getProcessServerURI() + "/results/precomputed/{accession}",
                 HttpMethod.GET,
                 entity,
-                Result.class,
+                MaGSResult.class,
                 accession
         );
     }
 
-    public ResponseEntity<List<Distribution>> getResultDistributions(String accession) {
+    public ResponseEntity<List<Graph>> getPrecomputedResultGraphs(String accession) {
         RestTemplate restTemplate = new RestTemplateBuilder()
             .errorHandler( new NoOpResponseErrorHandler() ).build();
         HttpEntity entity = new HttpEntity(createHeaders());
@@ -53,11 +54,45 @@ public class ResultService {
 
         log.info( "Get Result: {}", accession );
         return restTemplate.exchange(
-            applicationSettings.getProcessServerURI() + "/results/{accession}/distributions",
+            applicationSettings.getProcessServerURI() + "/results/precomputed/{accession}/graphs",
             HttpMethod.GET,
             entity,
-            new ParameterizedTypeReference<List<Distribution>>(){},
+            new ParameterizedTypeReference<List<Graph>>(){},
             accession
+        );
+    }
+
+    /* Jobs Results */
+
+    public ResponseEntity<MaGSSeqResult> getJobsResult(long id) {
+        RestTemplate restTemplate = new RestTemplateBuilder()
+            .errorHandler( new NoOpResponseErrorHandler() ).build();
+        HttpEntity entity = new HttpEntity(createHeaders());
+        // getForObject cannot specify headers so we use exchange
+
+        log.info( "Get Result: {}", id );
+        return restTemplate.exchange(
+            applicationSettings.getProcessServerURI() + "/results/jobs/{accession}",
+            HttpMethod.GET,
+            entity,
+            MaGSSeqResult.class,
+            id
+        );
+    }
+
+    public ResponseEntity<List<Graph>> getJobsResultGraphs(long id) {
+        RestTemplate restTemplate = new RestTemplateBuilder()
+            .errorHandler( new NoOpResponseErrorHandler() ).build();
+        HttpEntity entity = new HttpEntity(createHeaders());
+        // getForObject cannot specify headers so we use exchange
+
+        log.info( "Get Result: {}", id );
+        return restTemplate.exchange(
+            applicationSettings.getProcessServerURI() + "/results/jobs/{accession}/graphs",
+            HttpMethod.GET,
+            entity,
+            new ParameterizedTypeReference<List<Graph>>(){},
+            id
         );
     }
 

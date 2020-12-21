@@ -1,24 +1,23 @@
 package com.jacobsonmt.mags.ui.controllers;
 
 import com.jacobsonmt.mags.ui.exceptions.JobNotFoundException;
-import com.jacobsonmt.mags.ui.model.Base;
 import com.jacobsonmt.mags.ui.model.Job;
 import com.jacobsonmt.mags.ui.services.JobService;
 import com.jacobsonmt.mags.ui.utils.InputStreamUtils;
+import java.io.IOException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Log4j2
 @Controller
@@ -48,10 +47,8 @@ public class JobController {
         }
 
         ResponseEntity<JobService.JobSubmissionResponse> jobSubmissionResponse = jobService.submitJob( session,
-                "",
                 fasta,
-                email,
-                true );
+                email);
 
         if (jobSubmissionResponse.getBody() != null) {
             redirectAttributes.addFlashAttribute( "messages", jobSubmissionResponse.getBody().getMessages() );
@@ -91,38 +88,28 @@ public class JobController {
         return "job :: #job-view-content";
     }
 
-    @GetMapping(value = "/job/{jobId}/bases", produces = "application/json")
-    @ResponseBody
-    public List<Base> getJobResultBases( @PathVariable("jobId") String jobId) {
-        ResponseEntity<Job> entity = jobService.getJob( jobId );
-
-        if (entity.getStatusCode().equals( HttpStatus.NOT_FOUND ) || entity.getBody() == null ) {
-            throw new JobNotFoundException();
-        }
-
-        Job job = entity.getBody();
-
-        if ( job.isComplete() && !job.isFailed() ) {
-            return job.getResult().getBases();
-        }
-
-        return new ArrayList<>();
-    }
+    //TODO
+//    @GetMapping(value = "/job/{jobId}/bases", produces = "application/json")
+//    @ResponseBody
+//    public List<Base> getJobResultBases( @PathVariable("jobId") String jobId) {
+//        ResponseEntity<Job> entity = jobService.getJob( jobId );
+//
+//        if (entity.getStatusCode().equals( HttpStatus.NOT_FOUND ) || entity.getBody() == null ) {
+//            throw new JobNotFoundException();
+//        }
+//
+//        Job job = entity.getBody();
+//
+//        if ( job.isComplete() && !job.isFailed() ) {
+//            return job.getResult().getBases();
+//        }
+//
+//        return new ArrayList<>();
+//    }
 
     @GetMapping("/job/{jobId}/delete")
     public ResponseEntity<String> deleteJob( @PathVariable("jobId") String jobId ) {
         return jobService.deleteJob( jobId );
     }
-
-    @GetMapping("/job/{jobId}/resultCSV")
-    public ResponseEntity<String> jobResultCSV( @PathVariable("jobId") String jobId) {
-        return jobService.downloadJobResultContent( jobId );
-    }
-
-    @GetMapping("/job/{jobId}/inputFASTA")
-    public ResponseEntity<String> jobInputFASTA( @PathVariable("jobId") String jobId) {
-        return jobService.downloadJobInputFASTA( jobId );
-    }
-
 
 }

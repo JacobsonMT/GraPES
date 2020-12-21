@@ -1,8 +1,8 @@
 package com.jacobsonmt.mags.server.rest;
 
-import com.jacobsonmt.mags.server.dao.PrecomputedResultDao;
-import com.jacobsonmt.mags.server.model.result.Distribution;
-import com.jacobsonmt.mags.server.model.result.Result;
+import com.jacobsonmt.mags.server.model.result.Graph;
+import com.jacobsonmt.mags.server.model.result.MaGSResult;
+import com.jacobsonmt.mags.server.model.result.MaGSSeqResultVO;
 import com.jacobsonmt.mags.server.model.search.SearchCriteria;
 import com.jacobsonmt.mags.server.model.search.SearchResponse;
 import com.jacobsonmt.mags.server.services.ResultService;
@@ -22,19 +22,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ResultEndpoint {
 
-    private final PrecomputedResultDao precomputedResultDao;
     private final ResultService resultService;
 
-    public ResultEndpoint(PrecomputedResultDao precomputedResultDao,
-        ResultService resultService) {this.precomputedResultDao = precomputedResultDao;
+    public ResultEndpoint(ResultService resultService) {
         this.resultService = resultService;
     }
 
     /**
      * @return Precomputed result for given accession.
      */
-    @RequestMapping(value = "/{accession}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Result> getPrecomputedResultForAccession( @PathVariable String accession ) {
+    @RequestMapping(value = "/precomputed/{accession}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<MaGSResult> getPrecomputedResultForAccession( @PathVariable String accession ) {
 
         return resultService.getResultByAccession(accession)
             .map(ResponseEntity::ok).orElse(
@@ -43,10 +41,10 @@ public class ResultEndpoint {
     }
 
     /**
-     * @return Precomputed feature distributions for given accession.
+     * @return Precomputed feature graphs for given accession.
      */
-    @RequestMapping(value = "/{accession}/distributions", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<Distribution>> getDistributionForAccession( @PathVariable String accession ) {
+    @RequestMapping(value = "/precomputed/{accession}/graphs", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<Graph>> getGraphsForAccession( @PathVariable String accession ) {
 
         return resultService.calculateDistributions(accession)
             .map(ResponseEntity::ok).orElse(
@@ -62,6 +60,32 @@ public class ResultEndpoint {
         return resultService.search(searchCriteria).map(ResponseEntity::ok).orElse(
             ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( null )
         );
+    }
+
+    /* Jobs */
+
+    /**
+     * @return Precomputed result for given id.
+     */
+    @RequestMapping(value = "/jobs/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<MaGSSeqResultVO> getJobsResultForAccession( @PathVariable long id ) {
+
+        return resultService.getResultByJobId(id)
+            .map(ResponseEntity::ok).orElse(
+                ResponseEntity.status( HttpStatus.NOT_FOUND ).body( null )
+            );
+    }
+
+    /**
+     * @return Jobs feature graphs for given id.
+     */
+    @RequestMapping(value = "/jobs/{id}/graphs", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<Graph>> getGraphsForAccession( @PathVariable long id ) {
+
+        return resultService.calculateDistributionsForJobId(id)
+            .map(ResponseEntity::ok).orElse(
+                ResponseEntity.status( HttpStatus.NOT_FOUND ).body( null )
+            );
     }
 
 }

@@ -15,14 +15,7 @@ public class ApplicationSettings {
     private String clientId;
     private String clientToken;
 
-    private int userProcessLimit = 2;
-    private int userJobLimit = 200;
-
     private boolean disableEmails = false;
-    private boolean emailOnJobSubmitted = true;
-    private boolean emailOnJobStart = true;
-    private boolean emailOnJobComplete = true;
 
-    private double defaultHeatmapCutoff = 0.85;
 
 }

@@ -1,9 +1,13 @@
 package com.jacobsonmt.mags.server.services.mail;
 
-import com.jacobsonmt.mags.server.model.JobDO;
+import com.jacobsonmt.mags.server.entities.Job;
 import com.jacobsonmt.mags.server.settings.ApplicationSettings;
 import com.jacobsonmt.mags.server.settings.ClientSettings;
 import com.jacobsonmt.mags.server.settings.SiteSettings;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -11,9 +15,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
+@Slf4j
 @Profile("mail")
 @Service
 public class JavaMailService implements EmailService {
@@ -55,66 +57,40 @@ public class JavaMailService implements EmailService {
 
     }
 
-    public void sendJobSubmittedMessage( JobDO job ) throws MessagingException {
-        if ( job.getEmail() == null || job.getEmail().isEmpty() ) {
+    public void sendJobStartMessage( Job job ) throws MessagingException {
+        if (StringUtils.isEmpty(job.getEmail())) {
+            log.warn("Tried sending job start email with empty or null email");
             return;
         }
 
-        String clientName = clientSettings.getClients().get( job.getClientId() ).getName();
-        String jobUrl = job.getEmailJobLinkPrefix() + job.getJobId();
-
-        StringBuilder content = new StringBuilder();
-        content.append( "<p>Your job has been submitted!</p>" );
-        content.append( "<p>The job labelled <strong>" + job.getLabel() + "</strong> has been submitted to <strong>" + clientName + "</strong>.</p>" );
-        content.append( "<p>You can view its progress and/or results here: <a href='" + jobUrl + "' target='_blank'>" + jobUrl + "</a>.</p>" );
-        if ( job.isEmailOnJobStart() && job.isEmailOnJobComplete() ) {
-            content.append( "<p>We will notify you when the job has begun processing and when it has completed.</p>" );
-        } else if ( job.isEmailOnJobStart() ) {
-            content.append( "<p>We will notify you when the job has begun processing.</p>" );
-        } else if ( job.isEmailOnJobComplete() ) {
-            content.append( "<p>We will notify you when the job has completed.</p>" );
-        }
-        content.append( "<hr style='margin-top: 50px;'><p><small>THIS IS AN AUTOMATED MESSAGE - PLEASE DO NOT REPLY DIRECTLY TO THIS EMAIL</small></p>" );
-        sendMessage(  clientName + " - Job Submitted",
-                content.toString(),
-                job.getEmail() );
-    }
-
-    public void sendJobStartMessage( JobDO job ) throws MessagingException {
-        if ( job.getEmail() == null || job.getEmail().isEmpty() ) {
-            return;
-        }
-
-        String clientName = clientSettings.getClients().get( job.getClientId() ).getName();
-        String jobUrl = job.getEmailJobLinkPrefix() + job.getJobId();
+        String jobUrl = job.getExternalLink() + job.getId();
 
         StringBuilder content = new StringBuilder();
         content.append( "<p>Your job has started processing!</p>" );
-        content.append( "<p>The job labelled <strong>" + job.getLabel() + "</strong> submitted on <strong>" + job.getSubmittedDate() + "</strong> has begun processing.</p>" );
+        content.append( "<p>The job labelled <strong>" + job.getLabel() + "</strong> submitted on <strong>" + job.getCreatedDate() + "</strong> has begun processing.</p>" );
         content.append( "<p>You can view its progress and/or results here: <a href='" + jobUrl + "' target='_blank'>" + jobUrl + "</a>.</p>" );
-        if ( job.isEmailOnJobComplete() ) {
-            content.append( "<p>We will notify you when the job has completed.</p>" );
-        }
+        content.append( "<p>We will notify you when the job has completed.</p>" );
+
         content.append( "<hr style='margin-top: 50px;'><p><small>THIS IS AN AUTOMATED MESSAGE - PLEASE DO NOT REPLY DIRECTLY TO THIS EMAIL</small></p>" );
-        sendMessage(  clientName + " - Job Started",
+        sendMessage(  siteSettings.getTitle() + " - Job Started",
                 content.toString(),
                 job.getEmail() );
     }
 
-    public void sendJobCompletionMessage( JobDO job ) throws MessagingException {
-        if ( job.getEmail() == null || job.getEmail().isEmpty() ) {
+    public void sendJobCompletionMessage( Job job ) throws MessagingException {
+        if (StringUtils.isEmpty(job.getEmail())) {
+            log.warn("Tried sending job complete email with empty or null email");
             return;
         }
 
-        String clientName = clientSettings.getClients().get( job.getClientId() ).getName();
-        String jobUrl = job.getEmailJobLinkPrefix() + job.getJobId();
+        String jobUrl = job.getExternalLink() + job.getId();
 
         StringBuilder content = new StringBuilder();
         content.append( "<p>Your job has completed!</p>" );
-        content.append( "<p>The job labelled <strong>" + job.getLabel() + "</strong> submitted on <strong>" + job.getSubmittedDate() + "</strong> has completed.</p>" );
-        content.append( "<p>You can view its results here: <a href='" + jobUrl + "' target='_blank'>" + jobUrl + "</a>.</p>" );
+        content.append( "<p>The job labelled <strong>" + job.getLabel() + "</strong> submitted on <strong>" + job.getCreatedDate() + "</strong> has completed.</p>" );
+        content.append( "<p>You can view its results here: <a href='" +  jobUrl + "' target='_blank'>" +  jobUrl + "</a>.</p>" );
         content.append( "<hr style='margin-top: 50px;'><p><small>THIS IS AN AUTOMATED MESSAGE - PLEASE DO NOT REPLY DIRECTLY TO THIS EMAIL</small></p>" );
-        sendMessage(  clientName + " - Job Completed",
+        sendMessage(  siteSettings.getTitle() + " - Job Completed",
                 content.toString(),
                 job.getEmail() );
     }

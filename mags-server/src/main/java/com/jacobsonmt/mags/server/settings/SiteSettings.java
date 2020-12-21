@@ -16,6 +16,9 @@ public class SiteSettings {
     private String host;
     private String context;
 
+    private String title;
+    private String subTitle;
+
     @Email
     private String contactEmail;
     @Email

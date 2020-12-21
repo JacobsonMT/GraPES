@@ -1,40 +1,41 @@
 package com.jacobsonmt.mags.ui.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-import lombok.extern.log4j.Log4j2;
+import java.time.Instant;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.Date;
-
-@Log4j2
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString(of = {"jobId", "label", "hidden"})
-@EqualsAndHashCode(of = {"jobId"})
+@Slf4j
+@ToString(of = {"id", "label"})
+@EqualsAndHashCode(of = {"id"})
+@Data
 public class Job {
-
-    // Information on creation of job
-    private String jobId;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) private String clientId;
+    private long id;
+    private String session;
     private String label;
-    private String status;
-    private boolean running;
-    private boolean failed;
-    private boolean complete;
-    private Integer position;
-    private String email;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) private boolean hidden;
-    private Date submittedDate;
-    private Date startedDate;
-    private Date finishedDate;
-    private String inputFASTAContent;
-    private JobResult result;
-    private long executionTime;
+    private String input;
+    private String species;
+    private Status status;
+    private String message;
+    private Instant started;
+    private Instant finished;
+//    private String email;
+    private String externalLink;
+    private Instant createdDate;;
+//    private JobResult result;
 
     public static String obfuscateEmail( String email ) {
         return email.replaceAll( "(\\w{0,3})(\\w+.*)(@.*)", "$1****$3" );
+    }
+
+    public enum Status {
+        SUBMITTED,
+        PROCESSING,
+        SUCCESS,
+        ERROR,
+        STOPPED,
+        VALIDATION_ERROR
     }
 
 }

@@ -32,7 +32,7 @@ public class FASTASequence {
     public static final Set<Character> VALID_CHARACTERS = "QACDEFGHIKLMNPWRSTVYUOBJZ*X-.".chars()
             .mapToObj( e -> ( char ) e ).collect( Collectors.toSet() );
 
-    public static final int MINIMUM_SEQUENCE_SIZE = 26;
+    public static final int MINIMUM_SEQUENCE_SIZE = 150;
     public static final int MAXIMUM_SEQUENCE_SIZE = 40000;
 
     public String getFASTAContent() {

@@ -1,11 +1,10 @@
 package com.jacobsonmt.mags.server.services.mail;
 
-import com.jacobsonmt.mags.server.model.JobDO;
+import com.jacobsonmt.mags.server.entities.Job;
 import javax.mail.MessagingException;
 
 public interface EmailService {
 
-    void sendJobSubmittedMessage( JobDO job ) throws MessagingException;
-    void sendJobStartMessage( JobDO job ) throws MessagingException;
-    void sendJobCompletionMessage( JobDO job ) throws MessagingException;
+    void sendJobStartMessage( Job job ) throws MessagingException;
+    void sendJobCompletionMessage( Job job ) throws MessagingException;
 }

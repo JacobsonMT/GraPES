@@ -99,6 +99,13 @@
             <artifactId>guava</artifactId>
             <version>30.1-jre</version>
         </dependency>
+
+        <!-- CSV Parsing + Mapping -->
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>4.1</version>
+        </dependency>
     </dependencies>
 
     <build>

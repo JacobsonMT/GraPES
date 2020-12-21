@@ -1,5 +1,7 @@
 package com.jacobsonmt.mags.server.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,38 +14,45 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 @NoArgsConstructor
+@EqualsAndHashCode(of = "id", callSuper = false)
 @Data
 @Entity
+@Where(clause="deleted=false")
 @Table(name = "job")
-public class Job {
+public class Job extends Auditable {
 
     @Id
     @GeneratedValue
     private long id;
 
-    @Column(name = "client", nullable = false)
-    private String clientId;
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted;
 
-    @Column(name = "user_id", nullable = false)
-    private String userId;
-
-    @Column(name = "job_key", nullable = false)
-    private String jobKey;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name = "session", nullable = false)
+    private String session;
 
     @Column(name = "label", nullable = false)
     private String label;
 
     @Column(name = "input", nullable = false)
-    private String inputFASTAContent;
+    private String input;
 
-    @Column(name = "hidden", nullable = false)
-    private boolean hidden = true;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "species", nullable = false)
+    private Species species = Species.HUMAN;
 
-    @Column(name = "submitted")
-    private Instant submittedDate;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private Status status = Status.SUBMITTED;
+
+    @Column(name = "message")
+    private String message;
 
     @Column(name = "started")
     private Instant started;
@@ -51,37 +60,36 @@ public class Job {
     @Column(name = "finished")
     private Instant finished;
 
+    /* Options */
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "email")
     private String email;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "external_link", nullable = false)
     private String externalLink;
 
-    @Column(name = "email_on_job_submitted", nullable = false)
-    private boolean emailOnJobSubmitted;
-
-    @Column(name = "email_on_job_start", nullable = false)
-    private boolean emailOnJobStart;
-
-    @Column(name = "email_on_job_complete", nullable = false)
-    private boolean emailOnJobComplete;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private Status status = Status.SUBMITTED;
+//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+//    @JoinColumn(name="result_id")
+//    private Result result;
 
     @OneToOne(mappedBy = "job", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Result result;
-
-    private transient Integer position;
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "result_id", referencedColumnName = "id")
+    private JobResult result;
 
     public enum Status {
         SUBMITTED,
-        PENDING,
-        QUEUED,
         PROCESSING,
         SUCCESS,
-        ERROR
+        ERROR,
+        STOPPED,
+        VALIDATION_ERROR
+    }
+
+    @JsonIgnore
+    public String recreateFASTA() {
+        return label + System.lineSeparator() + input;
     }
 
 }

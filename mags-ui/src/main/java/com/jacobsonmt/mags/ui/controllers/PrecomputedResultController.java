@@ -4,14 +4,13 @@ import com.google.common.collect.Lists;
 import com.jacobsonmt.mags.ui.exceptions.ResultNotFoundException;
 import com.jacobsonmt.mags.ui.model.datatable.DataTableRequest;
 import com.jacobsonmt.mags.ui.model.datatable.DataTableResponse;
-import com.jacobsonmt.mags.ui.model.result.Distribution;
-import com.jacobsonmt.mags.ui.model.result.Result;
+import com.jacobsonmt.mags.ui.model.result.Graph;
+import com.jacobsonmt.mags.ui.model.result.MaGSResult;
 import com.jacobsonmt.mags.ui.model.search.FieldSearch;
 import com.jacobsonmt.mags.ui.model.search.FieldSort;
 import com.jacobsonmt.mags.ui.model.search.SearchCriteria;
 import com.jacobsonmt.mags.ui.model.search.SearchResponse;
 import com.jacobsonmt.mags.ui.services.ResultService;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
@@ -28,11 +27,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Log4j2
 @Controller
-public class ResultController {
+public class PrecomputedResultController {
 
     private final ResultService resultService;
 
-    public ResultController(ResultService resultService) {this.resultService = resultService;}
+    public PrecomputedResultController(ResultService resultService) {this.resultService = resultService;}
 
     @RequestMapping(value = "/results/precomputed/{accession}", method = RequestMethod.GET)
     public String precomputed( @PathVariable("accession") String accession, Model model) {
@@ -40,44 +39,30 @@ public class ResultController {
             throw new ResultNotFoundException();
         }
 
-        ResponseEntity<Result> result = resultService.getPrecomputedResult(accession);
-        ResponseEntity<List<Distribution>> distributions = resultService.getResultDistributions(accession);
+        ResponseEntity<MaGSResult> result = resultService.getPrecomputedResult(accession);
+        ResponseEntity<List<Graph>> graphs = resultService.getPrecomputedResultGraphs(accession);
 
         model.addAttribute("result", result.getBody() );
-        model.addAttribute("distributions", distributions.getBody() );
+        model.addAttribute("graphs", graphs.getBody() );
 
         return "result";
     }
 
-    @GetMapping("/api/results/precomputed/{accession}/distributions")
+    @GetMapping("/api/results/precomputed/{accession}/graphs")
     @ResponseBody
-    public ResponseEntity<List<Distribution>> getResultDistributions( @PathVariable("accession") String accession, Model model) {
+    public ResponseEntity<List<Graph>> getResultDistributions( @PathVariable("accession") String accession, Model model) {
 
         if (accession == null) {
             return ResponseEntity.notFound().build();
         }
 
-        return resultService.getResultDistributions(accession);
+        return resultService.getPrecomputedResultGraphs(accession);
 
     }
 
     @GetMapping("/api/results/precomputed/{accession}")
     @ResponseBody
-    public ResponseEntity<Result> getPrecomputedResult( @PathVariable("accession") String accession, Model model) {
-
-        if (accession == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return resultService.getPrecomputedResult(accession);
-
-    }
-
-    @GetMapping("/api/results/precomputed/{accession}/download")
-    @ResponseBody
-    public ResponseEntity<?> download( @PathVariable("accession") String accession,
-        Model model) throws IOException {
-        // TODO
+    public ResponseEntity<MaGSResult> getPrecomputedResult( @PathVariable("accession") String accession, Model model) {
 
         if (accession == null) {
             return ResponseEntity.notFound().build();
@@ -118,7 +103,7 @@ public class ResultController {
                         sorts.add(new FieldSort(col.getData(), order.getDir().equals("asc")));
                         break;
                     case "score":
-                        sorts.add(new FieldSort("magsZScore", order.getDir().equals("asc")));
+                        sorts.add(new FieldSort("zScore", order.getDir().equals("asc")));
                         break;
                     default:
                         // Do Nothing

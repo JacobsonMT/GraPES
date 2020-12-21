@@ -3,7 +3,7 @@ package com.jacobsonmt.mags.ui.model.result;
 import lombok.Data;
 
 @Data
-public class Result {
+public class MaGSResult {
 
     private String accession;
     private String species;

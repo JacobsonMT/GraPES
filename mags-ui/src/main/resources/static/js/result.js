@@ -14,12 +14,16 @@ function initializeGraphs() {
 
     window.charts = [];
 
-    for (let distribution of distributions) {
-        window[distribution.label] = new Highcharts.Chart(
-            document.getElementById(distribution.label + '-graph'),
-            createHistogram( distribution.title, distribution.title, distribution.background, distribution.score, distribution.markers)
-        );
-        charts.push( window[distribution.label] );
+    for (let graph of graphs) {
+        if (graph.score) {
+            window[graph.label] = new Highcharts.Chart(
+                document.getElementById(graph.label + '-graph'),
+                createHistogram(graph.title, graph.title,
+                    graph.distribution.background, graph.score,
+                    graph.distribution.markers)
+            );
+            charts.push(window[graph.label]);
+        }
     }
 
 }
@@ -71,7 +75,7 @@ function createHistogram(title, xAxis, data, score, markers) {
                 dashStyle: 'solid',
                 zIndex: 99,
                 label: {
-                    text: result.accession,
+                    text: result.accession ? result.accession : 'Current',
                     // verticalAlign: 'top',
                     // textAlign: 'left',
                     align: score > mid ? 'right' : 'left',

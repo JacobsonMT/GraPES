@@ -2,5 +2,7 @@
 #export fastaheader
 #echo "col1,col2,col3,col4,col5" > output.list
 #perl -E 'for($i=0;$i<10;$i++){say "$i,$ENV{fastaheader},field2,field3,",int rand 100}' >> output.list
-cp ../../sample.result output.list
+mkdir -p process/"$1"
+cp ../job.dat process/"$1"/job.dat
+cp ../job.out process/"$1"/job.out
 sleep 5

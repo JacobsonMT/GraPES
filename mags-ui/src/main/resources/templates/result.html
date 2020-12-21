@@ -14,7 +14,7 @@
         /*<![CDATA[*/
 
         const result = /*[[${result}]]*/ 'result';
-        const distributions = /*[[${distributions}]]*/ 'distributions';
+        const graphs = /*[[${graphs}]]*/ 'graphs';
 
         /*]]>*/
     </script>
@@ -49,7 +49,7 @@
             </div>
             <div class="card-body" th:if="${result}">
                <div id="graphs">
-                   <div th:each="distribution : ${distributions}" th:id="${distribution.label + '-graph'}" class="graph">
+                   <div th:each="graph : ${graphs}" th:id="${graph.label + '-graph'}" class="graph">
 
                    </div>
 
@@ -119,15 +119,15 @@
                 </table>
         </div>
 
-        <div class="card mx-auto text-center mb-4 result-card">
-            <div class="card-header">
-                <h5 class="mb-0 text-center">Downloads</h5>
-            </div>
-            <div class="card-body">
-<!--                <a th:href="${job.jobId} +'/inputFASTA'" class="align-middle mr-2"><i class="fas fa-file-download mr-1"></i>Input FASTA</a>-->
-<!--                <a th:href="${job.jobId} +'/resultCSV'" th:if="${job.complete && !job.failed}" class="align-middle"><i class="fas fa-file-download mr-1"></i>Results</a>-->
-            </div>
-        </div>
+<!--        <div class="card mx-auto text-center mb-4 result-card">-->
+<!--            <div class="card-header">-->
+<!--                <h5 class="mb-0 text-center">Downloads</h5>-->
+<!--            </div>-->
+<!--            <div class="card-body">-->
+<!--&lt;!&ndash;                <a th:href="${job.jobId} +'/inputFASTA'" class="align-middle mr-2"><i class="fas fa-file-download mr-1"></i>Input FASTA</a>&ndash;&gt;-->
+<!--&lt;!&ndash;                <a th:href="${job.jobId} +'/resultCSV'" th:if="${job.complete && !job.failed}" class="align-middle"><i class="fas fa-file-download mr-1"></i>Results</a>&ndash;&gt;-->
+<!--            </div>-->
+<!--        </div>-->
 
     </div>
 

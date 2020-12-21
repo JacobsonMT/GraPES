@@ -11,18 +11,7 @@ import org.springframework.stereotype.Component;
 @Setter
 public class ApplicationSettings {
 
-    private String command;
-    private String jobsDirectory;
-    private String outputCSVFilename;
-    private String inputFASTAFilename;
-    private String jobSerializationFilename;
-    private boolean loadJobsFromDisk;
-
-    private int maxCachedJobs = 1000;
     private int concurrentJobs = 1;
-    private boolean purgeSavedJobs = true;
-    private int purgeSavedJobsTimeHours = 1;
-    private int purgeAfterHours = 24;
     private boolean disableEmails = false;
 
 }
