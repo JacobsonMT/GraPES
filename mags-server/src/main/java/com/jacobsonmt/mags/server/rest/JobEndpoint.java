@@ -2,6 +2,7 @@ package com.jacobsonmt.mags.server.rest;
 
 import com.jacobsonmt.mags.server.entities.Job;
 import com.jacobsonmt.mags.server.entities.Job.Status;
+import com.jacobsonmt.mags.server.entities.Species;
 import com.jacobsonmt.mags.server.exceptions.FASTAValidationException;
 import com.jacobsonmt.mags.server.model.FASTASequence;
 import com.jacobsonmt.mags.server.model.Message;
@@ -87,7 +88,9 @@ public class JobEndpoint {
                         jobSubmissionContent.userId,
                         jobSubmissionContent.email,
                         s,
-                        jobSubmissionContent.emailJobLinkPrefix);
+                        jobSubmissionContent.emailJobLinkPrefix,
+                        jobSubmissionContent.species
+                    );
 
                     if (job.getStatus() != Status.SUBMITTED) {
                         result.addRejectedHeader( job.getLabel() );
@@ -139,6 +142,7 @@ public class JobEndpoint {
         @Email(message = "Not a valid email address")
         private final String email;
         private final String emailJobLinkPrefix;
+        private final Species species;
     }
 
     @Setter

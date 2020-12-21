@@ -16,16 +16,11 @@ public class SiteSettings {
     private String title;
     private String subtitle;
 
-    private String host;
-    private String context;
+    private String jobURLPrefix;
 
     @Email
     private String contactEmail;
     @Email
     private String fromEmail;
-
-    public String getFullUrl() {
-        return host + context + (context.endsWith( "/" ) ? "" : "/");
-    }
 
 }

@@ -6,6 +6,7 @@ import com.jacobsonmt.mags.server.dao.JobDao;
 import com.jacobsonmt.mags.server.entities.Job;
 import com.jacobsonmt.mags.server.entities.Job.Status;
 import com.jacobsonmt.mags.server.entities.JobResult;
+import com.jacobsonmt.mags.server.entities.Species;
 import com.jacobsonmt.mags.server.model.FASTASequence;
 import com.jacobsonmt.mags.server.services.mail.EmailService;
 import java.time.Instant;
@@ -101,9 +102,9 @@ public class JobService {
         }
     }
 
-    public Job submit( String user, String email, FASTASequence sequence, String emailExternalLink ) {
+    public Job submit( String user, String email, FASTASequence sequence, String emailExternalLink, Species species) {
         log.info("Job sumitted for user: {}, length: {}", user, sequence.getSequence().length());
-        return jobDao.save(createJob(user, email, sequence, emailExternalLink));
+        return jobDao.save(createJob(user, email, sequence, emailExternalLink, species));
     }
 
     public Optional<Job> getJob( long jobId ) {
@@ -128,9 +129,10 @@ public class JobService {
         return jobDao.findBySessionOrderByCreatedDateDesc(session);
     }
 
-    private Job createJob(String user, String email, FASTASequence sequence, String emailExternalLink) {
+    private Job createJob(String user, String email, FASTASequence sequence, String emailExternalLink, Species species) {
         Job job = new Job();
         job.setSession(user);
+        job.setSpecies(species != null ? species : Species.HUMAN);
 
         job.setLabel(sequence.getHeader());
         job.setInput(sequence.getSequence());

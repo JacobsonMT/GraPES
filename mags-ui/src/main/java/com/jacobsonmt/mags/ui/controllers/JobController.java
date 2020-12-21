@@ -2,7 +2,9 @@ package com.jacobsonmt.mags.ui.controllers;
 
 import com.jacobsonmt.mags.ui.exceptions.JobNotFoundException;
 import com.jacobsonmt.mags.ui.model.Job;
+import com.jacobsonmt.mags.ui.model.Species;
 import com.jacobsonmt.mags.ui.services.JobService;
+import com.jacobsonmt.mags.ui.services.JobService.JobSubmissionResponse;
 import com.jacobsonmt.mags.ui.utils.InputStreamUtils;
 import java.io.IOException;
 import lombok.extern.log4j.Log4j2;
@@ -31,6 +33,7 @@ public class JobController {
                            @RequestParam(value = "fastaFile", required = false) MultipartFile fastaFile,
                            @RequestParam(value = "email", required = false, defaultValue = "") String email,
                            @RequestParam(value = "session", required = false) String session,
+                           @RequestParam(value = "species", defaultValue = "HUMAN") Species species,
                            RedirectAttributes redirectAttributes) throws IOException {
 
         if (session == null || session.isEmpty()) {
@@ -46,9 +49,11 @@ public class JobController {
             }
         }
 
-        ResponseEntity<JobService.JobSubmissionResponse> jobSubmissionResponse = jobService.submitJob( session,
-                fasta,
-                email);
+        ResponseEntity<JobSubmissionResponse> jobSubmissionResponse = jobService.submitJob(
+            session,
+            fasta,
+            email,
+            species);
 
         if (jobSubmissionResponse.getBody() != null) {
             redirectAttributes.addFlashAttribute( "messages", jobSubmissionResponse.getBody().getMessages() );

@@ -5,6 +5,7 @@ import static org.springframework.http.HttpStatus.Series.SERVER_ERROR;
 
 import com.jacobsonmt.mags.ui.model.Job;
 import com.jacobsonmt.mags.ui.model.Message;
+import com.jacobsonmt.mags.ui.model.Species;
 import com.jacobsonmt.mags.ui.settings.ApplicationSettings;
 import com.jacobsonmt.mags.ui.settings.SiteSettings;
 import java.io.IOException;
@@ -39,11 +40,9 @@ public class JobService {
     @Autowired
     private SiteSettings siteSettings;
 
-    private Integer completionCount = 0;
-
-    public ResponseEntity<JobSubmissionResponse> submitJob( String userId, String fasta, String email) {
+    public ResponseEntity<JobSubmissionResponse> submitJob( String userId, String fasta, String email, Species species) {
         RestTemplate restTemplate = new RestTemplateBuilder().errorHandler(new NoOpResponseErrorHandler()).build();
-        JobSubmission jobSubmission = new JobSubmission( userId,  fasta, email, siteSettings.getFullUrl() + "job/");
+        JobSubmission jobSubmission = new JobSubmission( userId,  fasta, email, siteSettings.getJobURLPrefix(), species);
         HttpEntity<JobSubmission> request =
                 new HttpEntity<>( jobSubmission, createHeaders() );
         return restTemplate.postForEntity( applicationSettings.getProcessServerURI() + "/job/submit", request, JobSubmissionResponse.class );
@@ -127,6 +126,7 @@ public class JobService {
         private String fastaContent;
         private String email;
         private String emailJobLinkPrefix;
+        private Species species;
     }
 
     @ToString
