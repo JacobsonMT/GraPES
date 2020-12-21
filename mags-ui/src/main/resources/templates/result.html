@@ -71,49 +71,9 @@
                         <td class="text-right" style="width: 33%">Species:</td>
                         <td><span class="align-middle p-4" th:text="${result.species}"></span></td>
                     </tr>
-                    <tr>
-                        <td class="text-right" style="width: 33%">MaGS Z-Score:</td>
-                        <td><span class="align-middle p-4" th:text="${result.score}"></span></td>
-                    </tr>
-                    <tr>
-                        <td class="text-right" style="width: 33%">RNA:</td>
-                        <td><span class="align-middle p-4" th:text="${result.rna}"></span></td>
-                    </tr>
-                    <tr>
-                        <td class="text-right" style="width: 33%">Abundance:</td>
-                        <td><span class="align-middle p-4" th:text="${result.abundance}"></span></td>
-                    </tr>
-                    <tr>
-                        <td class="text-right" style="width: 33%">Camsol:</td>
-                        <td><span class="align-middle p-4" th:text="${result.camsol}"></span></td>
-                    </tr>
-                    <tr>
-                        <td class="text-right" style="width: 33%">Annotated Phosphorylation Sites:</td>
-                        <td><span class="align-middle p-4" th:text="${result.annotatedPhosphorylationSites}"></span></td>
-                    </tr>
-                    <tr>
-                        <td class="text-right" style="width: 33%">PScore:</td>
-                        <td><span class="align-middle p-4" th:text="${result.pScore}"></span></td>
-                    </tr>
-                    <tr>
-                        <td class="text-right" style="width: 33%">Disorder:</td>
-                        <td><span class="align-middle p-4" th:text="${result.disorder}"></span></td>
-                    </tr>
-                    <tr>
-                        <td class="text-right" style="width: 33%">% Composition D:</td>
-                        <td><span class="align-middle p-4" th:text="${result.compositionD}"></span></td>
-                    </tr>
-                    <tr>
-                        <td class="text-right" style="width: 33%">% Composition E:</td>
-                        <td><span class="align-middle p-4" th:text="${result.compositionE}"></span></td>
-                    </tr>
-                    <tr>
-                        <td class="text-right" style="width: 33%">Composition L:</td>
-                        <td><span class="align-middle p-4" th:text="${result.compositionL}"></span></td>
-                    </tr>
-                    <tr>
-                        <td class="text-right" style="width: 33%">% Composition G:</td>
-                        <td><span class="align-middle p-4" th:text="${result.compositionG}"></span></td>
+                    <tr th:each="graph : ${graphs}">
+                        <td class="text-right" style="width: 33%" th:text="${graph.title}"></td>
+                        <td><span class="align-middle p-4" th:text="${graph.score} % 1 == 0? ${graph.score} :${#numbers.formatDecimal(graph.score, 0, 2)}"></span></td>
                     </tr>
                     </tbody>
                 </table>
