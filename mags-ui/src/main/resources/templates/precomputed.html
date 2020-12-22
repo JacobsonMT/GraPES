@@ -40,11 +40,18 @@
     </div>
 
     <div class="main-content p-4" >
-        <h5 class="mb-3">On this website, <b th:text="${@siteSettings.title}">GraPES</b>, we provide two refined tools to predict
-            the likelihood of proteins to be contained within liquid-liquid phase separated (LLPS) protein condensates within a
-            cellular environment.  The first, MaGS, exploits a priori knowledge present in the public domain, while the second,
-            MaGSeq, makes predictions purely based on the input protein sequence.</h5>
-        <h5 class="mb-5">The below table shows a collection of precomputed MaGS results based on Human and Yeast Uniprot sequences.</h5>
+        <p class="mb-3" style="font-size: 125%">
+            On this website, <b th:text="${@siteSettings.title}">GraPES</b>, contains tools to predict proteins’ likelihood to
+            be contained in liquid-liquid phase separated biological condensates within a cellular environment.
+        </p>
+        <p class="mb-5" style="font-size: 125%">
+            On this homepage is, <b>MaGS</b>, a precomputed table for z-scores which exploits publically available knowledge of a protein's biological
+            context.  Enter Uniprot IDs for either yeast (S. Cerevisiae) or human proteins.  If the protein is unavailable, or
+            you are looking for different organisms, please use the second tool, MaGSeq, which makes predictions based entirely
+            on the input protein sequence features. Details on the MaGS method can be found
+            <a href="https://doi.org/10.1016/j.jmb.2020.02.020" target="_blank">https://doi.org/10.1016/j.jmb.2020.02.020</a> and the
+            sequence-based model will be discussed in an upcoming publication.
+        </p>
         <div>
             <div th:replace="fragments/precomputed-table :: precomputed-table"
                  th:remove="tag">...
