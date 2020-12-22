@@ -71,7 +71,8 @@ function initJobTable() {
             data.order = "";
         },
         "columnDefs": [
-            { "orderable": false, "targets": [0, -1] }
+            { "orderable": false, "targets": [0, -1] },
+            { "width": "40%", "targets": 1 },
         ]
     });
 }
