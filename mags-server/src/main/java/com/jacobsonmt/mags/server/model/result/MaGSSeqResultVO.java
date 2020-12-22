@@ -7,12 +7,12 @@ import lombok.Data;
 @Data
 public class MaGSSeqResultVO {
 
-    public static MaGSSeqResultVO fromPrecomputedResult(JobResult jobResult) {
+    public static MaGSSeqResultVO fromPrecomputedResult(JobResult jobResult, Species species) {
         MaGSSeqResultVO result = new MaGSSeqResultVO();
         result.setLabel(jobResult.getJob().getLabel());
-        result.setSpecies(jobResult.getSpecies());
 
-        result.setScore(jobResult.getZScore());
+        // Set score as the selected species
+        result.setScore(species == Species.HUMAN ? jobResult.getZScoreHuman() : jobResult.getZScoreYeast());
 
         result.setDisorder(jobResult.getDiso());
         result.setPropensityScore(jobResult.getPip());

@@ -13,8 +13,11 @@ public class MaGSSeqResult {
     @Column(name="score")
     private Double score;
 
-    @Column(name="z_score")
-    private Double zScore;
+    @Column(name="z_score_human")
+    private Double zScoreHuman;
+
+    @Column(name="z_score_yeast")
+    private Double zScoreYeast;
 
     @Column(name="diso")
     private Double diso;

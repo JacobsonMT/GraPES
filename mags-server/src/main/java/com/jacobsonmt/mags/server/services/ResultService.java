@@ -69,7 +69,8 @@ public class ResultService {
     }
 
     public enum MaGSSeqFeature {
-        score("MaGSeq Z-Score", MaGSSeqResult::getZScore),
+        scoreHuman("MaGSeq Z-Score", MaGSSeqResult::getZScoreHuman),
+        scoreYeast("MaGSeq Z-Score", MaGSSeqResult::getZScoreYeast),
         disorder("Disorder", MaGSSeqResult::getDiso),
         propensityScore("Propensity Score", MaGSSeqResult::getPip),
         rbpPred("RBP Pred", MaGSSeqResult::getRbp),
@@ -163,7 +164,7 @@ public class ResultService {
         /* Jobs background */
         Map<Species, List<MaGSSeqFeature>> speciesMaGSSeqFeatureSet = new HashMap<>();
         speciesMaGSSeqFeatureSet.put(Species.HUMAN, Lists.newArrayList(
-            MaGSSeqFeature.score,
+            MaGSSeqFeature.scoreHuman,
             MaGSSeqFeature.disorder,
             MaGSSeqFeature.propensityScore,
             MaGSSeqFeature.soluprot,
@@ -178,7 +179,7 @@ public class ResultService {
         ));
 
         speciesMaGSSeqFeatureSet.put(Species.YEAST, Lists.newArrayList(
-            MaGSSeqFeature.score,
+            MaGSSeqFeature.scoreYeast,
             MaGSSeqFeature.disorder,
             MaGSSeqFeature.propensityScore,
             MaGSSeqFeature.rbpPred,
@@ -275,25 +276,48 @@ public class ResultService {
 
     /* Jobs */
 
+    /**
+     * Use species selected when job was ran
+     */
     public Optional<List<Graph>> calculateDistributionsForJobId(long id) {
-        return jobResultDao.findById(id).map(this::calculateGraphs);
+        return jobResultDao.findById(id).map(JobResult::getJob).map(job ->
+            calculateGraphs(job.getResult(), job.getSpecies()));
     }
 
-    private List<Graph> calculateGraphs(JobResult result) {
+    /**
+     * Use alternate species
+     */
+    public Optional<List<Graph>> calculateDistributionsForJobId(long id, Species species) {
+        return jobResultDao.findById(id).map(jr -> calculateGraphs(jr, species));
+    }
+
+    private List<Graph> calculateGraphs(JobResult result, Species species) {
         List<Graph> graphs = new ArrayList<>();
 
-        backgroundMaGSSeqDistributions.getOrDefault(result.getSpecies(), new HashMap<>()).forEach( (feature, distribution) -> {
+        backgroundMaGSSeqDistributions.getOrDefault(species, new HashMap<>()).forEach( (feature, distribution) -> {
             try {
                 graphs.add( new Graph(feature.name(), feature.title, feature.extract.apply(result), distribution) );
             } catch (Exception e) {
-                log.error("Problem creating graph data for feature: {} in species: {}", feature, result.getSpecies(), e);
+                log.error("Problem creating graph data for feature: {} in species: {}", feature, species, e);
             }
         });
 
         return graphs;
     }
 
+    /**
+     * Use species selected when job was ran
+     */
     public Optional<MaGSSeqResultVO> getResultByJobId(long id) {
-        return jobResultDao.findById(id).map(MaGSSeqResultVO::fromPrecomputedResult);
+        return jobResultDao.findById(id).map(JobResult::getJob).map(job ->
+            MaGSSeqResultVO.fromPrecomputedResult(job.getResult(), job.getSpecies()));
+    }
+
+    /**
+     * Use alternate species
+     */
+    public Optional<MaGSSeqResultVO> getResultByJobId(long id, Species species) {
+        return jobResultDao.findById(id).map(jr ->
+            MaGSSeqResultVO.fromPrecomputedResult(jr, species));
     }
 }

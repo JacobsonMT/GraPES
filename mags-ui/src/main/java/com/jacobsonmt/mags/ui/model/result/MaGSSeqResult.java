@@ -6,14 +6,11 @@ import lombok.Data;
 @Data
 public class MaGSSeqResult {
 
+    @JsonAlias("zscoreHuman")
+    private Double scoreHuman;
 
-    private String species;
-
-    /**
-     * MaGS z score
-     */
-    @JsonAlias("zscore")
-    private Double zScore;
+    @JsonAlias("zscoreYeast")
+    private Double scoreYeast;
 
     @JsonAlias("diso")
     private Double disorder;

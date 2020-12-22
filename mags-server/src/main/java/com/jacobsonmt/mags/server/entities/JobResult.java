@@ -1,10 +1,7 @@
 package com.jacobsonmt.mags.server.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -34,16 +31,12 @@ public class JobResult extends MaGSSeqResult {
     @JoinColumn(name = "id")
     private Job job;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "species")
-    private Species species;
-
     public static JobResult fromJobResult(JobResult jobResult) {
         JobResult result = new JobResult();
-        result.setSpecies(jobResult.getSpecies());
 
         result.setScore(jobResult.getScore());
-        result.setZScore(jobResult.getZScore());
+        result.setZScoreHuman(jobResult.getZScoreHuman());
+        result.setZScoreYeast(jobResult.getZScoreYeast());
         result.setDiso(jobResult.getDiso());
         result.setLen(jobResult.getLen());
         result.setRun(jobResult.getRun());

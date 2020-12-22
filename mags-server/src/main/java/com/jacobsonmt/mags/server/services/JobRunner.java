@@ -2,7 +2,6 @@ package com.jacobsonmt.mags.server.services;
 
 import com.jacobsonmt.mags.server.entities.Job;
 import com.jacobsonmt.mags.server.entities.JobResult;
-import com.jacobsonmt.mags.server.entities.Species;
 import com.jacobsonmt.mags.server.exceptions.ResultFileException;
 import com.jacobsonmt.mags.server.settings.JobSettings;
 import com.opencsv.bean.CsvBindByName;
@@ -74,8 +73,8 @@ public class JobRunner {
             .resolve(jobSettings.getOutputScoreFile()));
 
         JobResult result = new JobResult();
-        result.setSpecies(job.getSpecies());
-        result.setZScore(job.getSpecies() == Species.HUMAN ? score.humanScore : score.yeastScore);
+        result.setZScoreHuman(score.humanScore);
+        result.setZScoreYeast(score.yeastScore);
 
         result.setDiso(features.dis);
         result.setLen(features.len);
