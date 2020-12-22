@@ -36,4 +36,9 @@ public class QueueEndpoint {
         return ResponseEntity.ok( jobService.getJobs( userId ) );
     }
 
+    @RequestMapping(value = "/pending", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Long> getJobs() {
+        return ResponseEntity.ok( jobService.getPendingJobCount() );
+    }
+
 }

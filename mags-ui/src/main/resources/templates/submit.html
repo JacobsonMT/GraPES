@@ -104,6 +104,9 @@
 <!--                            <i class="fas fa-trash mr-1"></i>Clear-->
 <!--                        </button>-->
                     </div>
+                    <div class="form-group d-flex">
+                        <p style="margin: auto;">There are currently <b id="queuePendingValue" th:text="${@jobController.queuePending()}">7</b> jobs pending</p>
+                    </div>
                 </div>
             </form>
 

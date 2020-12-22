@@ -17,4 +17,5 @@ public interface JobDao extends JpaRepository<Job, Long> {
 
     Optional<Job> findByIdAndDeletedFalse(long id);
 
+    long countJobByDeletedFalseAndStatusIn(Set<Status> statuses);
 }

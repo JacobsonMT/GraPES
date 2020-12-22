@@ -28,6 +28,7 @@ public class JobService {
     private final EmailService emailService;
 
     private final Set<String> recentlyProcessedSessions = new HashSet<>();
+    private final Set<Status> pendingStatuses = Sets.newHashSet(Status.SUBMITTED, Status.PROCESSING);
 
     public JobService(
         JobDao jobDao,
@@ -142,6 +143,10 @@ public class JobService {
 
     public List<Job> getJobs(String session) {
         return jobDao.findBySessionAndDeletedFalseOrderByCreatedDateDesc(session);
+    }
+
+    public long getPendingJobCount() {
+        return jobDao.countJobByDeletedFalseAndStatusIn(pendingStatuses);
     }
 
     private Job createJob(String user, String email, FASTASequence sequence, String emailExternalLink, Species species) {

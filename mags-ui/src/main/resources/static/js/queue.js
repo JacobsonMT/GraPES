@@ -2,6 +2,7 @@ $(document).ready(function () {
     queueTable = initJobTable();
 
     pollUntilDone(5000, 0);
+    pollQueuePending(30000);
 
 });
 
@@ -19,6 +20,7 @@ function pollUntilDone(interval, timeout) {
         return $.get("/pending", { session: sessionId }).then(function(pending) {
             if (pending < previousPending) {
                 updateJobTable();
+                updateQueuePendingValue();
                 previousPending = pending;
                 return delay(interval).then(run);
             } else if ( pending <= 0 ) {
@@ -36,6 +38,20 @@ function pollUntilDone(interval, timeout) {
         });
     }
     return run();
+}
+
+function pollQueuePending(interval) {
+    function run() {
+        updateQueuePendingValue().then(function() {return delay(interval)}).then(run);
+    }
+    return run();
+}
+
+function updateQueuePendingValue() {
+    return $.get("/queue/pending", { session: sessionId }).then(function(pending) {
+        $("#queuePendingValue").text(pending);
+    });
+
 }
 
 function deleteJob(e, jobId) {

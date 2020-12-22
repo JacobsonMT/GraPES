@@ -139,4 +139,9 @@ public class JobController {
         return jobService.deleteJob( jobId );
     }
 
+    @GetMapping("/queue/pending")
+    public ResponseEntity<Long> queuePending() {
+        return jobService.countPendingJobs();
+    }
+
 }
