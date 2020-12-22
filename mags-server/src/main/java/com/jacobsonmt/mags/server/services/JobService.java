@@ -46,7 +46,7 @@ public class JobService {
                     job.setStatus(Status.PROCESSING);
                     job.setStarted(Instant.now());
 
-                    jobDao.updateStatus(job.getId(), job.getStatus());
+                    jobDao.save(job);
                     this.onJobStart(job);
 
                     JobResult result = jobRunner.run(job);
@@ -82,7 +82,7 @@ public class JobService {
     public synchronized Optional<Job> findNextJob() {
         try {
             Optional<Job> job = jobDao
-                .findFirstBySessionNotInAndStatusIsOrderByCreatedDateAsc(
+                .findFirstBySessionNotInAndStatusIsAndDeletedFalseOrderByCreatedDateAsc(
                     // There must be at least one element in the comma separated list that defines the set of values for the IN expression.
                     recentlyProcessedSessions.isEmpty() ? Sets.newHashSet(""): recentlyProcessedSessions,
                     Status.SUBMITTED);
@@ -125,25 +125,23 @@ public class JobService {
     }
 
     public Optional<Job> getJob( long jobId ) {
-        return jobDao.findById(jobId);
+        return jobDao.findByIdAndDeletedFalse(jobId);
     }
 
     @Transactional
     public void stopJob( long jobId ) {
         log.info("Stop job: {}", jobId);
-        Optional<Job> job = getJob(jobId);
-
-        if (job.isPresent()) {
-            if (job.get().getStatus() == Status.SUBMITTED) {
-                jobDao.stop(jobId);
-            } else {
-                jobDao.delete(jobId);
+        getJob(jobId).ifPresent(job -> {
+            job.setDeleted(true);
+            if (job.getStatus() == Status.SUBMITTED) {
+                job.setStatus(Status.STOPPED);
             }
-        }
+            jobDao.save(job);
+        });
     }
 
     public List<Job> getJobs(String session) {
-        return jobDao.findBySessionOrderByCreatedDateDesc(session);
+        return jobDao.findBySessionAndDeletedFalseOrderByCreatedDateDesc(session);
     }
 
     private Job createJob(String user, String email, FASTASequence sequence, String emailExternalLink, Species species) {

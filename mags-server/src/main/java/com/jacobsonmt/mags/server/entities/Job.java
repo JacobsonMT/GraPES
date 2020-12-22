@@ -16,13 +16,11 @@ import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Where;
 
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = false)
 @Data
 @Entity
-@Where(clause="deleted=false")
 @Table(name = "job")
 public class Job extends Auditable {
 
