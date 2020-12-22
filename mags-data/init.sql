@@ -75,7 +75,7 @@ CREATE TABLE public.precomputed_magsseq (
     mfc float4 NULL,
     sto int4 NULL,
     stc int4 NULL,
-    sft varchar(1024) NULL,
+    sft float4 NULL,
     scn float4 NULL,
     sbb float4 NULL,
     pol float4 NULL,
@@ -105,13 +105,13 @@ CREATE TABLE public.precomputed_magsseq (
     CONSTRAINT precomputed_magsseq_pkey PRIMARY KEY (accession)
 );
 
-insert into precomputed_magsseq(accession,diso,len,run,"max",chg,net,gvy,pip,tgo,mfc,sto,stc,sol,cat,r,h,k,d,e,s,t,n,q,c,g,p,a,v,i,l,m,f,y,w) 
-select accession,diso,len,run,"max",chg,net,gvy,pip,tgo,mfc,sto,stc,sol,cat,r,h,k,d,e,s,t,n,q,c,g,p,a,v,i,l,m,f,y,w  from seq_hmn_pme_corr
+insert into precomputed_magsseq(accession,diso,len,run,"max",chg,net,gvy,pip,tgo,mfc,sto,stc,rbp,sol,cat,r,h,k,d,e,s,t,n,q,c,g,p,a,v,i,l,m,f,y,w) 
+select nam,dis,len,run,"max",chg,net,gvy,pip,tgo,mfc,sto,stc,rbp,sol,cat,r,h,k,d,e,s,t,n,q,c,g,p,a,v,i,l,m,f,y,w  from seq_hmn_pme_corr_txt
 
 UPDATE precomputed_magsseq set species='HUMAN';
 
 insert into precomputed_magsseq(accession,diso,len,run,"max",chg,net,gvy,pip,tgo,mfc,sto,stc,sft,scn,sbb,pol,rbp,sol,cat,r,h,k,d,e,s,t,n,q,c,g,p,a,v,i,l,m,f,y,w) 
-select accession,dis0,len,run,"max",chg,net,gvy,pip,tgo,mfc,sto,stc,sft,scn,sbb,pol,rbp,sol,cat,r,h,k,d,e,s,t,n,q,c,g,p,a,v,i,l,m,f,y,w from seq_yst_pme_corr
+select nam,dis,len,run,"max",chg,net,gvy,pip,tgo,mfc,sto,stc,sft,scn,sbb,pol,rbp,sol,cat,r,h,k,d,e,s,t,n,q,c,g,p,a,v,i,l,m,f,y,w from seq_yst_pme_corr_txt
 
 UPDATE precomputed_magsseq set species='YEAST' where species is NULL;
 
