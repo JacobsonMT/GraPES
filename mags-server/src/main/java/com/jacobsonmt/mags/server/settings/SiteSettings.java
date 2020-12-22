@@ -12,20 +12,10 @@ import javax.validation.constraints.Email;
 @Getter
 @Setter
 public class SiteSettings {
-
-    private String host;
-    private String context;
-
     private String title;
     private String subTitle;
+    private String logoUrl;
 
-    @Email
-    private String contactEmail;
     @Email
     private String fromEmail;
-
-    public String getFullUrl() {
-        return host + context + (context.endsWith( "/" ) ? "" : "/");
-    }
-
 }

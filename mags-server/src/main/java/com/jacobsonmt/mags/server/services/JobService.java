@@ -58,6 +58,7 @@ public class JobService {
                     job.setMessage(
                         "Completed after " + (job.getFinished().getEpochSecond() - job.getStarted().getEpochSecond())
                             + "s");
+                    log.info("Job {}: {}", job.getId(), job.getMessage());
                 } catch (Exception e) {
                     log.error("Job failed: {}", job.getId(), e);
                     job.setStatus(Status.ERROR);
@@ -91,7 +92,7 @@ public class JobService {
                 recentlyProcessedSessions.add(job.get().getSession());
             } else {
                 // No jobs available with restrictions on session
-                log.info("No jobs from new sessions");
+                log.debug("No jobs from new sessions");
                 recentlyProcessedSessions.clear();
             }
 
