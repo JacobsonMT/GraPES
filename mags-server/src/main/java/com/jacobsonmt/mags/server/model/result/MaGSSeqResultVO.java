@@ -15,7 +15,7 @@ public class MaGSSeqResultVO {
         result.setScore(species == Species.HUMAN ? jobResult.getZScoreHuman() : jobResult.getZScoreYeast());
 
         result.setDisorder(jobResult.getDiso());
-        result.setPropensityScore(jobResult.getPip());
+        result.setPScore(jobResult.getPip());
         result.setRbpPred(jobResult.getRbp());
         result.setSoluprot(jobResult.getSol());
         result.setLength(jobResult.getLen());
@@ -40,7 +40,7 @@ public class MaGSSeqResultVO {
     private Double score;
 
     private Double disorder;
-    private Double propensityScore;
+    private Double pScore;
     private Double rbpPred;
     private Double soluprot;
     private Integer length;

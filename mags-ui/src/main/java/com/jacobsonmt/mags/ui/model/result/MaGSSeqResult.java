@@ -1,6 +1,7 @@
 package com.jacobsonmt.mags.ui.model.result;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
@@ -16,7 +17,10 @@ public class MaGSSeqResult {
     private Double disorder;
 
     @JsonAlias("pip")
-    private Double propensityScore;
+    // For some reason jackson doesn't like to start with single letter lower case,
+    // tos this is necessary otherwise pScore is null
+    @JsonProperty("pScore")
+    private Double pScore;
 
     @JsonAlias("rbp")
     private Double rbpPred;
