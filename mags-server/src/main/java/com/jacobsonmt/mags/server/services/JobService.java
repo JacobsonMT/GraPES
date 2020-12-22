@@ -104,8 +104,24 @@ public class JobService {
     }
 
     public Job submit( String user, String email, FASTASequence sequence, String emailExternalLink, Species species) {
-        log.info("Job sumitted for user: {}, length: {}", user, sequence.getSequence().length());
-        return jobDao.save(createJob(user, email, sequence, emailExternalLink, species));
+        Job job = createJob(user, email, sequence, emailExternalLink, species);
+
+        // CHeck for existing job with exact match
+        Optional<Job> existingJob = jobDao.findFirstByInputAndStatusOrderByCreatedDateDesc(job.getInput(), Status.SUCCESS);
+
+        if (existingJob.isPresent() && existingJob.get().getResult() != null) {
+            // Copy so that we store a new record in the db
+            JobResult result = JobResult.fromJobResult(existingJob.get().getResult());
+            result.setJob(job);
+            job.setResult(result);
+            job.setStatus(Status.SUCCESS);
+            job.setMessage("Cached Result");
+            log.info("Returning cached result for job submitted for user: {}, length: {}", user, sequence.getSequence().length());
+        } else {
+            log.info("Job submitted for user: {}, length: {}", user, sequence.getSequence().length());
+        }
+
+        return jobDao.save(job);
     }
 
     public Optional<Job> getJob( long jobId ) {

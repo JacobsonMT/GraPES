@@ -31,4 +31,6 @@ public interface JobDao extends JpaRepository<Job, Long> {
 
     Optional<Job> findFirstBySessionNotInAndStatusIsOrderByCreatedDateAsc(Set<String> sessions, Status status);
 
+    Optional<Job> findFirstByInputAndStatusOrderByCreatedDateDesc(String input, Status status);
+
 }
