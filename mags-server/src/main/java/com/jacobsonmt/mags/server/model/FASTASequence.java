@@ -2,9 +2,10 @@ package com.jacobsonmt.mags.server.model;
 
 import com.jacobsonmt.mags.server.exceptions.FASTAValidationException;
 import com.jacobsonmt.mags.server.exceptions.SequenceValidationException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,7 @@ import org.apache.logging.log4j.util.Strings;
 @Setter
 @RequiredArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(of="sequence")
 @ToString
 @Log4j2
 public class FASTASequence {
@@ -39,7 +40,7 @@ public class FASTASequence {
         return ">" + header + '\n' + sequence + '\n';
     }
 
-    public static Set<FASTASequence> parseFASTAContent( String fasta ) throws FASTAValidationException {
+    public static List<FASTASequence> parseFASTAContent( String fasta ) throws FASTAValidationException {
 
         try {
 
@@ -50,7 +51,8 @@ public class FASTASequence {
                 throw new FASTAValidationException( "Empty FASTA" );
             }
 
-            Set<FASTASequence> sequences = new LinkedHashSet<>();
+            List<FASTASequence> sequences = new ArrayList<>();
+            Set<FASTASequence> deduplication = new HashSet<>();
             Set<String> headers = new HashSet<>();
 
             String[] sequenceStrings = fasta.split( "(^>)|(\\r?\\n>)" );
@@ -85,6 +87,10 @@ public class FASTASequence {
                         throw new SequenceValidationException( "Duplicate header line: " + sequence.getHeader() );
                     }
 
+                    if ( deduplication.contains( sequence ) ) {
+                        throw new SequenceValidationException( "Duplicate sequence: " + sequence.getHeader() );
+                    }
+
                     if ( sequence.getSequence().length() < MINIMUM_SEQUENCE_SIZE ) {
                         throw new SequenceValidationException( "Sequence too short; minimum size is " + MINIMUM_SEQUENCE_SIZE );
                     }
@@ -105,6 +111,7 @@ public class FASTASequence {
                     sequence.setValidationStatus( sve.getMessage() );
                 }
 
+                deduplication.add( sequence );
                 sequences.add( sequence );
                 headers.add( sequence.getHeader() );
             }

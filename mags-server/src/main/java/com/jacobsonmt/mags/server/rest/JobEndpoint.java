@@ -9,7 +9,6 @@ import com.jacobsonmt.mags.server.model.Message;
 import com.jacobsonmt.mags.server.services.JobService;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -79,7 +78,7 @@ public class JobEndpoint {
         } else {
 
             try {
-                Set<FASTASequence> sequences = FASTASequence.parseFASTAContent( jobSubmissionContent.fastaContent );
+                List<FASTASequence> sequences = FASTASequence.parseFASTAContent( jobSubmissionContent.fastaContent );
                 result.setTotalRequestedJobs( sequences.size() );
 
                 for (FASTASequence s : sequences) {
