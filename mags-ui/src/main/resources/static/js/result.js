@@ -77,9 +77,9 @@ function createHistogram(title, xAxis, data, score, markers) {
                     text: label,
                     // verticalAlign: 'top',
                     // textAlign: 'left',
-                    align: score > mid ? 'right' : 'left',
+                    align: score > (max - (max-min)/10) ? 'right' : 'left',
                     rotation: 0,
-                    x: score > mid ? -1 : 1,
+                    x: score > (max - (max-min)/10) ? -1 : 1,
                     y: 15,
                     style: {
                         fontWeight: 'bold'
@@ -125,9 +125,9 @@ function createHistogram(title, xAxis, data, score, markers) {
                     text: accession,
                     // verticalAlign: 'top',
                     // textAlign: 'left',
-                    align: 'left',
+                    align: markerScore > (max - (max-min)/10) ? 'right' : 'left',
                     rotation: 0,
-                    x: 1,
+                    x: markerScore > (max - (max-min)/10) ? -1 : 1,
                     y: y,
                     style: {
                         fontWeight: 'bold'
