@@ -2,6 +2,37 @@
 
 $(document).ready(function () {
     initializeGraphs();
+
+    $("#toggleMarkers").change(function() {
+        if (this.checked) {
+            for (let graph of graphs) {
+                if (graph.score) {
+                    const chart =  window[graph.label];
+                    const min = chart.xAxis[0].min;
+                    const max = chart.xAxis[0].max;
+
+                    var y = 50;
+                    for (let accession in graph.distribution.markers) {
+                        var markerScore = graph.distribution.markers[accession];
+                        chart.xAxis[0].addPlotLine(createMarkerPlotLineOptions(
+                            accession + '-marker', accession, markerScore, y, markerScore > (max - (max-min)/10)
+                        ));
+                        y += 35;
+                    }
+
+                }
+            }
+        } else {
+            for (let graph of graphs) {
+                if (graph.score) {
+                    const chart = window[graph.label];
+                    for (let accession in graph.distribution.markers) {
+                        chart.xAxis[0].removePlotLine(accession + '-marker');
+                    }
+                }
+            }
+        }
+    });
 });
 
 function initializeGraphs() {
@@ -33,7 +64,6 @@ function createHistogram(title, xAxis, data, score, markers) {
     const filteredData = filterOutliers(data);
     const min = Math.min(...filteredData, score);
     const max = Math.max(...filteredData, score);
-    const mid = (max-min)/2;
 
     const options = {
         title: {
@@ -68,6 +98,7 @@ function createHistogram(title, xAxis, data, score, markers) {
             min: min,
             max: max,
             plotLines: [{
+                id: 'current',
                 value: score,
                 width: 2,
                 color: 'green',
@@ -115,29 +146,36 @@ function createHistogram(title, xAxis, data, score, markers) {
     var y = 50;
     for (let accession in markers) {
         var markerScore = markers[accession];
-        options.xAxis[0].plotLines.push({
-                value: markerScore,
-                width: 1,
-                color: 'red',
-                dashStyle: 'dash',
-                zIndex: 98,
-                label: {
-                    text: accession,
-                    // verticalAlign: 'top',
-                    // textAlign: 'left',
-                    align: markerScore > (max - (max-min)/10) ? 'right' : 'left',
-                    rotation: 0,
-                    x: markerScore > (max - (max-min)/10) ? -1 : 1,
-                    y: y,
-                    style: {
-                        fontWeight: 'bold'
-                    }
-                }
-            })
+        options.xAxis[0].plotLines.push(createMarkerPlotLineOptions(
+            accession + '-marker', accession, markerScore, y, markerScore > (max - (max-min)/10)
+        ));
         y += 35;
     }
 
     return options;
+}
+
+function createMarkerPlotLineOptions(id, text, score, y, right) {
+    return {
+        id: id,
+        value: score,
+        width: 1,
+        color: 'red',
+        dashStyle: 'dash',
+        zIndex: 98,
+        label: {
+            text: text,
+                // verticalAlign: 'top',
+                // textAlign: 'left',
+                align: right ? 'right' : 'left',
+                rotation: 0,
+                x: right ? -1 : 1,
+                y: y,
+                style: {
+                fontWeight: 'bold'
+            }
+        }
+    };
 }
 
 function filterOutliers(someArray) {
