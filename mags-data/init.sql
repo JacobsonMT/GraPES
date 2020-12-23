@@ -115,10 +115,41 @@ select nam,dis,len,run,"max",chg,net,gvy,pip,tgo,mfc,sto,stc,sft,scn,sbb,pol,rbp
 
 UPDATE precomputed_magsseq set species='YEAST' where species is NULL;
 
-UPDATE precomputed_magsseq set marker = true where accession in ('P04147', 'Q13283', 'Q12517', 'Q9NPI6', 'Q8IU60', 'P53550', 'Q03465', 'P18583', 'P15646', 'O00567')
-
 update precomputed_magsseq set z_score_human = zs from hmn_zs_tsv where hmn_zs_tsv.accession = precomputed_magsseq.accession;
 update precomputed_magsseq set z_score_yeast = zs from yst_zs_tsv where yst_zs_tsv.accession = precomputed_magsseq.accession;
 
+
+-- Markers
+CREATE TABLE public.marker_mags (
+    accession varchar(255) NOT NULL,
+    label varchar(255) NOT NULL,
+    CONSTRAINT marker_mags_pkey PRIMARY KEY (accession),
+    CONSTRAINT marker_mags_fkey FOREIGN KEY (accession) REFERENCES precomputed_mags(accession)
+);
+INSERT INTO marker_mags (accession, label) VALUES
+    ('Q12517', 'p-body (DCP1)'),
+    --    ('Q9NPI6', 'p-body (DCP1)'),
+    ('Q8IU60', 'p-body (DCP2)'),
+    ('P53550', 'p-body (DCP2)'),
+    ('P04147', 'Stress Granule (PAB1)'),
+    ('P11940', 'Stress Granule (PAB1)'),
+    ('Q13283', 'Stress Granule (G3BP1)');
+
+CREATE TABLE public.marker_magseq (
+    accession varchar(255) NOT NULL,
+    label varchar(255) NOT NULL,
+    CONSTRAINT marker_magseq_pkey PRIMARY KEY (accession),
+    CONSTRAINT marker_magseq_fkey FOREIGN KEY (accession) REFERENCES precomputed_magsseq(accession)
+);
+INSERT INTO marker_magseq (accession, label) VALUES
+('Q12517', 'p-body (DCP1)'),
+('Q9NPI6', 'p-body (DCP1)'),
+('Q8IU60', 'p-body (DCP2)'),
+('P53550', 'p-body (DCP2)'),
+('P04147', 'Stress Granule (PAB1)'),
+('P11940', 'Stress Granule (PAB1)'),
+('Q13283', 'Stress Granule (G3BP1)');
+
+-- Indices
 
 CREATE INDEX job_input_idx ON public.job USING btree (input);

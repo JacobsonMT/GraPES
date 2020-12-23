@@ -2,11 +2,14 @@ package com.jacobsonmt.mags.server.services;
 
 import com.google.common.collect.Lists;
 import com.jacobsonmt.mags.server.dao.JobResultDao;
+import com.jacobsonmt.mags.server.dao.MaGSMarkerDao;
+import com.jacobsonmt.mags.server.dao.MaGSeqMarkerDao;
 import com.jacobsonmt.mags.server.dao.PrecomputedMaGSResultDao;
 import com.jacobsonmt.mags.server.dao.PrecomputedMaGSSeqResultDao;
 import com.jacobsonmt.mags.server.entities.JobResult;
 import com.jacobsonmt.mags.server.entities.MaGSSeqResult;
 import com.jacobsonmt.mags.server.entities.PrecomputedMaGSResult;
+import com.jacobsonmt.mags.server.entities.PrecomputedMaGSSeqResult;
 import com.jacobsonmt.mags.server.entities.Species;
 import com.jacobsonmt.mags.server.model.result.Distribution;
 import com.jacobsonmt.mags.server.model.result.Graph;
@@ -42,6 +45,8 @@ public class ResultService {
 
     private final PrecomputedMaGSResultDao precomputedMaGSResultDao;
     private final PrecomputedMaGSSeqResultDao precomputedMaGSSeqResultDao;
+    private final MaGSMarkerDao maGSMarkerDao;
+    private final MaGSeqMarkerDao maGSeqMarkerDao;
     private final JobResultDao jobResultDao;
 
     private Map<Species, Map<MaGSFeature, Distribution>> backgroundMaGSDistributions = new ConcurrentHashMap<>();
@@ -109,9 +114,12 @@ public class ResultService {
     public ResultService(
         PrecomputedMaGSResultDao precomputedMaGSResultDao,
         PrecomputedMaGSSeqResultDao precomputedMaGSSeqResultDao,
+        MaGSMarkerDao maGSMarkerDao, MaGSeqMarkerDao maGSeqMarkerDao,
         JobResultDao jobResultDao) {
         this.precomputedMaGSResultDao = precomputedMaGSResultDao;
         this.precomputedMaGSSeqResultDao = precomputedMaGSSeqResultDao;
+        this.maGSMarkerDao = maGSMarkerDao;
+        this.maGSeqMarkerDao = maGSeqMarkerDao;
         this.jobResultDao = jobResultDao;
     }
 
@@ -152,7 +160,8 @@ public class ResultService {
             }
         });
 
-        precomputedMaGSResultDao.findByMarkerTrue().forEach( result -> {
+        maGSMarkerDao.findAll().forEach( marker -> {
+            PrecomputedMaGSResult result = marker.getResult();
             Map<MaGSFeature, Distribution> featureMap = backgroundMaGSDistributions.computeIfAbsent(
                 result.getSpecies(),
                 k -> new LinkedHashMap<>());
@@ -160,7 +169,7 @@ public class ResultService {
             for (MaGSFeature feature : speciesFeatureSet.getOrDefault(result.getSpecies(), new ArrayList<>())) {
                 Number val = feature.extract.apply(result);
                 if (val != null) {
-                    featureMap.computeIfAbsent(feature, k -> new Distribution()).getMarkers().put(result.getAccession(), val);
+                    featureMap.computeIfAbsent(feature, k -> new Distribution()).getMarkers().put(marker.getLabel(), val);
                 }
             }
         });
@@ -210,7 +219,8 @@ public class ResultService {
             }
         });
 
-        precomputedMaGSSeqResultDao.findByMarkerTrue().forEach( result -> {
+        maGSeqMarkerDao.findAll().forEach( marker -> {
+            PrecomputedMaGSSeqResult result = marker.getResult();
             Map<MaGSSeqFeature, Distribution> featureMap = backgroundMaGSSeqDistributions.computeIfAbsent(
                 result.getSpecies(),
                 k -> new LinkedHashMap<>());
@@ -218,7 +228,7 @@ public class ResultService {
             for (MaGSSeqFeature feature : speciesMaGSSeqFeatureSet.getOrDefault(result.getSpecies(), new ArrayList<>())) {
                 Number val = feature.extract.apply(result);
                 if (val != null) {
-                    featureMap.computeIfAbsent(feature, k -> new Distribution()).getMarkers().put(result.getAccession(), val);
+                    featureMap.computeIfAbsent(feature, k -> new Distribution()).getMarkers().put(marker.getLabel(), val);
                 }
             }
         });

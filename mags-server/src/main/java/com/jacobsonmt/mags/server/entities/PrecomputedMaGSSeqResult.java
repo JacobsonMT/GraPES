@@ -25,7 +25,4 @@ public class PrecomputedMaGSSeqResult extends MaGSSeqResult {
     @Column(name = "species")
     private Species species;
 
-    @Column(name = "marker")
-    private boolean marker;
-
 }
