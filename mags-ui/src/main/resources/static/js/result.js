@@ -41,7 +41,6 @@ function createHistogram(title, xAxis, data, score, markers) {
         },
         chart: {
             height: 300,
-            width: 400,
             // marginLeft: 60,
             // marginRight: 75,
             // spacingTop: 20,

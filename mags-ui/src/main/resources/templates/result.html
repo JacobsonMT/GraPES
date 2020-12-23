@@ -19,17 +19,6 @@
         /*]]>*/
     </script>
     <script th:src="@{/js/result.js}"></script>
-    <style>
-        #graphs {
-            position: relative;
-        }
-
-        .graph {
-            width:400px;
-            display:inline-block;
-        }
-
-    </style>
 </head>
 <body>
 <div th:replace="fragments/navbar">...</div>
@@ -48,8 +37,8 @@
                     annotated with a green vertical bar, marker accessions are annotated with red vertical bars.</span>
             </div>
             <div class="card-body" th:if="${result}">
-               <div id="graphs">
-                   <div th:each="graph : ${graphs}" th:id="${graph.label + '-graph'}" class="graph">
+               <div id="graphs" class="row">
+                   <div th:each="graph : ${graphs}" th:id="${graph.label + '-graph'}" class="graph col-xl-6 col-sm-12">
 
                    </div>
 
