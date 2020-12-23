@@ -39,8 +39,11 @@
             </div>
             <div class="card-body" th:if="${graphs}">
                 <div id="graphs" class="row">
-                    <div th:each="graph : ${graphs}" th:id="${graph.label + '-graph'}" th:if="${graph.score != null}" class="graph col-xl-6 col-sm-12">
-
+                    <div th:each="graph : ${graphs}" th:if="${graph.score != null}" class="graph col-xl-6 col-sm-12">
+                        <div th:id="${graph.label + '-graph'}"></div>
+                        <div>
+                            <p th:text="${graph.description}"></p>
+                        </div>
                     </div>
 
                 </div>

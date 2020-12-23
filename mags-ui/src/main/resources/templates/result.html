@@ -38,8 +38,11 @@
             </div>
             <div class="card-body" th:if="${result}">
                <div id="graphs" class="row">
-                   <div th:each="graph : ${graphs}" th:id="${graph.label + '-graph'}" class="graph col-xl-6 col-sm-12">
-
+                   <div th:each="graph : ${graphs}" class="graph col-xl-6 col-sm-12">
+                       <div th:id="${graph.label + '-graph'}"></div>
+                       <div>
+                           <p th:text="${graph.description}"></p>
+                       </div>
                    </div>
 
                 </div>
