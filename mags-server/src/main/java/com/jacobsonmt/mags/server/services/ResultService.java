@@ -82,7 +82,7 @@ public class ResultService {
         pScore("PScore", MaGSSeqResult::getPip, "A metric to indicate the amount of π-π interactions within a protein.  Indicates that a protein is more likely to phase separate in vitro."),
         rbpPred("RBP Pred", MaGSSeqResult::getRbp, "Likelihood prediction for a protein to be an RNA-binding protein.  If score is over 0.5, then it is considered to interact with RNA."),
         soluprot("Soluprot", MaGSSeqResult::getSol, "A protein solubility score where higher numbers indicate higher solubility."),
-        length("Length", MaGSSeqResult::getLen, "Length"),
+        length("Length", MaGSSeqResult::getLen, "Number of amino acids."),
         tango("Tango", MaGSSeqResult::getTgo, "A score which indicates a likelihood for cross-beta protein aggregation. Higher scores indicate that the protein has regions which are aggregation-prone."),
         compositionG("% Composition G", MaGSSeqResult::getG, "% Composition G"),
         compositionR("% Composition R", MaGSSeqResult::getR, "% Composition R"),
