@@ -232,6 +232,18 @@ public class ResultService {
                 }
             }
         });
+
+        log.info("Building kernel density distributions");
+        /* Build all kernel density distributions and clear background data to free memory*/
+        backgroundMaGSDistributions.values().stream().flatMap(m -> m.values().stream()).forEach(d -> {
+            d.buildKernelDensityEstimate();
+            d.getBackground().clear();
+        });
+        backgroundMaGSSeqDistributions.values().stream().flatMap(m -> m.values().stream()).forEach(d -> {
+            d.buildKernelDensityEstimate();
+            d.getBackground().clear();
+        });
+        log.info("Finished building kernel density distributions");
     }
 
     public Optional<List<Graph>> calculateDistributions(String accession) {

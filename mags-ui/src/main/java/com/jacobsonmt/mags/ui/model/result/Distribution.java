@@ -8,5 +8,5 @@ import lombok.Data;
 public class Distribution {
 
     private Map<String, Number> markers;
-    private List<Number> background;
+    private List<Double[]> kde;
 }

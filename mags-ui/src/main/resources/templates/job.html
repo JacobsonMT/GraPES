@@ -14,7 +14,7 @@
         /*<![CDATA[*/
 
         const graphs = /*[[${graphs}]]*/ 'graphs';
-        const label = '';
+        const label = 'Result';
 
         /*]]>*/
     </script>
@@ -34,14 +34,9 @@
         <div class="card mx-auto text-center mb-4 result-card" th:if="${job}" style="min-width:750px;">
             <div class="card-header">
                 <h5 class="mb-0 text-center">Feature Distributions</h5>
-                <span class="d-block text-center text-muted">To zoom in, use the mouse to select a region of interest. Current accession is
-                    annotated with a green vertical bar, marker accessions are annotated with red vertical bars.</span>
-            </div>
-            <div>
-                <div class="custom-control custom-checkbox mt-2 mr-5" style="float: right;">
-                    <input type="checkbox" class="custom-control-input" id="toggleMarkers" checked>
-                    <label class="custom-control-label" for="toggleMarkers">Toggle marker lines</label>
-                </div>
+                <span class="d-block text-center text-muted">To zoom in, use the mouse to select a region of interest. The current result is
+                    shown with a blue vertical line. In addition, we selected representative proteins from different PMLO to
+                    indicate how these proteins perform in our predictor.</span>
             </div>
             <div class="card-body" th:if="${graphs}">
                 <div id="graphs" class="row">

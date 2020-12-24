@@ -144,4 +144,14 @@ public class JobController {
         return jobService.countPendingJobs();
     }
 
+    @GetMapping("/api/job/{id}/graphs")
+    @ResponseBody
+    public ResponseEntity<List<Graph>> getResultDistributions(  @PathVariable("id") long id) {
+        if (id == 0) {
+            throw new ResultNotFoundException();
+        }
+
+        return jobService.getJobsResultGraphs(id);
+    }
+
 }

@@ -2,55 +2,17 @@
 
 $(document).ready(function () {
     initializeGraphs();
-
-    $("#toggleMarkers").change(function() {
-        if (this.checked) {
-            for (let graph of graphs) {
-                if (graph.score) {
-                    const chart =  window[graph.label];
-                    const min = chart.xAxis[0].min;
-                    const max = chart.xAxis[0].max;
-
-                    var y = 50;
-                    for (let accession in graph.distribution.markers) {
-                        var markerScore = graph.distribution.markers[accession];
-                        chart.xAxis[0].addPlotLine(createMarkerPlotLineOptions(
-                            accession + '-marker', accession, markerScore, y, markerScore > (max - (max-min)/10)
-                        ));
-                        y += 35;
-                    }
-
-                }
-            }
-        } else {
-            for (let graph of graphs) {
-                if (graph.score) {
-                    const chart = window[graph.label];
-                    for (let accession in graph.distribution.markers) {
-                        chart.xAxis[0].removePlotLine(accession + '-marker');
-                    }
-                }
-            }
-        }
-    });
 });
 
 function initializeGraphs() {
-    // $('#graphs').bind('mouseleave', function(e) {
-    //     window.charts.forEach(function (chart) {
-    //         chart.tooltip.hide();
-    //         chart.xAxis[0].removePlotLine('plot-line-sync');
-    //     });
-    // });
-
     window.charts = [];
 
     for (let graph of graphs) {
         if (graph.score) {
             window[graph.label] = new Highcharts.Chart(
                 document.getElementById(graph.label + '-graph'),
-                createHistogram(graph.title, graph.title,
-                    graph.distribution.background, graph.score,
+                createKernelDensityEstimate(graph.title, graph.title,
+                    graph.distribution.kde, graph.score,
                     graph.distribution.markers)
             );
             charts.push(window[graph.label]);
@@ -59,11 +21,15 @@ function initializeGraphs() {
 
 }
 
-function createHistogram(title, xAxis, data, score, markers) {
+function createKernelDensityEstimate(title, xAxis, kde, score, markers) {
 
-    const filteredData = filterOutliers(data);
-    const min = Math.min(...filteredData, score);
-    const max = Math.max(...filteredData, score);
+    // find Max y-value for kde so we can determine where to stop drawing vertical marker lines
+    let yMax = 0;
+    for (const xy of kde) {
+        if (xy[1] > yMax) {
+            yMax = xy[1];
+        }
+    }
 
     const options = {
         title: {
@@ -95,109 +61,60 @@ function createHistogram(title, xAxis, data, score, markers) {
 
         xAxis: [{
             title: { text: xAxis },
-            min: min,
-            max: max,
-            plotLines: [{
-                id: 'current',
-                value: score,
-                width: 2,
-                color: 'green',
-                dashStyle: 'solid',
-                zIndex: 99,
-                label: {
-                    text: label,
-                    // verticalAlign: 'top',
-                    // textAlign: 'left',
-                    align: score > (max - (max-min)/10) ? 'right' : 'left',
-                    rotation: 0,
-                    x: score > (max - (max-min)/10) ? -1 : 1,
-                    y: 15,
-                    style: {
-                        fontWeight: 'bold'
-                    }
-                }
-            }]
         }],
 
         yAxis: [{
-            title: { text: 'Count' }
+            title: { text: 'Density' }
         }],
 
         series: [{
-            name: 'Histogram',
-            type: 'histogram',
-            xAxis: 0,
-            yAxis: 0,
-            baseSeries: 's1',
-            showInLegend: false
-        }, {
-            name: 'Data',
-            type: 'scatter',
-            data: filteredData,
-            visible: false,
-            showInLegend: false,
-            id: 's1',
+            type: 'areaspline',
+            name: "KDE",
+            dashStyle: "solid",
+            lineWidth: 1,
+            color: "#a6a3ac",
+            data: kde,
             marker: {
-                radius: 1.5
-            }
+                enabled: false
+            },
+        },
+        {
+            type: 'line',
+            name: label,
+            dashStyle: "solid",
+            lineWidth: 2,
+            // color: "#a6a3ac",
+            data: [[score, 0],[score, yMax]],
+            marker: {
+                enabled: false
+            },
+            tooltip: {
+                valueDecimals: 2,
+                headerFormat: "{series.name}:",
+                pointFormat: "<b>{point.x:.2f}</b>"
+            },
         }],
     };
 
-    var y = 50;
-    for (let accession in markers) {
-        var markerScore = markers[accession];
-        options.xAxis[0].plotLines.push(createMarkerPlotLineOptions(
-            accession + '-marker', accession, markerScore, y, markerScore > (max - (max-min)/10)
-        ));
-        y += 35;
+    for (let label in markers) {
+        var markerScore = markers[label];
+        options.series.push({
+            type: 'line',
+            name: label,
+            dashStyle: "solid",
+            lineWidth: 2,
+            // color: "#a6a3ac",
+            data: [[markerScore, 0],[markerScore, yMax]],
+            marker: {
+                enabled: false
+            },
+            tooltip: {
+                valueDecimals: 2,
+                headerFormat: "{series.name}:",
+                pointFormat: "<b>{point.x:.2f}</b>"
+            },
+        });
     }
 
     return options;
-}
-
-function createMarkerPlotLineOptions(id, text, score, y, right) {
-    return {
-        id: id,
-        value: score,
-        width: 1,
-        color: 'red',
-        dashStyle: 'dash',
-        zIndex: 98,
-        label: {
-            text: text,
-                // verticalAlign: 'top',
-                // textAlign: 'left',
-                align: right ? 'right' : 'left',
-                rotation: 0,
-                x: right ? -1 : 1,
-                y: y,
-                style: {
-                fontWeight: 'bold'
-            }
-        }
-    };
-}
-
-function filterOutliers(someArray) {
-
-    if(someArray.length < 4)
-        return someArray;
-
-    let values, q1, q3, iqr, maxValue, minValue;
-
-    values = someArray.slice().sort( (a, b) => a - b);//copy array fast and sort
-
-    if((values.length / 4) % 1 === 0){//find quartiles
-        q1 = 1/2 * (values[(values.length / 4)] + values[(values.length / 4) + 1]);
-        q3 = 1/2 * (values[(values.length * (3 / 4))] + values[(values.length * (3 / 4)) + 1]);
-    } else {
-        q1 = values[Math.floor(values.length / 4 + 1)];
-        q3 = values[Math.ceil(values.length * (3 / 4) + 1)];
-    }
-
-    iqr = q3 - q1;
-    maxValue = q3 + iqr * 1.5;
-    minValue = q1 - iqr * 1.5;
-
-    return values.filter((x) => (x >= minValue) && (x <= maxValue));
 }
