@@ -8,7 +8,7 @@ function initializeGraphs() {
     window.charts = [];
 
     for (let graph of graphs) {
-        if (graph.score) {
+        if (graph.score != null) {
             window[graph.label] = new Highcharts.Chart(
                 document.getElementById(graph.label + '-graph'),
                 createKernelDensityEstimate(graph.title, graph.title,
