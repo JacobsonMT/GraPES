@@ -35,7 +35,7 @@ public class MaGSSeqResult {
     private Double chg;
 
     @Column(name="net")
-    private Double net;
+    private Integer net;
 
     @Column(name="gvy")
     private Double gvy;
@@ -47,7 +47,7 @@ public class MaGSSeqResult {
     private Double tgo;
 
     @Column(name="mfc")
-    private Double mfc;
+    private Integer mfc;
 
     @Column(name="sto")
     private Integer sto;
@@ -55,8 +55,8 @@ public class MaGSSeqResult {
     @Column(name="stc")
     private Integer stc;
 
-//    @Column(name="sft")
-//    private varchar sft;
+    @Column(name="sft")
+    private Double sft;
 
     @Column(name="scn")
     private Double scn;

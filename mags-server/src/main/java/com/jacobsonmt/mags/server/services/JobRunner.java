@@ -88,7 +88,7 @@ public class JobRunner {
         result.setMfc(features.mfc);
         result.setSto(features.sto);
         result.setStc(features.stc);
-//        result.setSft(features.sft);
+        result.setSft(features.sft);
         result.setScn(features.scn);
         result.setSbb(features.sbb);
         result.setPol(features.pol);
@@ -255,7 +255,7 @@ public class JobRunner {
         private Double chg;
 
         @CsvBindByName(column = "net")
-        private Double net;
+        private Integer net;
 
         @CsvBindByName(column = "gvy")
         private Double gvy;
@@ -267,7 +267,7 @@ public class JobRunner {
         private Double tgo;
 
         @CsvBindByName(column = "mfc")
-        private Double mfc;
+        private Integer mfc;
 
         @CsvBindByName(column = "sto")
         private Integer sto;
@@ -275,8 +275,8 @@ public class JobRunner {
         @CsvBindByName(column = "stc")
         private Integer stc;
 
-//        @CsvBindByName(column = "sft")
-//        private varchar sft;
+        @CsvBindByName(column = "sft")
+        private Double sft;
 
         @CsvBindByName(column = "scn")
         private Double scn;

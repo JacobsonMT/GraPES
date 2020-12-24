@@ -59,7 +59,7 @@ public class ResultService {
         annotatedPhosphorylationSites("Annotated Phosphorylation Sites", PrecomputedMaGSResult::getPhs, "The total number of experimentally observed phosphorylation sites on a protein.  This number indicates the potential for modification."),
         pScore("PScore", PrecomputedMaGSResult::getPip, "A metric to indicate the amount of π-π interactions within a protein.  Indicates that a protein is more likely to phase separate in vitro."),
         disorder("Disorder", PrecomputedMaGSResult::getDiso, "The percent of residues within the protein that are predicted to be disordered by DISOPRED3. Many hypotheses suggest that disordered regions in proteins can modulate protein solubility."),
-        compositionD("% Composition D", PrecomputedMaGSResult::getD, "% Composition D"),
+        compositionD("% Composition D", PrecomputedMaGSResult::getD, "% Composition D", "%"),
         compositionE("% Composition E", PrecomputedMaGSResult::getE, "% Composition E", "%"),
         compositionL("% Composition L", PrecomputedMaGSResult::getL, "% Composition L", "%"),
         compositionG("% Composition G", PrecomputedMaGSResult::getG, "% Composition G", "%");

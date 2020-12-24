@@ -25,8 +25,8 @@ public class MaGSResult {
     @Column(name="csl")
     private Double csl;
 
-//    @Column(name="int")
-//    private Integer int;
+    @Column(name="int")
+    private Integer inte;
 
     @Column(name="len")
     private Integer len;
@@ -53,7 +53,7 @@ public class MaGSResult {
     private Double cat;
 
     @Column(name="tgo")
-    private Double tgo;
+    private Integer tgo;
 
     @Column(name="gvy")
     private Double gvy;
@@ -68,7 +68,7 @@ public class MaGSResult {
     private Double d;
 
     @Column(name="e")
-    private Integer e;
+    private Double e;
 
     @Column(name="f")
     private Double f;
@@ -77,7 +77,7 @@ public class MaGSResult {
     private Double g;
 
     @Column(name="h")
-    private Integer h;
+    private Double h;
 
     @Column(name="i")
     private Double i;
@@ -116,6 +116,6 @@ public class MaGSResult {
     private Double w;
 
     @Column(name="y")
-    private Integer y;
+    private Double y;
 
 }

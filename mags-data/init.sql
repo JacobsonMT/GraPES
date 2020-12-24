@@ -2,7 +2,6 @@ CREATE TABLE public.precomputed_mags (
     accession varchar(255) NOT NULL,
     gene varchar(255) NULL,
     species varchar(255) NULL,
-    marker bool NOT NULL DEFAULT false,
     score float8 NULL,
     z_score float8 NULL,
     diso float8 NULL,
@@ -17,15 +16,15 @@ CREATE TABLE public.precomputed_mags (
     mrf int4 NULL,
     lps float8 NULL,
     cat float8 NULL,
-    tgo float8 NULL,
+    tgo int4 NULL,
     gvy float8 NULL,
     a float8 NULL,
     c float8 NULL,
     d float8 NULL,
-    e int4 NULL,
+    e float8 NULL,
     f float8 NULL,
     g float8 NULL,
-    h int4 NULL,
+    h float8 NULL,
     i float8 NULL,
     k float8 NULL,
     l float8 NULL,
@@ -38,21 +37,19 @@ CREATE TABLE public.precomputed_mags (
     t float8 NULL,
     v float8 NULL,
     w float8 NULL,
-    y int4 NULL,
+    y float8 NULL,
     CONSTRAINT precomputed_mags_pkey PRIMARY KEY (accession)
 );
 
-insert into precomputed_mags(accession, diso, abd, csl, "int", len, "max", phs, pip, rna, mrf, lps, cat, a, c, d, e, f, g, h, i, k, l, m, n, p, q, r, s, t, v, w, y) 
-select accession, diso, abd, csl, "int", len, "max", phs, pip, rna, mrf, lps, cat, a, c, d, e, f, g, h, i, k, l, m, n, p, q, r, s, t, v, w, y  from precomp_human_data_tsv
+insert into precomputed_mags(accession, diso, abd, csl, "int", len, "max", phs, pip, rna, mrf, lps, cat, a, c, d, e, f, g, h, i, k, l, m, n, p, q, r, s, t, v, w, y)
+select "name", diso, abd, csl, "int", len, "max", phs, pip, rna, mrf, lps, cat, a, c, d, e, f, g, h, i, k, l, m, n, p, q, r, s, t, v, w, y  from precomp_human_data_tsv;
 
 UPDATE precomputed_mags set species='HUMAN';
 
 insert into precomputed_mags(accession,diso,abd,csl,"int",len,"max",phs,pip,rna,mrf,lps,cat,tgo,gvy,a,c,d,e,f,g,h,i,k,l,m,n,p,q,r,s,t,v,w,y) 
-select accession,diso,abd,csl,"int",len,"max",phs,pip,rna,mrf,lps,cat,tgo,gvy,a,c,d,e,f,g,h,i,k,l,m,n,p,q,r,s,t,v,w,y from precomp_yeast_data_tsv
+select "name",diso,abd,csl,"int",len,"max",phs,pip,rna,mrf,lps,cat,tgo,gvy,a,c,d,e,f,g,h,i,k,l,m,n,p,q,r,s,t,v,w,y from precomp_yeast_data_tsv;
 
 UPDATE precomputed_mags set species='YEAST' where species is NULL;
-
-UPDATE precomputed_mags set marker = true where accession in ('P04147', 'Q13283', 'Q12517', 'Q9NPI6', 'Q8IU60', 'P53550', 'Q03465', 'P18583', 'P15646', 'O00567')
 
 update precomputed_mags set z_score = "avg" from precomp_human_zs_tsv where precomp_human_zs_tsv.nam = precomputed_mags.accession;
 update precomputed_mags set z_score = "avg" from precomp_yeast_zs_tsv where precomp_yeast_zs_tsv."name" = precomputed_mags.accession;
@@ -66,7 +63,6 @@ CREATE TABLE public.precomputed_magsseq (
     accession varchar(255) NOT NULL,
     gene varchar(255) NULL,
     species varchar(255) NULL,
-    marker bool NOT NULL DEFAULT false,
     score float8 NULL,
     z_score_human float8 NULL,
     z_score_yeast float8 NULL,
@@ -75,11 +71,11 @@ CREATE TABLE public.precomputed_magsseq (
     run int4 NULL,
     max int4 NULL,
     chg float4 NULL,
-    net float4 NULL,
+    net int4 NULL,
     gvy float4 NULL,
     pip float4 NULL,
     tgo float4 NULL,
-    mfc float4 NULL,
+    mfc int4 NULL,
     sto int4 NULL,
     stc int4 NULL,
     sft float4 NULL,
@@ -113,19 +109,17 @@ CREATE TABLE public.precomputed_magsseq (
 );
 
 insert into precomputed_magsseq(accession,diso,len,run,"max",chg,net,gvy,pip,tgo,mfc,sto,stc,rbp,sol,cat,r,h,k,d,e,s,t,n,q,c,g,p,a,v,i,l,m,f,y,w) 
-select nam,dis,len,run,"max",chg,net,gvy,pip,tgo,mfc,sto,stc,rbp,sol,cat,r,h,k,d,e,s,t,n,q,c,g,p,a,v,i,l,m,f,y,w  from seq_hmn_pme_corr_txt
+select nam,dis,len,run,"max",chg,net,gvy,pip,tgo,mfc,sto,stc,rbp,sol,cat,r,h,k,d,e,s,t,n,q,c,g,p,a,v,i,l,m,f,y,w  from seq_hmn_pme_corr_txt;
 
 UPDATE precomputed_magsseq set species='HUMAN';
 
 insert into precomputed_magsseq(accession,diso,len,run,"max",chg,net,gvy,pip,tgo,mfc,sto,stc,sft,scn,sbb,pol,rbp,sol,cat,r,h,k,d,e,s,t,n,q,c,g,p,a,v,i,l,m,f,y,w) 
-select nam,dis,len,run,"max",chg,net,gvy,pip,tgo,mfc,sto,stc,sft,scn,sbb,pol,rbp,sol,cat,r,h,k,d,e,s,t,n,q,c,g,p,a,v,i,l,m,f,y,w from seq_yst_pme_corr_txt
+select nam,dis,len,run,"max",chg,net,gvy,pip,tgo,mfc,sto,stc,sft,scn,sbb,pol,rbp,sol,cat,r,h,k,d,e,s,t,n,q,c,g,p,a,v,i,l,m,f,y,w from seq_yst_pme_corr_txt;
 
 UPDATE precomputed_magsseq set species='YEAST' where species is NULL;
 
 update precomputed_magsseq set z_score_human = zs from hmn_zs_tsv where hmn_zs_tsv.accession = precomputed_magsseq.accession;
 update precomputed_magsseq set z_score_yeast = zs from yst_zs_tsv where yst_zs_tsv.accession = precomputed_magsseq.accession;
-
-
 
 --  gene names
 update precomputed_magsseq SET gene = "human_uni2genesyn.txt".gene from "human_uni2genesyn.txt" where "human_uni2genesyn.txt".accession=precomputed_magsseq.accession;

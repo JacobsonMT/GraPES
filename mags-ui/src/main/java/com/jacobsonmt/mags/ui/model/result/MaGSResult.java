@@ -23,7 +23,7 @@ public class MaGSResult {
     private Double disorder;
 
     private Double compositionD;
-    private Integer compositionE;
+    private Double compositionE;
 
     private Double compositionL;
     private Double compositionG;
