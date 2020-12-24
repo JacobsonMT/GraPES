@@ -10,6 +10,7 @@ public class Graph {
     private String label;
     private String title;
     private String description;
+    private String unit;
     private Number score;
     private Distribution distribution;
 }

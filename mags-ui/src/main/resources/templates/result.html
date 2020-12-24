@@ -87,7 +87,12 @@
                     </tr>
                     <tr th:each="graph : ${graphs}">
                         <td class="text-right" style="width: 33%" th:text="${graph.title}"></td>
-                        <td><span class="align-middle p-4" th:text="${graph.score} % 1 == 0? ${graph.score} :${#numbers.formatDecimal(graph.score, 0, 2)}"></span></td>
+                        <td>
+                            <span class="align-middle p-4">
+                                <span th:text="${graph.score} % 1 == 0? ${graph.score} :${#numbers.formatDecimal(graph.score, 0, 2)}" th:remove="tag"></span>
+                                <span th:if="${graph.unit != null}" th:text="${graph.unit}" th:remove="tag"></span>
+                            </span>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
