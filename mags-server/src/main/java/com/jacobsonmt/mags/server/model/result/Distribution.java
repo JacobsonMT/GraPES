@@ -13,7 +13,7 @@ import weka.estimators.KernelEstimator;
 @Data
 public class Distribution {
 
-    private static final int KERNEL_STEPS = 100;
+    private static final int KERNEL_STEPS = 15;
 
     private final Map<String, Number> markers = new LinkedHashMap<>();
 
@@ -51,7 +51,7 @@ public class Distribution {
 
         double stepWidth = (max - min) / KERNEL_STEPS;
 
-        for (int i = 0; i < KERNEL_STEPS; i++) {
+        for (int i = 0; i <= KERNEL_STEPS; i++) {
             double xi = min + i * stepWidth;
 
             data.add(new Double[]{xi, kernelEstimator.getProbability(xi)});
