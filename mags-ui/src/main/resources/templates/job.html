@@ -28,7 +28,7 @@
     <div id="job-view-content" class="main-content p-4" >
 
         <h1 class="mb-0 text-center" th:text="${job.label}">...</h1>
-        <span class="d-block text-center mb-4 text-muted" th:text="${job.species}">...</span>
+        <span class="d-block text-center mb-4 text-muted" th:text="${job.species.label + ' Model'}">...</span>
         <!--<small class="d-block text-center mb-4 text-muted" th:if="${job.hidden}" th:text="Private">...</small>-->
 
         <div class="card mx-auto text-center mb-4 result-card" th:if="${job}" style="min-width:750px;">
