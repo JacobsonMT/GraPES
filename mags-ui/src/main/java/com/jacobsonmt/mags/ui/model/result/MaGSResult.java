@@ -6,6 +6,7 @@ import lombok.Data;
 public class MaGSResult {
 
     private String accession;
+    private String gene;
     private String species;
 
 

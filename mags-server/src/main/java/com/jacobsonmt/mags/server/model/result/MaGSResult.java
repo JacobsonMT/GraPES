@@ -10,6 +10,7 @@ public class MaGSResult {
     public static MaGSResult fromPrecomputedResult(PrecomputedMaGSResult precomputedResult) {
         MaGSResult result = new MaGSResult();
         result.setAccession(precomputedResult.getAccession());
+        result.setGene(precomputedResult.getGene());
         result.setSpecies(precomputedResult.getSpecies());
 
         result.setScore(precomputedResult.getZScore());
@@ -30,6 +31,7 @@ public class MaGSResult {
     }
 
     private String accession;
+    private String gene;
     private Species species;
 
 

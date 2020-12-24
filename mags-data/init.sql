@@ -1,5 +1,6 @@
 CREATE TABLE public.precomputed_mags (
     accession varchar(255) NOT NULL,
+    gene varchar(255) NULL,
     species varchar(255) NULL,
     marker bool NOT NULL DEFAULT false,
     score float8 NULL,
@@ -56,8 +57,14 @@ UPDATE precomputed_mags set marker = true where accession in ('P04147', 'Q13283'
 update precomputed_mags set z_score = "avg" from precomp_human_zs_tsv where precomp_human_zs_tsv.nam = precomputed_mags.accession;
 update precomputed_mags set z_score = "avg" from precomp_yeast_zs_tsv where precomp_yeast_zs_tsv."name" = precomputed_mags.accession;
 
+--  gene names
+
+update precomputed_mags SET gene = "human_uni2genesyn.txt".gene from "human_uni2genesyn.txt" where "human_uni2genesyn.txt".accession=precomputed_mags.accession;
+update precomputed_mags SET gene = "yeast_gene.txt".gene from "yeast_gene.txt" where "yeast_gene.txt".accession=precomputed_mags.accession;
+
 CREATE TABLE public.precomputed_magsseq (
     accession varchar(255) NOT NULL,
+    gene varchar(255) NULL,
     species varchar(255) NULL,
     marker bool NOT NULL DEFAULT false,
     score float8 NULL,
@@ -118,6 +125,11 @@ UPDATE precomputed_magsseq set species='YEAST' where species is NULL;
 update precomputed_magsseq set z_score_human = zs from hmn_zs_tsv where hmn_zs_tsv.accession = precomputed_magsseq.accession;
 update precomputed_magsseq set z_score_yeast = zs from yst_zs_tsv where yst_zs_tsv.accession = precomputed_magsseq.accession;
 
+
+
+--  gene names
+update precomputed_magsseq SET gene = "human_uni2genesyn.txt".gene from "human_uni2genesyn.txt" where "human_uni2genesyn.txt".accession=precomputed_magsseq.accession;
+update precomputed_magsseq SET gene = "yeast_gene.txt".gene from "yeast_gene.txt" where "yeast_gene.txt".accession=precomputed_magsseq.accession;
 
 -- Markers
 CREATE TABLE public.marker_mags (

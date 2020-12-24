@@ -38,11 +38,16 @@ $(document).ready(function () {
       },
       {
         targets: 1,
-        data: "species",
+        data: "gene",
         className: 'text-right mono-font-body'
       },
       {
         targets: 2,
+        data: "species",
+        className: 'text-right mono-font-body'
+      },
+      {
+        targets: 3,
         data: "score",
         className: 'text-right mono-font-body',
         render: function (data, type, row, meta) {
@@ -50,7 +55,7 @@ $(document).ready(function () {
         }
       },
       {
-        targets: 3,
+        targets: 4,
         data: "accession",
         searchable: false,
         orderable: false,

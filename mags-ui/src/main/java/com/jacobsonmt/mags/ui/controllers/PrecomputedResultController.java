@@ -81,6 +81,7 @@ public class PrecomputedResultController {
                 if ( col.isSearchable() ) {
                     switch ( col.getData() ) {
                         case "accession":
+                        case "gene":
 //                        case "species":
 //                        case "v1":
                             searches.add(new FieldSearch(col.getData(), query));
@@ -100,6 +101,7 @@ public class PrecomputedResultController {
                 switch ( col.getData() ) {
                     case "accession":
                     case "species":
+                    case "gene":
                         sorts.add(new FieldSort(col.getData(), order.getDir().equals("asc")));
                         break;
                     case "score":

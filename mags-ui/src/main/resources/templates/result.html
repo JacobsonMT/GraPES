@@ -15,7 +15,7 @@
         /*<![CDATA[*/
 
         const graphs = /*[[${graphs}]]*/ 'graphs';
-        const label = /*[[${result.accession}]]*/ 'Query';
+        const label = /*[[${result.gene != null ? result.gene : result.accession}]]*/ 'Query';
 
         /*]]>*/
     </script>
@@ -27,7 +27,8 @@
 
     <div id="job-view-content" class="main-content p-4" >
 
-        <h1 class="mb-0 text-center" th:text="${result.accession}">...</h1>
+        <h1 class="mb-0 text-center" th:if="${result.gene != null}" th:text="${result.gene + ' (' + result.accession + ')'}">...</h1>
+        <h1 class="mb-0 text-center" th:if="${result.gene == null}" th:text="${result.accession}">...</h1>
         <span class="d-block text-center mb-4 text-muted" th:text="${result.species}">...</span>
         <!--<small class="d-block text-center mb-4 text-muted" th:if="${job.hidden}" th:text="Private">...</small>-->
 
