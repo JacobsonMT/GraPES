@@ -15,9 +15,16 @@
         <p> MaGS takes a number of protein features; including protein abundance, number of annotated interaction partners, number of annotated phosphorylation sites, and others; and combines them in a general linearized model to generate a score that ranks proteins for their likelihood to be contained within biological condensates. Additionally, the server contains a new method, MaGSeq, which also is a general linearized model for protein condensate incorporation based only on protein sequence features without any other a priori knowledge of that protein’s biological context.  In MaGSeq, a number of other predictors, such as DISOPRED3 for protein intrinsic disorder and RPBBind for RNA-binding propensity, are used. To parameterize and test the model, proteins localizing to cellular condensates/granules were compiled from mass-spec and colocalization immunofluorescence experiments.  These ‘granulomes’ were then interrogated against cytoplasmic and proteomic controls for enriched protein features, which were then examined with PCA and QDA methods to find those features which best separated granulome proteins from the controls.  These features were then used in a quasibinomial GLM which underwent 10-fold cross validation during parameterization and was then tested against an independent validation set. </p>
     </div>
 
-    <div th:replace="fragments/title :: title(title='Citations')" th:remove="tag">...</div>
+    <div th:replace="fragments/title :: title(title='Citation')" th:remove="tag">...</div>
+    <div class="main-content p-4">
+        <p>Kuechler ER, Jacobson M, Mayor T, Gsponer J. GraPES: The granule protein enrichment server. in press.</p>
+    </div>
+
+    <div th:replace="fragments/title :: title(title='References')" th:remove="tag">...</div>
 
     <div class="main-content p-4">
+        <p class="mb-0"><b>MaGS:</b></p>
+        <p class="mb-2 ml-3">Kuechler ER, Budzyńska PM, Bernardini JP, Gsponer J, Mayor T. Distinct Features of Stress Granule Proteins Predict Localization in Membraneless Organelles. <em>J Mol Biol</em>. 2020 Mar 27;432(7):2349-2368. <a target="_blank" href="https://doi.org/10.1016/j.jmb.2020.02.020">doi: 10.1016/j.jmb.2020.02.020</a>. Epub 2020 Feb 24. PMID: 32105731.</p>
         <p class="mb-0"><b>DISOPRED3:</b></p>
         <p class="mb-2 ml-3">Jones DT, Cozzetto D. DISOPRED3: precise disordered region predictions with annotated protein-binding activity. <em>Bioinformatics</em>. 2015 Mar 15;31(6):857-63. <a target="_blank" href="https://doi.org/10.1093/bioinformatics/btu744">doi: 10.1093/bioinformatics/btu744</a>. Epub 2014 Nov 12. PMID: 25391399; PMCID: PMC4380029.</p>
         <p class="mb-0"><b>Camsol:</b></p>
