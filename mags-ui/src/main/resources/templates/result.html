@@ -33,14 +33,34 @@
 
         <div class="card mx-auto text-center mb-4 result-card" th:if="${result}" style="min-width:750px;">
             <div class="card-header">
-                <h5 class="mb-0 text-center">Feature Distributions</h5>
-                <span class="d-block text-center text-muted">To zoom in, use the mouse to select a region of interest. The current accession is
-                    shown with a blue vertical line. In addition, we selected representative proteins from different PMLO to
+                <h5 class="mb-0 text-center">MaGS Z-Score Distribution</h5>
+                <span class="d-block text-center text-muted">To zoom in, use the mouse to select a region of interest.</span>
+                <span class="d-block text-center text-muted">Selected representative proteins from different PMLO are shown to
                     indicate how these proteins perform in our predictor.</span>
             </div>
             <div class="card-body" th:if="${result}">
+                <div class="row">
+                    <div th:each="graph : ${graphs}" th:if="${graph.title == 'MaGS Z-Score'}" class="graph col-12">
+                        <div th:id="${graph.label + '-graph'}"></div>
+                        <div>
+                            <p th:text="${graph.description}"></p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="card mx-auto text-center mb-4 result-card" th:if="${result}" style="min-width:750px;">
+            <div class="card-header">
+                <h5 class="mb-0 text-center">Feature Distributions</h5>
+                <span class="d-block text-center text-muted">To zoom in, use the mouse to select a region of interest.</span>
+                <span class="d-block text-center text-muted">Individual features scores for the predicted sequence are shown below.
+                    Selected representative proteins from different PMLO are shown to indicate how these proteins perform in our predictor.</span>
+            </div>
+            <div class="card-body" th:if="${result}">
                <div id="graphs" class="row">
-                   <div th:each="graph : ${graphs}" class="graph col-xl-6 col-sm-12">
+                   <div th:each="graph : ${graphs}" th:if="${graph.title != 'MaGS Z-Score'}" class="graph col-xl-6 col-sm-12">
                        <div th:id="${graph.label + '-graph'}"></div>
                        <div>
                            <p th:text="${graph.description}"></p>
@@ -53,7 +73,7 @@
 
         <div class="card mx-auto text-center mb-4 result-card">
             <div class="card-header">
-                <h5 class="mb-0 text-center">Details</h5>
+                <h5 class="mb-0 text-center">Scores</h5>
             </div>
                 <table class="job-table table table-sm mb-0">
                     <tbody>
@@ -73,15 +93,15 @@
                 </table>
         </div>
 
-<!--        <div class="card mx-auto text-center mb-4 result-card">-->
-<!--            <div class="card-header">-->
-<!--                <h5 class="mb-0 text-center">Downloads</h5>-->
-<!--            </div>-->
-<!--            <div class="card-body">-->
-<!--&lt;!&ndash;                <a th:href="${job.jobId} +'/inputFASTA'" class="align-middle mr-2"><i class="fas fa-file-download mr-1"></i>Input FASTA</a>&ndash;&gt;-->
-<!--&lt;!&ndash;                <a th:href="${job.jobId} +'/resultCSV'" th:if="${job.complete && !job.failed}" class="align-middle"><i class="fas fa-file-download mr-1"></i>Results</a>&ndash;&gt;-->
-<!--            </div>-->
-<!--        </div>-->
+        <div class="card mx-auto text-center mb-4 result-card">
+            <div class="card-header">
+                <h5 class="mb-0 text-center">Downloads</h5>
+            </div>
+            <div class="card-body">
+                <a th:href="'/api/precomputed/' + ${result.accession}" class="align-middle mr-2" target="_blank"><i class="fas fa-file-download mr-1"></i>Results</a>
+                <a th:href="'/api/precomputed/' + ${result.accession} + '/graphs'" class="align-middle" target="_blank"><i class="fas fa-file-download mr-1"></i>KDE</a>
+            </div>
+        </div>
 
     </div>
 
