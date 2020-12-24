@@ -37,8 +37,13 @@ public class QueueEndpoint {
     }
 
     @RequestMapping(value = "/pending", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Long> getJobs() {
+    public ResponseEntity<Long> pending() {
         return ResponseEntity.ok( jobService.getPendingJobCount() );
+    }
+
+    @RequestMapping(value = "/user/{userId}/pending", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Long> pendingForUser(@PathVariable String userId) {
+        return ResponseEntity.ok( jobService.getPendingJobCount(userId) );
     }
 
 }

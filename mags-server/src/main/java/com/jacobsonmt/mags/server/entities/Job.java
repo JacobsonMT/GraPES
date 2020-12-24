@@ -81,7 +81,16 @@ public class Job extends Auditable {
         SUCCESS,
         ERROR,
         STOPPED,
-        VALIDATION_ERROR
+        PAUSED,
+        VALIDATION_ERROR;
+
+        public static Status getValueOf(String value) {
+            try{
+                return Status.valueOf(value);
+            } catch( IllegalArgumentException e ) {
+                return null;
+            }
+        }
     }
 
     @JsonIgnore

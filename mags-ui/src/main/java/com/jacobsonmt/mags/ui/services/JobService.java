@@ -63,6 +63,21 @@ public class JobService {
         );
     }
 
+    public ResponseEntity<Long> countPendingJobsForSession(String session) {
+        RestTemplate restTemplate = new RestTemplateBuilder()
+            .errorHandler( new NoOpResponseErrorHandler() ).build();
+        HttpEntity entity = new HttpEntity(createHeaders());
+        // getForObject cannot specify headers so we use exchange
+
+        return restTemplate.exchange(
+            applicationSettings.getProcessServerURI() + "/queue/user/{userId}/pending",
+            HttpMethod.GET,
+            entity,
+            Long.class,
+            session
+        );
+    }
+
     public ResponseEntity<Job> getJob(long jobId) {
         RestTemplate restTemplate = new RestTemplateBuilder()
                 .errorHandler( new NoOpResponseErrorHandler() ).build();

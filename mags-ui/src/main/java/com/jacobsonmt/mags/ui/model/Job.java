@@ -17,7 +17,7 @@ public class Job {
     private String label;
     private String input;
     private Species species;
-    private Status status;
+    private String status;
     private String message;
     private Instant started;
     private Instant finished;
@@ -25,14 +25,5 @@ public class Job {
 //    private String externalLink;
     private Instant createdDate;;
     private MaGSSeqResult result;
-
-    public enum Status {
-        SUBMITTED,
-        PROCESSING,
-        SUCCESS,
-        ERROR,
-        STOPPED,
-        VALIDATION_ERROR
-    }
 
 }

@@ -1,9 +1,6 @@
 package com.jacobsonmt.mags.ui.controllers;
 
-import com.jacobsonmt.mags.ui.model.Job;
-import com.jacobsonmt.mags.ui.model.Job.Status;
 import com.jacobsonmt.mags.ui.services.JobService;
-import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -60,17 +57,8 @@ public class MainController {
     }
 
     @GetMapping("/pending")
-    public ResponseEntity<Long> pendingCount(@RequestParam(value = "session", required = false) String session ) {
-        if (session == null || session.isEmpty()) {
-            session = RequestContextHolder.currentRequestAttributes().getSessionId();
-        }
-        List<Job> jobs = jobService.getJobsForUser( session ).getBody();
-        if (jobs == null) {
-            return ResponseEntity.status( 500 ).body( 0L );
-        }
-
-        return ResponseEntity.ok().body(jobs.stream()
-            .filter( j -> j.getStatus() == Status.SUBMITTED || j.getStatus() == Status.PROCESSING ).count());
+    public ResponseEntity<Long> pendingCount(@RequestParam(value = "session") String session ) {
+        return jobService.countPendingJobsForSession( session );
     }
 
     @GetMapping("/precomputed")

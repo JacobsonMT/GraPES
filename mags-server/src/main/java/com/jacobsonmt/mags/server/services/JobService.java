@@ -2,9 +2,11 @@ package com.jacobsonmt.mags.server.services;
 
 
 import com.google.common.collect.Sets;
+import com.jacobsonmt.mags.server.dao.JobConfigDao;
 import com.jacobsonmt.mags.server.dao.JobDao;
 import com.jacobsonmt.mags.server.entities.Job;
 import com.jacobsonmt.mags.server.entities.Job.Status;
+import com.jacobsonmt.mags.server.entities.JobConfig;
 import com.jacobsonmt.mags.server.entities.JobResult;
 import com.jacobsonmt.mags.server.entities.Species;
 import com.jacobsonmt.mags.server.model.FASTASequence;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class JobService {
 
     private final JobDao jobDao;
+    private final JobConfigDao jobConfigDao;
     private final JobRunner jobRunner;
     private final EmailService emailService;
 
@@ -32,9 +35,11 @@ public class JobService {
 
     public JobService(
         JobDao jobDao,
+        JobConfigDao jobConfigDao,
         JobRunner jobRunner,
         EmailService emailService) {
         this.jobDao = jobDao;
+        this.jobConfigDao = jobConfigDao;
         this.jobRunner = jobRunner;
         this.emailService = emailService;
     }
@@ -104,6 +109,7 @@ public class JobService {
         }
     }
 
+    @Transactional
     public Job submit( String user, String email, FASTASequence sequence, String emailExternalLink, Species species) {
         Job job = createJob(user, email, sequence, emailExternalLink, species);
 
@@ -149,6 +155,10 @@ public class JobService {
         return jobDao.countJobByDeletedFalseAndStatusIn(pendingStatuses);
     }
 
+    public long getPendingJobCount(String session) {
+        return jobDao.countJobBySessionIsAndDeletedFalseAndStatusIn(session, pendingStatuses);
+    }
+
     private Job createJob(String user, String email, FASTASequence sequence, String emailExternalLink, Species species) {
         Job job = new Job();
         job.setSession(user);
@@ -161,7 +171,13 @@ public class JobService {
             job.setStatus(Status.VALIDATION_ERROR);
             job.setMessage(sequence.getValidationStatus());
         } else {
-            job.setStatus(Status.SUBMITTED);
+            Status status = jobConfigDao.findById(JobConfig.DEFAULT_STATUS).map(JobConfig::getValue)
+                .map(Status::getValueOf).orElse(Status.SUBMITTED);
+            if (status != Status.SUBMITTED) {
+                String message = jobConfigDao.findById(JobConfig.DEFAULT_MESSAGE).map(JobConfig::getValue).orElse("");
+                job.setMessage(message);
+            }
+            job.setStatus(status);
         }
 
         job.setEmail(email);
