@@ -165,3 +165,5 @@ INSERT INTO marker_magseq (accession, label) VALUES
 -- Indices
 
 CREATE INDEX job_input_idx ON public.job USING btree (input);
+CREATE INDEX precomputed_mags_accession_idx ON public.precomputed_mags USING btree (accession, gene);
+CREATE INDEX precomputed_magsseq_accession_idx ON public.precomputed_magsseq USING btree (accession, gene);
