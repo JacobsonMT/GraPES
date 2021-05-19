@@ -15,7 +15,7 @@
         /*<![CDATA[*/
 
         const graphs = /*[[${graphs}]]*/ 'graphs';
-        const label = /*[[${result.gene != null ? result.gene : result.accession}]]*/ 'Query';
+        const label = /*[[${result.gene != null && result.gene != "" ? result.gene : result.accession}]]*/ 'Query';
 
         /*]]>*/
     </script>
