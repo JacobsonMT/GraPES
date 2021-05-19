@@ -9,13 +9,69 @@
 <div th:replace="fragments/navbar :: navbar(documentation)">...</div>
 <div class="container-fluid p-4">
 
-    <div th:replace="fragments/title :: title(title='Instructions')" th:remove="tag">...</div>
+    <div th:replace="fragments/title :: title(title='Overview')" th:remove="tag">...</div>
 
     <div class="main-content p-4">
-        <p><b>Input:</b></p>
-        <p>One or more protein sequences in fasta format.
-        <p><b>Output:</b></p>
-        <p><a th:href="@{/precomputed/A0AV96}" href="../precomputed/A0AV96">Live Example</a></p>
+        <p>
+            GraPES currently houses the MaGS (Membraneless organelle and Granule Score) and MaGSeq
+            tools that predict the likelihood of proteins to colocalize into liquid-liquid phase separated biological
+            condensates by evaluating a protein and providing the user with a z-score as compared to the proteomic
+            distribution of human or Saccharomyces Cerevisiae cell lines. These tools are parameterized using the
+            same workflow but differ in their implementation:
+        </p>
+
+        <ul>
+            <li>MaGS uses protein-specific, experimentally measured data in its evaluation and will provide the
+                user with the most accurate assessment. However, this method is more limited as it requires all
+                experimental data to be available. Currently, users can search a database of pre-computed
+                scores over the human and yeast proteomes.</li>
+            <li>MaGSeq uses only the primary sequence of a protein in its evaluation and, while not as accurate
+                as MaGS, provides the user flexibility to test novel protein sequences or to make predictions of
+                proteins of other eukaryotic organisms.</li>
+        </ul>
+    </div>
+
+    <div th:replace="fragments/title :: title(title='Submitting a Job')" th:remove="tag">...</div>
+
+    <div class="main-content p-4">
+        <p>
+            For MaGS (currently on the home page) simply query the protein of interest by UniProtID or gene name
+            and the webtool will pull up any entries in the database that are available.
+        </p>
+        <p>
+            For MaGSeq, navigate to the MaGSeq tab at the top of the web page then you should be able to enter
+            the following information: FASTA sequence(s), Model (Human/Yeast) and E-mail (optional). When you
+            have entered the information, click the Submit button.
+        </p>
+    </div>
+
+    <div th:replace="fragments/title :: title(title='Output')" th:remove="tag">...</div>
+
+    <div class="main-content p-4">
+        <p>
+            After your jobs have run, you will be able to access a variety of output data. Most importantly, is the Z-
+            Score, as this represents the likelihood for localization into biological condensates. While there is no
+            strict cutoff, we would recommend a score of over 1.5 as an initial threshold keeping in mind that phase
+            separation in a biological environment is complex and nuanced. A number of other features are included
+            in the output as well, and can be used to help inform which features are helping to drive the prediction.
+            Each of the features and the z-score are represented graphically:
+        </p>
+
+        <img th:src="@{/img/pscore_example.png}" style="height: 250px;" class="mt-4 mb-4">
+
+        <p>
+            Where the y-axis is the Density (percent) of proteins with a given score (the x-axis). The background
+            distribution of that feature in the proteome is shown in gray. Then a number of known foci markers are
+            shown in addition to the queried protein. Here, for instance, the PScore is shown with the markers
+            DCP2, PAB1, and G3BP1 along with the queried protein. The protein of interest has a much higher
+            PScore, which is a measure of increased pi-pi interactions, than the markers so the user can conclude
+            that this property is likely to aid the protein in forming multivalent interactions and to form
+            condensates.
+        </p>
+        <p>
+            In addition to the graphical outputs a plain text file can be downloaded containing data for that protein.
+            This file is formatted as:
+        </p>
         <pre>
 {
     "accession": Unitprot Accession,
@@ -35,10 +91,24 @@
         </pre>
     </div>
 
-<!--    <div th:replace="fragments/title :: title(title='Job Deletion Policy')" th:remove="tag">...</div>-->
-<!--    <div class="main-content p-4">-->
-<!--        <p>Jobs will be stored for at least 14 days, afterwards they may be deleted without notice. </p>-->
-<!--    </div>-->
+    <div th:replace="fragments/title :: title(title='Notification Email')" th:remove="tag">...</div>
+
+    <div class="main-content p-4">
+        <p>
+            If an email address is provided (providing an email address is optional), a notification email will be sent
+            once a job is processed. Notification a link to the results page for the job.
+        </p>
+    </div>
+
+    <div th:replace="fragments/title :: title(title='Jobs Table')" th:remove="tag">...</div>
+
+    <div class="main-content p-4">
+        <p>
+            At the bottom of the Home and MaGSeq tabs there is a table which provides the user information on
+            the queuing system and the state of their submitted jobs. Once your jobs have been finished your
+            results can also be accessed through this table.
+        </p>
+    </div>
 
     <div th:replace="fragments/title :: title(title='Versions')" th:remove="tag">...</div>
     <div class="main-content p-4">
