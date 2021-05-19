@@ -24,6 +24,9 @@ public class PrecomputedMaGSResult extends MaGSResult {
     @Column(name = "gene")
     private String gene;
 
+    @Column(name = "synonyms")
+    private String synonyms;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "species")
     private Species species;

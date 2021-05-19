@@ -85,6 +85,7 @@ public class PrecomputedResultController {
 //                        case "species":
 //                        case "v1":
                             searches.add(new FieldSearch(col.getData(), query));
+                            searches.add(new FieldSearch("synonyms", query));
                             break;
                         default:
                             // Do Nothing
