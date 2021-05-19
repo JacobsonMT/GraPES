@@ -34,7 +34,7 @@
         <div class="card mx-auto text-center mb-4 result-card" th:if="${job}" style="min-width:750px;">
             <div class="card-header">
                 <h5 class="mb-0 text-center">MaGSeq Z-Score Distribution</h5>
-                <span class="d-block text-center text-muted">To zoom in, use the mouse to select a region of interest.</span>
+                <span class="d-block text-center text-muted">To zoom in, click and drag to select a region of interest. Click a series in the legend to hide it.</span>
                 <span class="d-block text-center text-muted">Selected representative proteins from different PMLO are shown to
                     indicate how these proteins perform in our predictor.</span>
             </div>
@@ -54,7 +54,7 @@
         <div class="card mx-auto text-center mb-4 result-card" th:if="${job}" style="min-width:750px;">
             <div class="card-header">
                 <h5 class="mb-0 text-center">Feature Distributions</h5>
-                <span class="d-block text-center text-muted">To zoom in, use the mouse to select a region of interest.</span>
+                <span class="d-block text-center text-muted">To zoom in, click and drag to select a region of interest. Click a series in the legend to hide it.</span>
                 <span class="d-block text-center text-muted">Individual features scores for the predicted sequence are shown below.
                     Selected representative proteins from different PMLO are shown to indicate how these proteins perform in our predictor.</span>
             </div>
@@ -105,8 +105,9 @@
                 <h5 class="mb-0 text-center">Downloads</h5>
             </div>
             <div class="card-body">
-                <a th:href="'/api/job/' + ${job.id}" class="align-middle mr-2" target="_blank"><i class="fas fa-file-download mr-1"></i>Results</a>
-                <a th:href="'/api/job/' + ${job.id} + '/graphs'" class="align-middle" target="_blank"><i class="fas fa-file-download mr-1"></i>KDE</a>
+                <p>Below you can access JSON representations of this job's metadata and scores (Job Results) and the background proteome distribution (Proteome Distribution).</p>
+                <a th:href="'/api/job/' + ${job.id}" class="align-middle mr-2" target="_blank"><i class="fas fa-file-download mr-1"></i>Job Results</a>
+                <a th:href="'/api/job/' + ${job.id} + '/graphs'" class="align-middle" target="_blank"><i class="fas fa-file-download mr-1"></i>Proteome Distribution</a>
             </div>
         </div>
 

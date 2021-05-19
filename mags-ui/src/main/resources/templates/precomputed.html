@@ -41,16 +41,15 @@
 
     <div class="main-content p-4" >
         <p class="mb-3" style="font-size: 125%">
-            On this website, <b th:text="${@siteSettings.title}">GraPES</b>, contains tools to predict proteins’ likelihood to
+            This website, <b th:text="${@siteSettings.title}">GraPES</b>, contains tools to predict proteins’ likelihood to
             be contained in liquid-liquid phase separated biological condensates within a cellular environment.
         </p>
         <p class="mb-5" style="font-size: 125%">
-            On this homepage is, <b>MaGS</b>, a precomputed table for z-scores which exploits publically available knowledge of a protein's biological
-            context.  Enter Uniprot IDs for either yeast (S. Cerevisiae) or human proteins.  If the protein is unavailable, or
-            you are looking for different organisms, please use the second tool, MaGSeq, which makes predictions based entirely
-            on the input protein sequence features. Details on the MaGS method can be found
-            <a href="https://doi.org/10.1016/j.jmb.2020.02.020" target="_blank">https://doi.org/10.1016/j.jmb.2020.02.020</a> and the
-            sequence-based model will be discussed in an upcoming publication.
+            Two main tools are available: <b>MaGS</b> and <b>MaGSeq</b>. MaGS(below) provides precomputed z-scores for the likelihood of granule localization.
+            MaGS exploits publically available knowledge of a protein's biological context. Enter Uniprot IDs for either yeast (S. Cerevisiae) or
+            human proteins. If the protein is unavailable, or you are looking for different organisms, please use <a class="nav-link" th:href="@{/submit}" href="/submit">MaGSeq</a>.
+            Details on the MaGS method can be found at <a href="https://doi.org/10.1016/j.jmb.2020.02.020" target="_blank">https://doi.org/10.1016/j.jmb.2020.02.020</a>
+            and the sequence-based model will be discussed in an upcoming publication.
         </p>
         <div>
             <div th:replace="fragments/precomputed-table :: precomputed-table"

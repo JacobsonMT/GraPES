@@ -69,7 +69,7 @@ function createKernelDensityEstimate(title, xAxis, kde, score, markers) {
 
         series: [{
             type: 'areaspline',
-            name: "KDE",
+            name: "Proteome Distribution",
             dashStyle: "solid",
             lineWidth: 1,
             color: "#a6a3ac",

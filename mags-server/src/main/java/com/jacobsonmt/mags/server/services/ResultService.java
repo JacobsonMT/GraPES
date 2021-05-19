@@ -58,7 +58,7 @@ public class ResultService {
         camsol("Camsol", PrecomputedMaGSResult::getCsl, "Protein solubility as determined by the Camsol method.  Higher numbers indicate proteins that tend to remain in solution while lower numbers indicate that a protein is aggregation-prone."),
         annotatedPhosphorylationSites("Annotated Phosphorylation Sites", PrecomputedMaGSResult::getPhs, "The total number of experimentally observed phosphorylation sites on a protein.  This number indicates the potential for modification."),
         pScore("PScore", PrecomputedMaGSResult::getPip, "A metric to indicate the amount of π-π interactions within a protein.  Indicates that a protein is more likely to phase separate in vitro."),
-        disorder("Disorder", PrecomputedMaGSResult::getDiso, "The percent of residues within the protein that are predicted to be disordered by DISOPRED3. Many hypotheses suggest that disordered regions in proteins can modulate protein solubility."),
+        disorder("Disorder", PrecomputedMaGSResult::getDiso, "The percent of residues within the protein that are predicted to be disordered by DISOPRED3. Disordered regions in proteins can modulate protein solubility and the ability to phase separate."),
         compositionD("% Composition D", PrecomputedMaGSResult::getD, "% Composition D", "%"),
         compositionE("% Composition E", PrecomputedMaGSResult::getE, "% Composition E", "%"),
         compositionL("% Composition L", PrecomputedMaGSResult::getL, "% Composition L", "%"),
@@ -84,7 +84,7 @@ public class ResultService {
     public enum MaGSSeqFeature {
         scoreHuman("MaGSeq Z-Score", MaGSSeqResult::getZScoreHuman, "This is the MaGSeq z-score, the higher the value the more likely the protein is predicted to be in a biological condensate.  However, other complications, like cell localization could play a role."),
         scoreYeast("MaGSeq Z-Score", MaGSSeqResult::getZScoreYeast, "This is the MaGSeq z-score, the higher the value the more likely the protein is predicted to be in a biological condensate.  However, other complications, like cell localization could play a role."),
-        disorder("Disorder", MaGSSeqResult::getDiso, "The percent of residues within the protein that are predicted to be disordered by DISOPRED3. Many hypotheses suggest that disordered regions in proteins can modulate protein solubility."),
+        disorder("Disorder", MaGSSeqResult::getDiso, "The percent of residues within the protein that are predicted to be disordered by DISOPRED3. Disordered regions in proteins can modulate protein solubility and the ability to phase separate."),
         pScore("PScore", MaGSSeqResult::getPip, "A metric to indicate the amount of π-π interactions within a protein.  Indicates that a protein is more likely to phase separate in vitro."),
         rbpPred("RBP Pred", MaGSSeqResult::getRbp, "Likelihood prediction for a protein to be an RNA-binding protein.  If score is over 0.5, then it is considered to interact with RNA."),
         soluprot("Soluprot", MaGSSeqResult::getSol, "A protein solubility score where higher numbers indicate higher solubility."),
