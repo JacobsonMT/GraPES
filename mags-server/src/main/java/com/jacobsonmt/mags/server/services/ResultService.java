@@ -85,6 +85,9 @@ public class ResultService {
         scoreHuman("MaGSeq Z-Score", MaGSSeqResult::getZScoreHuman, "This is the MaGSeq z-score, the higher the value the more likely the protein is predicted to be in a biological condensate.  However, other complications, like cell localization could play a role."),
         scoreYeast("MaGSeq Z-Score", MaGSSeqResult::getZScoreYeast, "This is the MaGSeq z-score, the higher the value the more likely the protein is predicted to be in a biological condensate.  However, other complications, like cell localization could play a role."),
         disorder("Disorder", MaGSSeqResult::getDiso, "The percent of residues within the protein that are predicted to be disordered by DISOPRED3. Disordered regions in proteins can modulate protein solubility and the ability to phase separate."),
+        charge("Net Charge", MaGSSeqResult::getChg, "The total sum of the positively and negatively charged residues at neutral pH."),
+        gravy("GRAVY Score", MaGSSeqResult::getGvy, "A measure of protein hydrophobicity."),
+        softness("Softness", MaGSSeqResult::getSft, "An average measure of the electronic softness of isolated residues for the protein."),
         pScore("PScore", MaGSSeqResult::getPip, "A metric to indicate the amount of π-π interactions within a protein.  Indicates that a protein is more likely to phase separate in vitro."),
         rbpPred("RBP Pred", MaGSSeqResult::getRbp, "Likelihood prediction for a protein to be an RNA-binding protein.  If score is over 0.5, then it is considered to interact with RNA."),
         soluprot("Soluprot", MaGSSeqResult::getSol, "A protein solubility score where higher numbers indicate higher solubility."),
@@ -95,7 +98,9 @@ public class ResultService {
         compositionL("% Composition L", MaGSSeqResult::getL, "% Composition L", "%"),
         compositionD("% Composition D", MaGSSeqResult::getD, "% Composition D", "%"),
         compositionP("% Composition P", MaGSSeqResult::getP, "% Composition P", "%"),
-        compositionS("% Composition S", MaGSSeqResult::getS, "% Composition S", "%");
+        compositionS("% Composition S", MaGSSeqResult::getS, "% Composition S", "%"),
+        compositionW("% Composition W", MaGSSeqResult::getW, "% Composition W", "%"),
+        compositionV("% Composition V", MaGSSeqResult::getV, "% Composition V", "%");
 
         private final Function<MaGSSeqResult, Number> extract;
         private final String title;
@@ -191,32 +196,27 @@ public class ResultService {
         speciesMaGSSeqFeatureSet.put(Species.HUMAN, Lists.newArrayList(
             MaGSSeqFeature.scoreHuman,
             MaGSSeqFeature.disorder,
+            MaGSSeqFeature.charge,
             MaGSSeqFeature.pScore,
             MaGSSeqFeature.soluprot,
-            MaGSSeqFeature.length,
-            MaGSSeqFeature.tango,
-            MaGSSeqFeature.compositionG,
-            MaGSSeqFeature.compositionR,
+            MaGSSeqFeature.gravy,
+            MaGSSeqFeature.rbpPred,
             MaGSSeqFeature.compositionL,
-            MaGSSeqFeature.compositionD,
-            MaGSSeqFeature.compositionP,
-            MaGSSeqFeature.compositionS
+            MaGSSeqFeature.compositionW,
+            MaGSSeqFeature.compositionV
         ));
 
         speciesMaGSSeqFeatureSet.put(Species.YEAST, Lists.newArrayList(
             MaGSSeqFeature.scoreYeast,
             MaGSSeqFeature.disorder,
+            MaGSSeqFeature.charge,
             MaGSSeqFeature.pScore,
-            MaGSSeqFeature.rbpPred,
             MaGSSeqFeature.soluprot,
-            MaGSSeqFeature.length,
-            MaGSSeqFeature.tango,
-            MaGSSeqFeature.compositionG,
-            MaGSSeqFeature.compositionR,
+            MaGSSeqFeature.gravy,
+            MaGSSeqFeature.softness,
+            MaGSSeqFeature.rbpPred,
             MaGSSeqFeature.compositionL,
-            MaGSSeqFeature.compositionD,
-            MaGSSeqFeature.compositionP,
-            MaGSSeqFeature.compositionS
+            MaGSSeqFeature.compositionP
         ));
         precomputedMaGSSeqResultDao.findAll().forEach( result -> {
             Map<MaGSSeqFeature, Distribution> featureMap = backgroundMaGSSeqDistributions.computeIfAbsent(
