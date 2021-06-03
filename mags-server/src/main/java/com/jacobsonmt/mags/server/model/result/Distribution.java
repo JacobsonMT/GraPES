@@ -1,5 +1,7 @@
 package com.jacobsonmt.mags.server.model.result;
 
+import static java.lang.Math.log10;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,13 +17,22 @@ public class Distribution {
 
     private static final int KERNEL_STEPS = 15;
 
+    /**
+     * If true, the KDE will be constructed using the log10 of the background values.
+     */
+    private final boolean logTransform;
+
     private final Map<String, Number> markers = new LinkedHashMap<>();
 
     @JsonIgnore
     private final List<Number> background = new ArrayList<>();
 
     public void add(Number data) {
-        background.add(data);
+        background.add(logTransform ? log10(data.doubleValue()): data);
+    }
+
+    public void addMarker(String label, Number data) {
+        markers.put(label, data);
     }
 
     private List<Double[]> kde;
@@ -54,11 +65,12 @@ public class Distribution {
         for (int i = 0; i <= KERNEL_STEPS; i++) {
             double xi = min + i * stepWidth;
 
-            data.add(new Double[]{xi, kernelEstimator.getProbability(xi)});
+            data.add(new Double[]{logTransform ? Math.pow(10, xi) : xi, kernelEstimator.getProbability(xi)});
         }
 
         this.kde = data;
     }
+
     private Double[] iqr(List<? extends Number> values) {
         values.sort((o1, o2) -> {
             Double d1 = (o1 == null) ? Double.POSITIVE_INFINITY : o1.doubleValue();

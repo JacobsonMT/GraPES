@@ -11,9 +11,14 @@ function initializeGraphs() {
         if (graph.score != null) {
             window[graph.label] = new Highcharts.Chart(
                 document.getElementById(graph.label + '-graph'),
-                createKernelDensityEstimate(graph.title, graph.title,
-                    graph.distribution.kde, graph.score,
-                    graph.distribution.markers)
+                createKernelDensityEstimate(
+                    graph.title,
+                    graph.title,
+                    graph.distribution.kde,
+                    graph.score,
+                    graph.distribution.markers,
+                    graph.distribution.logTransform
+                )
             );
             charts.push(window[graph.label]);
         }
@@ -21,7 +26,7 @@ function initializeGraphs() {
 
 }
 
-function createKernelDensityEstimate(title, xAxis, kde, score, markers) {
+function createKernelDensityEstimate(title, xAxis, kde, score, markers, logTransform) {
 
     // find Max y-value for kde so we can determine where to stop drawing vertical marker lines
     let yMax = 0;
@@ -61,6 +66,7 @@ function createKernelDensityEstimate(title, xAxis, kde, score, markers) {
 
         xAxis: [{
             title: { text: xAxis },
+            type: logTransform ? 'logarithmic' : 'linear',
         }],
 
         yAxis: [{

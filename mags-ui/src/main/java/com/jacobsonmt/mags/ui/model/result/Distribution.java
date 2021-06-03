@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class Distribution {
-
+    private boolean logTransform;
     private Map<String, Number> markers;
     private List<Double[]> kde;
 }

@@ -54,7 +54,7 @@ public class ResultService {
 
     public enum MaGSFeature {
         score("MaGS Z-Score", PrecomputedMaGSResult::getZScore, "This is the MaGS z-score, the higher the value the more likely the protein is predicted to be in a biological condensate.  However, other complications, like cell localization could play a role."),
-        abundance("Abundance", PrecomputedMaGSResult::getAbd, "The amount of protein contained within the cell, as reported in the PAXdb integrated proteomes.  Units are in ppm.", "ppm"),
+        abundance("Abundance", PrecomputedMaGSResult::getAbd, "The amount of protein contained within the cell, as reported in the PAXdb integrated proteomes.  Units are in ppm.", "ppm", true),
         camsol("Camsol", PrecomputedMaGSResult::getCsl, "Protein solubility as determined by the Camsol method.  Higher numbers indicate proteins that tend to remain in solution while lower numbers indicate that a protein is aggregation-prone."),
         annotatedPhosphorylationSites("Annotated Phosphorylation Sites", PrecomputedMaGSResult::getPhs, "The total number of experimentally observed phosphorylation sites on a protein.  This number indicates the potential for modification."),
         pScore("PScore", PrecomputedMaGSResult::getPip, "A metric to indicate the amount of π-π interactions within a protein.  Indicates that a protein is more likely to phase separate in vitro."),
@@ -68,16 +68,22 @@ public class ResultService {
         private final String title;
         private final String description;
         private final String unit;
+        private final boolean logTransform;
 
         MaGSFeature(String title, Function<PrecomputedMaGSResult, Number> extract, String description) {
-            this(title, extract, description, null);
+            this(title, extract, description, null, false);
         }
 
         MaGSFeature(String title, Function<PrecomputedMaGSResult, Number> extract, String description, String unit) {
+            this(title, extract, description, unit, false);
+        }
+
+        MaGSFeature(String title, Function<PrecomputedMaGSResult, Number> extract, String description, String unit, boolean logTransform) {
             this.extract = extract;
             this.title = title;
             this.description = description;
             this.unit = unit;
+            this.logTransform = logTransform;
         }
     }
 
@@ -106,16 +112,22 @@ public class ResultService {
         private final String title;
         private final String description;
         private final String unit;
+        private final boolean logTransform;
 
         MaGSSeqFeature(String title, Function<MaGSSeqResult, Number> extract, String description) {
             this(title, extract, description, null);
         }
 
         MaGSSeqFeature(String title, Function<MaGSSeqResult, Number> extract, String description, String unit) {
+            this(title, extract, description, unit, false);
+        }
+
+        MaGSSeqFeature(String title, Function<MaGSSeqResult, Number> extract, String description, String unit, boolean logTransform) {
             this.extract = extract;
             this.title = title;
             this.description = description;
             this.unit = unit;
+            this.logTransform = logTransform;
         }
     }
 
@@ -172,7 +184,7 @@ public class ResultService {
             for (MaGSFeature feature : speciesFeatureSet.getOrDefault(result.getSpecies(), new ArrayList<>())) {
                 Number val = feature.extract.apply(result);
                 if (val != null) {
-                    featureMap.computeIfAbsent(feature, k -> new Distribution()).add(val);
+                    featureMap.computeIfAbsent(feature, k -> new Distribution(feature.logTransform)).add(val);
                 }
             }
         });
@@ -186,7 +198,7 @@ public class ResultService {
             for (MaGSFeature feature : speciesFeatureSet.getOrDefault(result.getSpecies(), new ArrayList<>())) {
                 Number val = feature.extract.apply(result);
                 if (val != null) {
-                    featureMap.computeIfAbsent(feature, k -> new Distribution()).getMarkers().put(marker.getLabel(), val);
+                    featureMap.computeIfAbsent(feature, k -> new Distribution(feature.logTransform)).addMarker(marker.getLabel(), val);
                 }
             }
         });
@@ -226,7 +238,7 @@ public class ResultService {
             for (MaGSSeqFeature feature : speciesMaGSSeqFeatureSet.getOrDefault(result.getSpecies(), new ArrayList<>())) {
                 Number val = feature.extract.apply(result);
                 if (val != null) {
-                    featureMap.computeIfAbsent(feature, k -> new Distribution()).add(val);
+                    featureMap.computeIfAbsent(feature, k -> new Distribution(feature.logTransform)).add(val);
                 }
             }
         });
@@ -240,7 +252,7 @@ public class ResultService {
             for (MaGSSeqFeature feature : speciesMaGSSeqFeatureSet.getOrDefault(result.getSpecies(), new ArrayList<>())) {
                 Number val = feature.extract.apply(result);
                 if (val != null) {
-                    featureMap.computeIfAbsent(feature, k -> new Distribution()).getMarkers().put(marker.getLabel(), val);
+                    featureMap.computeIfAbsent(feature, k -> new Distribution(feature.logTransform)).addMarker(marker.getLabel(), val);
                 }
             }
         });
