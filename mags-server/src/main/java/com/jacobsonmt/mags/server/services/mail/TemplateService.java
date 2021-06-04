@@ -39,6 +39,7 @@ public class TemplateService {
         context.setVariable("jobLabel", job.getLabel());
         context.setVariable("jobLink", job.getExternalLink() + job.getId());
         context.setVariable("logo", siteSettings.getLogoUrl());
+        context.setVariable("subtitle", siteSettings.getSubTitle());
 
         return context;
     }
