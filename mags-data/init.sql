@@ -31,20 +31,8 @@ UPDATE precomputed_magsseq set species='YEAST' where species is NULL;
 
 -- Scores
 
-update precomputed_magsseq set score = avg from tmp_scores_hmn where tmp_scores_hmn.nam = precomputed_magsseq.accession;
-update precomputed_magsseq set score = avg from tmp_scores_yst where tmp_scores_yst.nam = precomputed_magsseq.accession;
-
-with stats as
-         (select avg("score") as mean,
-                 stddev("score") as sd
-          from precomputed_magsseq where species='HUMAN')
-UPDATE precomputed_magsseq set z_score_human=(score - stats.mean) / stats.sd from stats where species='HUMAN';
-
-with stats as
-         (select avg("score") as mean,
-                 stddev("score") as sd
-          from precomputed_magsseq where species='YEAST')
-UPDATE precomputed_magsseq set z_score_yeast=(score - stats.mean) / stats.sd from stats where species='YEAST';
+update precomputed_magsseq set z_score_human = avg from tmp_scores_hmn where tmp_scores_hmn.nam = precomputed_magsseq.accession;
+update precomputed_magsseq set z_score_yeast = avg from tmp_scores_yst where tmp_scores_yst.nam = precomputed_magsseq.accession;
 
 --  gene names
 update precomputed_magsseq SET gene = "human_uni2genesyn.txt".gene from "human_uni2genesyn.txt" where "human_uni2genesyn.txt".accession=precomputed_magsseq.accession;
