@@ -91,7 +91,7 @@ public class ResultService {
         scoreHuman("MaGSeq Z-Score", MaGSSeqResult::getZScoreHuman, "This is the MaGSeq z-score, the higher the value the more likely the protein is predicted to be in a biological condensate.  However, other complications, like cell localization could play a role."),
         scoreYeast("MaGSeq Z-Score", MaGSSeqResult::getZScoreYeast, "This is the MaGSeq z-score, the higher the value the more likely the protein is predicted to be in a biological condensate.  However, other complications, like cell localization could play a role."),
         disorder("Disorder", MaGSSeqResult::getDiso, "The percent of residues within the protein that are predicted to be disordered by DISOPRED3. Disordered regions in proteins can modulate protein solubility and the ability to phase separate."),
-        charge("Net Charge", MaGSSeqResult::getChg, "The total sum of the positively and negatively charged residues at neutral pH."),
+        charge("Net Charge", MaGSSeqResult::getNet, "The total sum of the positively and negatively charged residues at neutral pH."),
         gravy("GRAVY Score", MaGSSeqResult::getGvy, "A measure of protein hydrophobicity."),
         softness("Softness", MaGSSeqResult::getSft, "An average measure of the electronic softness of isolated residues for the protein."),
         pScore("PScore", MaGSSeqResult::getPip, "A metric to indicate the amount of π-π interactions within a protein.  Indicates that a protein is more likely to phase separate in vitro."),
