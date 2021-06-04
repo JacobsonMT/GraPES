@@ -31,6 +31,12 @@ public class Job extends Auditable {
     @Column(name = "deleted", nullable = false)
     private boolean deleted;
 
+    /**
+     * True, if this job can be used as a cached result for future jobs.
+     */
+    @Column(name = "invalidated", nullable = false)
+    private boolean invalidated;
+
     @Column(name = "session", nullable = false)
     private String session;
 

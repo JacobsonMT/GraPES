@@ -113,8 +113,8 @@ public class JobService {
     public Job submit( String user, String email, FASTASequence sequence, String emailExternalLink, Species species) {
         Job job = createJob(user, email, sequence, emailExternalLink, species);
 
-        // CHeck for existing job with exact match
-        Optional<Job> existingJob = jobDao.findFirstByInputAndStatusOrderByCreatedDateDesc(job.getInput(), Status.SUCCESS);
+        // Check for existing job with exact match that hasn't been invalidated
+        Optional<Job> existingJob = jobDao.findFirstByInputAndStatusAndInvalidatedFalseOrderByCreatedDateDesc(job.getInput(), Status.SUCCESS);
 
         if (existingJob.isPresent() && existingJob.get().getResult() != null) {
             // Copy so that we store a new record in the db
