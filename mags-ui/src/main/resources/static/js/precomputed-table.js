@@ -11,7 +11,12 @@ $(document).ready(function () {
       processData: false,
       dataType: "json",
       contentType: "application/json;charset=UTF-8",
-      type: "POST"
+      type: "POST",
+      error: function (xhr, error, code)
+      {
+        console.log(xhr);
+        console.log(code);
+      }
     },
     pagingType: "simple_numbers",
     "bInfo": false,

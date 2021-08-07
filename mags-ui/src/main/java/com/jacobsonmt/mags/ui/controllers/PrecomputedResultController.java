@@ -127,17 +127,21 @@ public class PrecomputedResultController {
 
         ResponseEntity<SearchResponse> results = resultService.search(searchCriteria);
 
-        if (results.getBody() != null) {
-
-            DataTableResponse response = new DataTableResponse();
-            response.setData(results.getBody().getData());
-            response.setDraw(dataTablesRequest.getDraw());
-            response.setRecordsTotal(results.getBody().getTotal());
-            response.setRecordsFiltered(results.getBody().getMatched());
-
-            return ResponseEntity.ok(response);
+        if (!results.getStatusCode().is2xxSuccessful()) {
+            return ResponseEntity.status(results.getStatusCode()).build();
         }
-        return ResponseEntity.noContent().build();
+
+        if (results.getBody() == null) {
+            return ResponseEntity.noContent().build();
+        }
+
+        DataTableResponse response = new DataTableResponse();
+        response.setData(results.getBody().getData());
+        response.setDraw(dataTablesRequest.getDraw());
+        response.setRecordsTotal(results.getBody().getTotal());
+        response.setRecordsFiltered(results.getBody().getMatched());
+
+        return ResponseEntity.ok(response);
     }
 
 }
