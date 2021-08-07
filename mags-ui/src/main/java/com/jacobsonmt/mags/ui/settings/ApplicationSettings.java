@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @Setter
 public class ApplicationSettings {
 
+    private String processServerHost;
     private String processServerURI;
     private String clientId;
     private String clientToken;
