@@ -70,7 +70,8 @@ function createKernelDensityEstimate(title, xAxis, kde, score, markers, logTrans
         }],
 
         yAxis: [{
-            title: { text: 'Density' }
+            title: { text: 'Density' },
+            max: yMax
         }],
 
         series: [{
@@ -90,7 +91,7 @@ function createKernelDensityEstimate(title, xAxis, kde, score, markers, logTrans
             dashStyle: "solid",
             lineWidth: 2,
             // color: "#a6a3ac",
-            data: [[score, 0],[score, yMax]],
+            data: [[score, 0],[score, yMax],[score, 1]],
             marker: {
                 enabled: false
             },
@@ -100,6 +101,13 @@ function createKernelDensityEstimate(title, xAxis, kde, score, markers, logTrans
                 pointFormat: "<b>{point.x:.2f}</b>"
             },
         }],
+        exporting: {
+            buttons: {
+                contextButton: {
+                    menuItems: ['viewFullscreen', 'printChart', 'separator', 'downloadPNG', 'downloadPDF', 'downloadSVG', 'separator', 'downloadCSV', 'downloadXLS']
+                }
+            }
+        }
     };
 
     for (let label in markers) {
@@ -110,7 +118,7 @@ function createKernelDensityEstimate(title, xAxis, kde, score, markers, logTrans
             dashStyle: "solid",
             lineWidth: 2,
             // color: "#a6a3ac",
-            data: [[markerScore, 0],[markerScore, yMax]],
+            data: [[markerScore, 0],[markerScore, yMax], [markerScore, 1]],
             marker: {
                 enabled: false
             },

@@ -9,6 +9,7 @@
     <script src="https://code.highcharts.com/8.2.2/modules/boost.js"></script>
     <script src="https://code.highcharts.com/8.2.2/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/8.2.2/modules/offline-exporting.js"></script>
+    <script src="https://code.highcharts.com/8.2.2/modules/export-data.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js"></script>
     <script th:inline="javascript">
 
@@ -79,17 +80,29 @@
                 <table class="job-table table table-sm mb-0">
                     <tbody>
                     <tr>
-                        <td class="text-right" style="width: 33%">Accession:</td>
-                        <td><span class="align-middle p-4" th:text="${result.accession}"></span></td>
+                        <td class="text-right" style="width: 50%">
+                            <span class="align-right p-4">Accession:</span>
+                        </td>
+                        <td class="text-left">
+                            <span class="align-middle p-4" th:text="${result.accession}"></span>
+                        </td>
                     </tr>
                     <tr>
-                        <td class="text-right" style="width: 33%">Species:</td>
-                        <td><span class="align-middle p-4" th:text="${result.species}"></span></td>
+                        <td class="text-right" style="width: 50%">
+                            <span class="align-right p-4">Species:</span>
+                        </td>
+                        <td class="text-left">
+                            <span class="align-middle p-4" th:text="${result.species}"></span>
+                        </td>
                     </tr>
                     <tr th:each="graph : ${graphs}">
-                        <td class="text-right" style="width: 33%" th:text="${graph.title}"></td>
-                        <td>
-                            <span class="align-middle p-4">
+                        <td class="text-right" style="width: 50%">
+                            <span class="align-right p-4">
+                                <span th:text="${graph.title} + ':'" th:remove="tag"></span>
+                            </span>
+                        </td>
+                        <td class="text-left">
+                            <span class="align-right p-4">
                                 <span th:text="${graph.score} % 1 == 0? ${graph.score} :${#numbers.formatDecimal(graph.score, 0, 2)}" th:remove="tag"></span>
                                 <span th:if="${graph.unit != null}" th:text="${graph.unit}" th:remove="tag"></span>
                             </span>
@@ -104,9 +117,10 @@
                 <h5 class="mb-0 text-center">Downloads</h5>
             </div>
             <div class="card-body">
-                <p>Below you can access JSON representations of this protein's scores (Scores) and the background proteome distribution (Proteome Distribution).</p>
-                <a th:href="'/api/precomputed/' + ${result.accession}" class="align-middle mr-2" target="_blank"><i class="fas fa-file-download mr-1"></i>Scores</a>
-                <a th:href="'/api/precomputed/' + ${result.accession} + '/graphs'" class="align-middle" target="_blank"><i class="fas fa-file-download mr-1"></i>Proteome Distribution</a>
+                <p>Below you can access CSV & JSON representations of this protein's scores and the background proteome distributions.</p>
+                <a th:href="'/api/precomputed/' + ${result.accession} + '/csv'" class="align-middle mr-2" target="_blank"><i class="fas fa-file-csv mr-1"></i>CSV</a>
+                <a th:href="'/api/precomputed/' + ${result.accession}" class="align-middle mr-2" target="_blank"><i class="fas fa-file-code mr-1"></i>JSON</a>
+                <a th:href="'/api/precomputed/' + ${result.accession} + '/graphs'" class="align-middle" target="_blank"><i class="fas fa-file-download mr-1"></i>Proteome Distributions</a>
             </div>
         </div>
 

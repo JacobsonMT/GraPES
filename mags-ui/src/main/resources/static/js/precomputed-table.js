@@ -68,7 +68,8 @@ $(document).ready(function () {
         render: function ( data, type, row, meta ) {
           return '<span class="align-middle">' +
               '<a href="/precomputed/' + data + '" target="_blank" class="align-middle mr-2"><i class="fas fa-chart-area mr-1"></i>View</a>' +
-              '<a href="/api/precomputed/' + data + '" target="_blank" class="align-middle"><i class="fas fa-file-download mr-1"></i>Download</a>' +
+              '<a href="/api/precomputed/' + data + '/csv" target="_blank" class="align-middle mr-2"><i class="fas fa-file-csv mr-1"></i>CSV</a>' +
+              '<a href="/api/precomputed/' + data + '" target="_blank" class="align-middle"><i class="fas fa-file-code mr-1"></i>JSON</a>' +
               '</span>';
         }
       }

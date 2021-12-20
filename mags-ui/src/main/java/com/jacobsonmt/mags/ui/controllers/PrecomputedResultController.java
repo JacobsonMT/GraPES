@@ -1,5 +1,10 @@
 package com.jacobsonmt.mags.ui.controllers;
 
+import static com.jacobsonmt.mags.ui.controllers.Utils.downloadAsFile;
+import static com.jacobsonmt.mags.ui.controllers.Utils.jsonToCsv;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.jacobsonmt.mags.ui.exceptions.ResultNotFoundException;
 import com.jacobsonmt.mags.ui.model.datatable.DataTableRequest;
@@ -13,7 +18,9 @@ import com.jacobsonmt.mags.ui.model.search.SearchResponse;
 import com.jacobsonmt.mags.ui.services.ResultService;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,11 +34,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Log4j2
 @Controller
+@AllArgsConstructor
 public class PrecomputedResultController {
 
     private final ResultService resultService;
+    private final ObjectMapper objectMapper;
 
-    public PrecomputedResultController(ResultService resultService) {this.resultService = resultService;}
 
     @RequestMapping(value = "/precomputed/{accession}", method = RequestMethod.GET)
     public String precomputed( @PathVariable("accession") String accession, Model model) {
@@ -70,6 +78,24 @@ public class PrecomputedResultController {
 
         return resultService.getPrecomputedResult(accession);
 
+    }
+
+    @GetMapping("/api/precomputed/{accession}/csv")
+    @ResponseBody
+    public ResponseEntity<ByteArrayResource> getPrecomputedResultAsCSV( @PathVariable("accession") String accession, Model model)
+        throws JsonProcessingException {
+
+        if (accession == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        ResponseEntity<MaGSResult> result = resultService.getPrecomputedResult(accession);
+
+        if (result.getStatusCode().is2xxSuccessful() && result.getBody() != null) {
+            return downloadAsFile( accession + ".csv",  jsonToCsv(objectMapper.valueToTree(result.getBody())));
+        }
+
+        return ResponseEntity.status(result.getStatusCode()).build();
     }
 
     @RequestMapping( value = "/api/precomputed/datatable", method = RequestMethod.POST )

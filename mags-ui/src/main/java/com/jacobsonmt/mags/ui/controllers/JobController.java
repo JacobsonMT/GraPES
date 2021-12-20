@@ -1,16 +1,24 @@
 package com.jacobsonmt.mags.ui.controllers;
 
+import static com.jacobsonmt.mags.ui.controllers.Utils.downloadAsFile;
+import static com.jacobsonmt.mags.ui.controllers.Utils.jsonToCsv;
+
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jacobsonmt.mags.ui.exceptions.JobNotFoundException;
 import com.jacobsonmt.mags.ui.exceptions.ResultNotFoundException;
 import com.jacobsonmt.mags.ui.model.Job;
 import com.jacobsonmt.mags.ui.model.Species;
 import com.jacobsonmt.mags.ui.model.result.Graph;
+import com.jacobsonmt.mags.ui.model.result.MaGSSeqResult;
 import com.jacobsonmt.mags.ui.services.JobService;
 import com.jacobsonmt.mags.ui.services.JobService.JobSubmissionResponse;
 import com.jacobsonmt.mags.ui.utils.InputStreamUtils;
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,9 +37,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class JobController {
 
     private final JobService jobService;
+    private final ObjectMapper objectMapper;
 
-    public JobController(JobService jobService) {
+    public JobController(JobService jobService, ObjectMapper objectMapper) {
         this.jobService = jobService;
+
+        // We want to flatten result to simplify conversion to CSV
+        // We copy the object mapper so as not to flatten for all other serializations of Job
+        this.objectMapper = objectMapper.copy().addMixIn(Job.class, JobUnwrappedMixIn.class);
     }
 
     @PostMapping("/submit")
@@ -113,6 +126,27 @@ public class JobController {
         }
 
         return entity.getBody();
+    }
+
+    @GetMapping("/api/job/{id}/csv")
+    @ResponseBody
+    public ResponseEntity<ByteArrayResource> jobAsCSV( @PathVariable("id") long id) throws JsonProcessingException {
+        if (id == 0) {
+            throw new ResultNotFoundException();
+        }
+
+        ResponseEntity<Job> entity = jobService.getJob( id );
+
+        if (entity.getStatusCode().equals( HttpStatus.NOT_FOUND ) || entity.getBody() == null ) {
+            throw new JobNotFoundException();
+        }
+
+        return downloadAsFile( id + ".csv",  jsonToCsv(objectMapper.valueToTree(entity.getBody())));
+    }
+
+    interface JobUnwrappedMixIn {
+        @JsonUnwrapped
+        MaGSSeqResult getResult();
     }
 
     //TODO

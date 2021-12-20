@@ -85,6 +85,12 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- CSV Result -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-csv</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
