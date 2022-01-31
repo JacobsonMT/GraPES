@@ -2,7 +2,6 @@ package com.jacobsonmt.mags.server.rest;
 
 import com.jacobsonmt.mags.server.model.result.Graph;
 import com.jacobsonmt.mags.server.model.result.MaGSResult;
-import com.jacobsonmt.mags.server.model.result.MaGSSeqResultVO;
 import com.jacobsonmt.mags.server.model.search.SearchCriteria;
 import com.jacobsonmt.mags.server.model.search.SearchResponse;
 import com.jacobsonmt.mags.server.services.ResultService;
@@ -63,18 +62,6 @@ public class ResultEndpoint {
     }
 
     /* Jobs */
-
-    /**
-     * @return Precomputed result for given id.
-     */
-    @RequestMapping(value = "/jobs/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<MaGSSeqResultVO> getJobsResultForAccession( @PathVariable long id ) {
-
-        return resultService.getResultByJobId(id)
-            .map(ResponseEntity::ok).orElse(
-                ResponseEntity.status( HttpStatus.NOT_FOUND ).body( null )
-            );
-    }
 
     /**
      * @return Jobs feature graphs for given id.

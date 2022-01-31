@@ -14,7 +14,6 @@ import com.jacobsonmt.mags.server.entities.Species;
 import com.jacobsonmt.mags.server.model.result.Distribution;
 import com.jacobsonmt.mags.server.model.result.Graph;
 import com.jacobsonmt.mags.server.model.result.MaGSResult;
-import com.jacobsonmt.mags.server.model.result.MaGSSeqResultVO;
 import com.jacobsonmt.mags.server.model.search.FieldSearch;
 import com.jacobsonmt.mags.server.model.search.SearchCriteria;
 import com.jacobsonmt.mags.server.model.search.SearchResponse;
@@ -106,6 +105,10 @@ public class ResultService {
         compositionP("% Composition P", MaGSSeqResult::getP, "% Composition P", "%"),
         compositionS("% Composition S", MaGSSeqResult::getS, "% Composition S", "%"),
         compositionW("% Composition W", MaGSSeqResult::getW, "% Composition W", "%"),
+        compositionA("% Composition A", MaGSSeqResult::getA, "% Composition A", "%"),
+        compositionI("% Composition I", MaGSSeqResult::getI, "% Composition I", "%"),
+        compositionM("% Composition M", MaGSSeqResult::getM, "% Composition M", "%"),
+        compositionF("% Composition F", MaGSSeqResult::getF, "% Composition F", "%"),
         compositionV("% Composition V", MaGSSeqResult::getV, "% Composition V", "%");
 
         private final Function<MaGSSeqResult, Number> extract;
@@ -213,21 +216,21 @@ public class ResultService {
             MaGSSeqFeature.soluprot,
             MaGSSeqFeature.gravy,
             MaGSSeqFeature.rbpPred,
-            MaGSSeqFeature.compositionL,
-            MaGSSeqFeature.compositionW,
-            MaGSSeqFeature.compositionV
+            MaGSSeqFeature.compositionD,
+            MaGSSeqFeature.compositionA,
+            MaGSSeqFeature.compositionV,
+            MaGSSeqFeature.compositionI,
+            MaGSSeqFeature.compositionM,
+            MaGSSeqFeature.compositionF
         ));
 
         speciesMaGSSeqFeatureSet.put(Species.YEAST, Lists.newArrayList(
             MaGSSeqFeature.scoreYeast,
-            MaGSSeqFeature.disorder,
-            MaGSSeqFeature.charge,
-            MaGSSeqFeature.pScore,
+            MaGSSeqFeature.tango,
             MaGSSeqFeature.soluprot,
-            MaGSSeqFeature.gravy,
-            MaGSSeqFeature.softness,
-            MaGSSeqFeature.rbpPred,
-            MaGSSeqFeature.compositionL,
+            MaGSSeqFeature.length,
+            MaGSSeqFeature.compositionS,
+            MaGSSeqFeature.compositionA,
             MaGSSeqFeature.compositionP
         ));
         precomputedMaGSSeqResultDao.findAll().forEach( result -> {
@@ -353,21 +356,5 @@ public class ResultService {
         });
 
         return graphs;
-    }
-
-    /**
-     * Use species selected when job was ran
-     */
-    public Optional<MaGSSeqResultVO> getResultByJobId(long id) {
-        return jobResultDao.findById(id).map(JobResult::getJob).map(job ->
-            MaGSSeqResultVO.fromPrecomputedResult(job.getResult(), job.getSpecies()));
-    }
-
-    /**
-     * Use alternate species
-     */
-    public Optional<MaGSSeqResultVO> getResultByJobId(long id, Species species) {
-        return jobResultDao.findById(id).map(jr ->
-            MaGSSeqResultVO.fromPrecomputedResult(jr, species));
     }
 }

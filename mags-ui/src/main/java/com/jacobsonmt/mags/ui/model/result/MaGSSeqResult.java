@@ -13,8 +13,17 @@ public class MaGSSeqResult {
     @JsonAlias("zscoreYeast")
     private Double scoreYeast;
 
+    @JsonAlias("net")
+    private Integer charge;
+
     @JsonAlias("diso")
     private Double disorder;
+
+    @JsonAlias("gvy")
+    private Double gravy;
+
+    @JsonAlias("len")
+    private Integer length;
 
     @JsonAlias("pip")
     // For some reason jackson doesn't like to start with single letter lower case,
@@ -28,23 +37,32 @@ public class MaGSSeqResult {
     @JsonAlias("sol")
     private Double soluprot;
 
-    @JsonAlias("len")
-    private Integer length;
-
     @JsonAlias("tgo")
     private Double tango;
 
-    @JsonAlias("g")
-    private Double compositionG;
-    @JsonAlias("r")
-    private Double compositionR;
-    @JsonAlias("l")
-    private Double compositionL;
+    @JsonAlias("a")
+    private Double compositionA;
     @JsonAlias("d")
     private Double compositionD;
+    @JsonAlias("f")
+    private Double compositionF;
+    @JsonAlias("g")
+    private Double compositionG;
+    @JsonAlias("i")
+    private Double compositionI;
+    @JsonAlias("l")
+    private Double compositionL;
+    @JsonAlias("m")
+    private Double compositionM;
     @JsonAlias("p")
     private Double compositionP;
+    @JsonAlias("r")
+    private Double compositionR;
     @JsonAlias("s")
     private Double compositionS;
+    @JsonAlias("v")
+    private Double compositionV;
+    @JsonAlias("w")
+    private Double compositionW;
 
 }
