@@ -43,6 +43,9 @@ public class MaGSResult {
     @Column(name="rna")
     private Integer rna;
 
+    @Column(name="sg")
+    private Boolean sg;
+
     @Column(name="mrf")
     private Integer mrf;
 

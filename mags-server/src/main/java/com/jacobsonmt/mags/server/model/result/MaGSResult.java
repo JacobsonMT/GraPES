@@ -26,6 +26,7 @@ public class MaGSResult {
         result.setCompositionG(precomputedResult.getG());
 
         result.setRna(precomputedResult.getRna() != null && precomputedResult.getRna().equals(1));
+        result.setSg(precomputedResult.getSg());
 
         return result;
     }
@@ -54,5 +55,6 @@ public class MaGSResult {
     private Double compositionG;
 
     private Boolean rna;
+    private Boolean sg;
 
 }

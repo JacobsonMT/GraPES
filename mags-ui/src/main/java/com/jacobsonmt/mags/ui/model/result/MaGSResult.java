@@ -29,5 +29,6 @@ public class MaGSResult {
     private Double compositionG;
 
     private Boolean rna;
+    private Boolean sg;
 
 }
