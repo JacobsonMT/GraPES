@@ -13,7 +13,7 @@
   <div class="main-content p-4 text-center">
     <h1 style="font-size: 3rem;">Welcome to GraPES, the <b>Gra</b>nule <b>P</b>rotein <b>E</b>nrichment <b>S</b>erver!</h1>
     <h5>
-      Here you can obtain predictions for cellular protein condensate localization as well as a variety of other useful information pertaining to the likelihood of protein condensate incorporation.
+      Here you can obtain predictions for cellular protein condensate localization as well as a variety of other useful information pertaining to the propensity of protein condensate incorporation.
     </h5>
     <h5>
       This server is free to use and no registration is required.
@@ -29,7 +29,7 @@
           </div>
           <div class="card-body">
             <p class="card-text">
-              To obtain the most accurate results please use the <a th:href="@{/precomputed}" href="/precomputed">MaGS</a> predictor database. Query your protein of interest and if you obtain a Z-score greater than or equal to <b>1.16</b> for human or <b>1.08</b> in yeast then the protein is showing a high likelihood to be included within phase-separated organelles within the cell. If the score is between <b>1.16</b> and <b>0.66</b> for human and <b>1.08</b> and <b>0.58</b> for yeast, then the protein has a modest likelihood, and biological factors other than the features used in the model could heavily influence condensate localization. If your score is below <b>-0.36</b> for human or <b>-0.39</b> for yeast, then the protein is showing a low likelihood for inclusion into membraneless organelles.
+              To obtain the most accurate results please use the <a th:href="@{/precomputed}" href="/precomputed">MaGS</a> predictor database. Query your protein of interest and if you obtain a Z-score greater than or equal to <b>1.16</b> for human or <b>1.08</b> in yeast then the protein is showing a high propensity to be included within phase-separated organelles within the cell. If the score is between <b>1.16</b> and <b>0.66</b> for human and <b>1.08</b> and <b>0.58</b> for yeast, then the protein has a modest likelihood, and biological factors other than the features used in the model could heavily influence condensate localization. If your score is below <b>-0.36</b> for human or <b>-0.39</b> for yeast, then the protein is showing a low likelihood for inclusion into membraneless organelles.
             </p>
           </div>
           <div class="card-footer text-center">
@@ -42,7 +42,7 @@
           </div>
           <div class="card-body">
             <p class="card-text">
-              If MaGS does not provide a prediction score, likely due to the protein lacking experimental features needed for prediction by MaGS, or you have an unknown protein sequence then use the sequence-based predictor <a th:href="@{/submit}" href="/submit">MaGSeq</a>. If you obtain a MaGSeq value greater than or equal to <b>0.90</b> for human or 0.89 in yeast then the protein is highly likely part of phase-separated organelles within the cell. Similarly, scores between <b>0.90</b> and <b>0.56</b> for human and <b>0.89</b> and <b>0.25</b> for yeast are modest and scores below <b>-0.33</b> for human and <b>-0.</b> for yeast are indicative of a low likelihood result.
+              If MaGS does not provide a prediction score, likely due to the protein lacking experimental features needed for prediction by MaGS, or you have an unknown protein sequence then use the sequence-based predictor <a th:href="@{/submit}" href="/submit">MaGSeq</a>. If you obtain a MaGSeq value greater than or equal to <b>0.90</b> for human or <b>0.89</b> in yeast then the protein is highly likely part of phase-separated organelles within the cell. Similarly, scores between <b>0.90</b> and <b>0.56</b> for human and <b>0.89</b> and <b>0.25</b> for yeast are modest and scores below <b>-0.33</b> for human and <b>-0.45</b> for yeast are indicative of a low propensity result.
             </p>
 
             <p class="card-text" style="color: #6c757d;">
@@ -75,27 +75,27 @@
       <tbody>
       <tr>
         <th scope="row">MaGS Human</th>
-        <td class="bg-cutoff-high">1.16</td>
-        <td class="bg-cutoff-moderate">0.66</td>
-        <td class="bg-cutoff-low">-0.36</td>
+        <td class="bg-cutoff-high">>1.16</td>
+        <td class="bg-cutoff-moderate">1.16 to 0.66</td>
+        <td class="bg-cutoff-low">0.66 to -0.36</td>
       </tr>
       <tr>
         <th scope="row">MaGS Yeast</th>
-        <td class="bg-cutoff-high">1.08</td>
-        <td class="bg-cutoff-moderate">0.58</td>
-        <td class="bg-cutoff-low">-0.39</td>
+        <td class="bg-cutoff-high">>1.08</td>
+        <td class="bg-cutoff-moderate">1.08 to 0.58</td>
+        <td class="bg-cutoff-low">0.58 to -0.39</td>
       </tr>
       <tr>
         <th scope="row">MaGSeq Human</th>
-        <td class="bg-cutoff-high">0.90</td>
-        <td class="bg-cutoff-moderate">0.56</td>
-        <td class="bg-cutoff-low">-0.33</td>
+        <td class="bg-cutoff-high">>0.90</td>
+        <td class="bg-cutoff-moderate">0.90 to 0.56</td>
+        <td class="bg-cutoff-low">0.56 to -0.33</td>
       </tr>
       <tr>
         <th scope="row">MaGSeq Yeast</th>
-        <td class="bg-cutoff-high">0.89</td>
-        <td class="bg-cutoff-moderate">0.25</td>
-        <td class="bg-cutoff-low">-0.45</td>
+        <td class="bg-cutoff-high">>0.89</td>
+        <td class="bg-cutoff-moderate">0.89 to 0.25</td>
+        <td class="bg-cutoff-low">0.25 to -0.45</td>
       </tr>
       </tbody>
     </table>
