@@ -20,3 +20,19 @@
 .popover {
     max-width: 600px;
 }
+
+/* Z-Score Cutoff Background Colors */
+.bg-cutoff-high {
+    background-color: #b2d37c !important;
+    font-weight: bold;
+}
+
+.bg-cutoff-moderate {
+    background-color: #afafd7 !important;
+    font-weight: bold;
+}
+
+.bg-cutoff-low {
+    background-color: #FFFFFF !important;
+    font-weight: bold;
+}

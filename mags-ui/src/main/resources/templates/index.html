@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title th:text="${@siteSettings.title}">GraPES</title>
+  <object th:include="fragments/head :: head" th:remove="tag"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}"/>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar(home)">...</div>
+<div class="container-fluid p-4">
+
+  <div class="main-content p-4 text-center">
+    <h1 style="font-size: 3rem;">Welcome to GraPES, the <b>Gra</b>nule <b>P</b>rotein <b>E</b>nrichment <b>S</b>erver!</h1>
+    <h5>
+      Here you can obtain predictions for cellular protein condensate localization as well as a variety of other useful information pertaining to the likelihood of protein condensate incorporation.
+    </h5>
+    <h5>
+      This server is free to use and no registration is required.
+    </h5>
+
+  </div>
+
+  <div class="main-content p-4">
+    <div class="card-deck" style="max-width:1600px;margin: 0 auto;">
+        <div class="card">
+          <div class="card-header">
+            <h3>MaGS (<b>M</b>embraneless organelle <b>a</b>nd <b>G</b>ranule <b>S</b>core)</h3>
+          </div>
+          <div class="card-body">
+            <p class="card-text">
+              To obtain the most accurate results please use the <a th:href="@{/precomputed}" href="/precomputed">MaGS</a> predictor database. Query your protein of interest and if you obtain a Z-score greater than or equal to <b>1.16</b> for human or <b>1.08</b> in yeast then the protein is showing a high likelihood to be included within phase-separated organelles within the cell. If the score is between <b>1.16</b> and <b>0.66</b> for human and <b>1.08</b> and <b>0.58</b> for yeast, then the protein has a modest likelihood, and biological factors other than the features used in the model could heavily influence condensate localization. If your score is below <b>-0.36</b> for human or <b>-0.39</b> for yeast, then the protein is showing a low likelihood for inclusion into membraneless organelles.
+            </p>
+          </div>
+          <div class="card-footer text-center">
+            <a class="btn btn-primary btn-lg" th:href="@{/precomputed}" href="/precomputed">Try MaGS</a>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>MaGSeq (<b>MaG</b>S <b>Seq</b>uence-based Tool)</h3>
+          </div>
+          <div class="card-body">
+            <p class="card-text">
+              If MaGS does not provide a prediction score, likely due to the protein lacking experimental features needed for prediction by MaGS, or you have an unknown protein sequence then use the sequence-based predictor <a th:href="@{/submit}" href="/submit">MaGSeq</a>. If you obtain a MaGSeq value greater than or equal to <b>0.90</b> for human or 0.89 in yeast then the protein is highly likely part of phase-separated organelles within the cell. Similarly, scores between <b>0.90</b> and <b>0.56</b> for human and <b>0.89</b> and <b>0.25</b> for yeast are modest and scores below <b>-0.33</b> for human and <b>-0.</b> for yeast are indicative of a low likelihood result.
+            </p>
+
+            <p class="card-text" style="color: #6c757d;">
+              MaGSeq is intended to extend the scope of the MaGS method framework, however, scores are not directly comparable and MaGSeq should be used only when MaGS values are not available. Keep in mind that in order to obtain MaGSeq values, queries must have a minimal sequence length of 150 amino acids.
+            </p>
+
+          </div>
+          <div class="card-footer text-center">
+            <a class="btn btn-primary btn-lg" th:href="@{/submit}" href="/submit">Try MaGSeq</a>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="main-content p-4">
+    <div class="row">
+      <div class="col-12" style="max-width: 1600px;margin: 0 auto;">
+    <table class="table table-sm table-bordered table-striped">
+      <thead>
+      <tr>
+        <th colspan="4" class="text-center">Suggested Z-Score Cutoff Values</th>
+      </tr>
+      <tr>
+        <th style="width: 25%">Predictor</th>
+        <th style="width: 25%">High</th>
+        <th style="width: 25%">Moderate</th>
+        <th style="width: 25%">Low</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <th scope="row">MaGS Human</th>
+        <td class="bg-cutoff-high">1.16</td>
+        <td class="bg-cutoff-moderate">0.66</td>
+        <td class="bg-cutoff-low">-0.36</td>
+      </tr>
+      <tr>
+        <th scope="row">MaGS Yeast</th>
+        <td class="bg-cutoff-high">1.08</td>
+        <td class="bg-cutoff-moderate">0.58</td>
+        <td class="bg-cutoff-low">-0.39</td>
+      </tr>
+      <tr>
+        <th scope="row">MaGSeq Human</th>
+        <td class="bg-cutoff-high">0.90</td>
+        <td class="bg-cutoff-moderate">0.56</td>
+        <td class="bg-cutoff-low">-0.33</td>
+      </tr>
+      <tr>
+        <th scope="row">MaGSeq Yeast</th>
+        <td class="bg-cutoff-high">0.89</td>
+        <td class="bg-cutoff-moderate">0.25</td>
+        <td class="bg-cutoff-low">-0.45</td>
+      </tr>
+      </tbody>
+    </table>
+        <p style="color: #6c757d;">
+          Please note, cutoff values are suggestions based on estimates of model worthiness from Receiver Operator Characteristic (ROC) Curves and model specificity at balance point. If you are performing a screen and desire a higher sensitivity, you would want to lower this threshold. Conversely, if you want to have a very high level of specificity in identifying granule proteins, then you may wish to raise the threshold. Furthermore, while MaGS and MaGSeq have been trained on stress granule proteins only, our analyses revealed that proteins localizing to other cellular granules have, on average, also increased prediction scores, probably because other membraneless organelles follow a similar mechanism of formation and, therefore, their constituents have related protein features. Thus, high z-scores are indicative of a protein’s capability to incorporate into a biological granule in the cell, but they do not indicate type. End users must determine, based on their own biological knowledge and experiments, which type of biological condensate is most likely. One of the first steps to refine this prediction is by examining cellular localization.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <div th:replace="fragments/title :: title(title='Assistance')" th:remove="tag">...</div>
+
+  <div class="main-content p-4">
+    <p>
+      For more information please visit the <a th:href="@{/documentation}" href="/documentation">documentation</a> or <a th:href="@{/about}" href="/about">about</a> pages. If you need further assistance, please contact us directly. Also, if you have used these tools or found them helpful, please cite the following manuscripts:
+    </p>
+
+    <ol>
+      <li>Kuechler ER, Budzyńska PM, Bernardini JP, Gsponer J, Mayor T. Distinct Features of Stress Granule Proteins Predict Localization in Membraneless Organelles. J Mol Biol. 2020 Mar 27;432(7):2349-2368. doi: 10.1016/j.jmb.2020.02.020. Epub 2020 Feb 24. PMID: 32105731.</li>
+      <li>“GraPES: The Granule Protein Enrichment Server for prediction of biological condensate constituents” Erich R. Kuechler, Matthew Jacobson, Thibault Mayor, and Jörg Gsponer. Nucleic Acids Research. In revision.</li>
+    </ol>
+  </div>
+
+</div>
+
+
+<div th:replace="fragments/footer" th:remove="tag">...</div>
+</body>
+</html>

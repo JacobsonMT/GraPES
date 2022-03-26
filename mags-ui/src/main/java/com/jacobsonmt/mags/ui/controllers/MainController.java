@@ -19,7 +19,7 @@ public class MainController {
 
     @GetMapping("/")
     public String index() {
-        return "precomputed";
+        return "index";
     }
 
     @GetMapping("/submit")
