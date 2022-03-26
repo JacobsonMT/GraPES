@@ -201,5 +201,5 @@ CREATE TABLE public.marker_magseq (
 );
 
 -- Indices
-CREATE INDEX job_input_idx ON public.job USING btree (input);
+CREATE INDEX job_input_idx ON public.job USING HASH (input);
 CREATE INDEX precomputed_mags_accession_idx ON public.precomputed_mags USING btree (accession, gene);
