@@ -13,6 +13,7 @@
 
     <div class="main-content p-4">
         <p> MaGS takes a number of protein features; including protein abundance, number of annotated interaction partners, number of annotated phosphorylation sites, and others; and combines them in a general linearized model to generate a score that ranks proteins for their propensity to be contained within biological condensates. Additionally, the server contains a new method, MaGSeq, which also is a general linearized model for protein condensate incorporation based only on protein sequence features without any other a priori knowledge of that protein’s biological context.  In MaGSeq, a number of other predictors, such as DISOPRED3 for protein intrinsic disorder and RPBBind for RNA-binding propensity, are used. To parameterize and test the model, proteins localizing to cellular condensates/granules were compiled from mass-spec and colocalization immunofluorescence experiments.  These ‘granulomes’ were then interrogated against cytoplasmic and proteomic controls for enriched protein features, which were then examined with PCA and QDA methods to find those features which best separated granulome proteins from the controls.  These features were then used in a quasibinomial GLM which underwent 10-fold cross validation during parameterization and was then tested against an independent validation set. </p>
+        <p>Stress granule proteins used in model parameterization were taken from a series of publications detailed in the original MaGS manuscript (<a target="_blank" href="https://doi.org/10.1016/j.jmb.2020.02.020">doi: 10.1016/j.jmb.2020.02.020</a>). Briefly, these proteins (457 human and 321 yeast) were largely identified using mass spectrometry under heat or chemical stress and were curated based on the level of confidence from these publications.</p>
     </div>
 
     <div th:replace="fragments/title :: title(title='Citation')" th:remove="tag">...</div>
@@ -41,6 +42,8 @@
         <p class="mb-2 ml-3">Fernandez-Escamilla AM, Rousseau F, Schymkowitz J, Serrano L. Prediction of sequence-dependent and mutational effects on the aggregation of peptides and proteins. <em>Nat Biotechnol</em>. 2004 Oct;22(10):1302-6. <a target="_blank" href="https://doi.org/10.1038/nbt1012">doi: 10.1038/nbt1012</a>. Epub 2004 Sep 12. PMID: 15361882.</p>
         <p class="mb-0"><b>Phosphorylation Sites:</b></p>
         <p class="mb-2 ml-3">Huang KY, Lee TY, Kao HJ, Ma CT, Lee CC, Lin TH, Chang WC, Huang HD. dbPTM in 2019: exploring disease association and cross-talk of post-translational modifications. <em>Nucleic Acids Res</em>. 2019 Jan 8;47(D1):D298-D308. <a target="_blank" href="https://doi.org/10.1093/nar/gky1074">doi: 10.1093/nar/gky1074</a>. PMID: 30418626; PMCID: PMC6323979.</p>
+        <p class="mb-0"><b>RNA-binding proteins:</b></p>
+        <p class="mb-2 ml-3">Beckmann BM, Horos R, Fischer B, Castello A, Eichelbaum K, Alleaume AM, Schwarzl T, Curk T, Foehr S, Huber W, Krijgsveld J, Hentze MW. The RNA-binding proteomes from yeast to man harbour conserved enigmRBPs. <em>Nat Commun</em>. 2015 Dec 3;6:10127. <a target="_blank" href="https://doi.org/10.1038/ncomms10127">doi: 10.1038/ncomms10127</a>. PMID: 26632259; PMCID: PMC4686815.</p>
     </div>
 
     <div th:replace="fragments/title :: title(title='Terms & Conditions')" th:remove="tag">...</div>
